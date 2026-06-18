@@ -44,7 +44,10 @@ function initBlockly() {
       colour: '#d8dce3',
       snap: true,
     },
-    renderer: 'zelos',
+
+    // geras：接近 Google Blockly 原始方正風格
+    // zelos：較圓潤，接近 Scratch / App Inventor 風格
+    renderer: 'geras',
   });
 
   workspace.addChangeListener(updateCodePreview);
