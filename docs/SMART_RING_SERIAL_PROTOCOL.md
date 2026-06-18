@@ -23,3 +23,28 @@ ESP8266 應持續送出按鈕狀態：
 
 ```json
 {"btn":[false,false,false,false,false,false,false,false],"func":0,"mode":0}
+
+## LED 編號規則
+
+從 MVP-B08-1 起，SmartRing LED 編號採用學生較容易理解的 1 起算。
+
+| 學生看到的 LED 編號 | ESP8266 內部 WS2812 index |
+|---:|---:|
+| 1 | 0 |
+| 2 | 1 |
+| 3 | 2 |
+| 4 | 3 |
+| 5 | 4 |
+| 6 | 5 |
+| 7 | 6 |
+| 8 | 7 |
+| 9 | 8 |
+| 10 | 9 |
+| 11 | 10 |
+| 12 | 11 |
+
+前端送出的 JSON 使用 LED 編號 1～12：
+
+```json
+{"cmd":"setLed","index":1,"color":"red","r":255,"g":0,"b":0}
+

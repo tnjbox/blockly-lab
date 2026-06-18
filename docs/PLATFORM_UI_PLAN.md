@@ -271,7 +271,7 @@ MVP-B07 針對 SmartRing LED 控制建立固定 JSON 指令格式。
 
 SmartRing 狀態面板新增：
 
-- 測試第 0 顆紅燈
+- 測試第 1 顆紅燈
 - 清除 LED
 - 最後送出指令
 

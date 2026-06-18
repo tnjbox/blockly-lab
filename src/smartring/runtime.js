@@ -117,12 +117,12 @@ class SmartRingRuntime extends EventTarget {
     return LED_COLOR_TABLE[colorName] || LED_COLOR_TABLE.off;
   }
 
-  async setLedColor(index, colorName) {
-    const ledIndex = Number(index);
+  async setLedColor(ledNumber, colorName) {
+    const ledIndex = Number(ledNumber);
     const color = this.getLedColorPayload(colorName);
 
-    if (!Number.isInteger(ledIndex) || ledIndex < 0 || ledIndex > 11) {
-      throw new Error('LED 編號必須是 0 到 11 的整數。');
+    if (!Number.isInteger(ledIndex) || ledIndex < 1 || ledIndex > 12) {
+      throw new Error('LED 編號必須是 1 到 12 的整數。');
     }
 
     await this.sendCommand('setLed', {
@@ -133,7 +133,7 @@ class SmartRingRuntime extends EventTarget {
       b: color.b,
     });
 
-    this.emitLog(`設定 LED ${ledIndex} 為 ${colorName}`);
+    this.emitLog(`設定第 ${ledIndex} 顆 LED 為 ${colorName}`);
   }
 
   async clearLeds() {

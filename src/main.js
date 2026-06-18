@@ -341,14 +341,14 @@ function loadSmartRingSample() {
       <block type="controls_if" x="40" y="40">
         <value name="IF0">
           <block type="smartring_button_pressed">
-            <field name="BUTTON">0</field>
+            <field name="BUTTON">1</field>
           </block>
         </value>
         <statement name="DO0">
           <block type="smartring_set_led_color">
             <value name="INDEX">
               <shadow type="math_number">
-                <field name="NUM">0</field>
+                <field name="NUM">1</field>
               </shadow>
             </value>
             <field name="COLOR">red</field>
@@ -363,7 +363,7 @@ function loadSmartRingSample() {
                   <block type="text_print">
                     <value name="TEXT">
                       <block type="text">
-                        <field name="TEXT">BTN1/F 被按下，點亮第 0 顆 LED</field>
+                        <field name="TEXT">BTN1/F 被按下，點亮第 1 顆 LED</field>
                       </block>
                     </value>
                   </block>
@@ -702,9 +702,9 @@ async function disconnectSmartRing() {
 
 async function testLedRed() {
   try {
-    await smartRingRuntime.setLedColor(0, 'red');
+    await smartRingRuntime.setLedColor(1, 'red');
     renderLastCommand(smartRingRuntime.getLastCommand());
-    outputArea.textContent = '已送出測試指令：設定第 0 顆 LED 為紅色。';
+    outputArea.textContent = '已送出測試指令：設定第 1 顆 LED 為紅色。';
   } catch (error) {
     outputArea.textContent = `送出 LED 測試指令失敗：\n${error.message}`;
   }
