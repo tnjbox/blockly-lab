@@ -17,6 +17,8 @@ const outputArea = document.getElementById('outputArea');
 
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
 const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
+const btnTestLedRed = document.getElementById('btnTestLedRed');
+const btnTestLedClear = document.getElementById('btnTestLedClear');
 
 const btnLoadSample = document.getElementById('btnLoadSample');
 const btnRun = document.getElementById('btnRun');
@@ -44,6 +46,7 @@ const smartRingStatus = document.getElementById('smartRingStatus');
 const serialStatusValue = document.getElementById('serialStatusValue');
 const buttonStateValue = document.getElementById('buttonStateValue');
 const rawStateValue = document.getElementById('rawStateValue');
+const lastCommandValue = document.getElementById('lastCommandValue');
 
 const tabBlocks = document.getElementById('tabBlocks');
 const tabCode = document.getElementById('tabCode');
@@ -76,7 +79,7 @@ const demoCourses = {
       '需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。',
     scoring:
       '學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。',
-    hint: 'MVP-B06 已加入 SmartRing 基礎積木。LED 指令需搭配支援 cmd 指令的 ESP8266 韌體。',
+    hint: 'MVP-B07 已固定前端 LED JSON 指令格式。若 LED 沒反應，下一步需更新 ESP8266 韌體端接收邏輯。',
   },
   'SR-A01': {
     id: 'SR-A01',
@@ -560,7 +563,7 @@ function loadCourse() {
     currentCourse = null;
     taskInfo.innerHTML = `
       <h2>找不到課程：${code}</h2>
-      <p>目前 MVP-B06 只內建示範課程：</p>
+      <p>目前 MVP-B07 只內建示範課程：</p>
       <ul>
         <li>SR-B01：SmartRing 基礎任務</li>
         <li>SR-A01：SmartRing 陣列任務</li>
@@ -610,8 +613,8 @@ async function testTask() {
   writeOutput('---');
   writeOutput(`任務測試模式：${modeText}`);
   writeOutput(`課程代碼：${currentCourse.id}`);
-  writeOutput('MVP-B06 測試結果：SmartRing 基礎積木流程正常。');
-  writeOutput('正式測資評分功能將於後續 MVP-J01 建置。');
+  writeOutput('MVP-B07 測試結果：SmartRing LED 指令已送出。');
+  writeOutput('若 WS2812 未反應，請檢查 ESP8266 韌體是否支援 setLed / clearLeds 指令。');
 }
 
 function submitScore() {
@@ -635,7 +638,7 @@ function submitScore() {
   }
 
   outputArea.textContent = [
-    'MVP-B06：成績上傳介面測試',
+    'MVP-B07：成績上傳介面測試',
     `班級：${profile.className}`,
     `座號：${profile.seatNumber}`,
     `姓名：${profile.name}`,
@@ -665,6 +668,8 @@ function setSmartRingConnectedUi(isConnected, message) {
 
   btnConnectSmartRing.disabled = isConnected;
   btnDisconnectSmartRing.disabled = !isConnected;
+  btnTestLedRed.disabled = !isConnected;
+  btnTestLedClear.disabled = !isConnected;
 }
 
 async function connectSmartRing() {
@@ -688,9 +693,41 @@ async function disconnectSmartRing() {
     await smartRingRuntime.disconnect();
     buttonStateValue.textContent = '尚無資料';
     rawStateValue.textContent = '尚未收到 ESP8266 資料。';
+    lastCommandValue.textContent = '尚未送出 LED 指令。';
     outputArea.textContent = 'SmartRing 已斷開連線。';
   } catch (error) {
     outputArea.textContent = `SmartRing 斷線時發生錯誤：\n${error.message}`;
+  }
+}
+
+async function testLedRed() {
+  try {
+    await smartRingRuntime.setLedColor(0, 'red');
+    renderLastCommand(smartRingRuntime.getLastCommand());
+    outputArea.textContent = '已送出測試指令：設定第 0 顆 LED 為紅色。';
+  } catch (error) {
+    outputArea.textContent = `送出 LED 測試指令失敗：\n${error.message}`;
+  }
+}
+
+function renderLastCommand(payload) {
+  if (!lastCommandValue) return;
+
+  if (!payload) {
+    lastCommandValue.textContent = '尚未送出 LED 指令。';
+    return;
+  }
+
+  lastCommandValue.textContent = JSON.stringify(payload);
+}
+
+async function testLedClear() {
+  try {
+    await smartRingRuntime.clearLeds();
+    renderLastCommand(smartRingRuntime.getLastCommand());
+    outputArea.textContent = '已送出測試指令：清除所有 LED。';
+  } catch (error) {
+    outputArea.textContent = `送出清除 LED 指令失敗：\n${error.message}`;
   }
 }
 
@@ -712,6 +749,11 @@ function bindSmartRingRuntimeEvents() {
     }
   });
 
+  smartRingRuntime.addEventListener('command', (event) => {
+    const { payload } = event.detail;
+    renderLastCommand(payload);
+  });
+
   smartRingRuntime.addEventListener('error', (event) => {
     const { message } = event.detail;
     setSmartRingConnectedUi(false, 'SmartRing：連線錯誤');
@@ -727,6 +769,8 @@ function bindSmartRingRuntimeEvents() {
 function bindEvents() {
   btnConnectSmartRing.addEventListener('click', connectSmartRing);
   btnDisconnectSmartRing.addEventListener('click', disconnectSmartRing);
+  btnTestLedRed.addEventListener('click', testLedRed);
+  btnTestLedClear.addEventListener('click', testLedClear);
 
   btnLoadSample.addEventListener('click', loadSample);
   btnRun.addEventListener('click', runUserCode);
@@ -776,6 +820,7 @@ function initStatus() {
   serialStatusValue.textContent = '尚未連線';
   buttonStateValue.textContent = '尚無資料';
   rawStateValue.textContent = '尚未收到 ESP8266 資料。';
+  renderLastCommand(null);
 }
 
 initBlockly();

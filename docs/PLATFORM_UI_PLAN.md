@@ -260,3 +260,26 @@ MVP-B05 開始加入 SmartRingController 實體硬體連線能力。
 ### 後續發展
 
 MVP-B06 將新增 SmartRing 基礎積木，讓學生可以透過 Blockly 控制 LED 與讀取按鈕。
+
+---
+
+## 十三、MVP-B07 SmartRing LED 指令協定校準
+
+MVP-B07 針對 SmartRing LED 控制建立固定 JSON 指令格式。
+
+### 新增測試功能
+
+SmartRing 狀態面板新增：
+
+- 測試第 0 顆紅燈
+- 清除 LED
+- 最後送出指令
+
+此設計讓教師可以不透過 Blockly，直接測試前端是否能送出 LED 控制指令。
+
+### LED 指令格式
+
+設定單顆 LED：
+
+```json
+{"cmd":"setLed","index":0,"color":"red","r":255,"g":0,"b":0}

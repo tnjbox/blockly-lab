@@ -19,6 +19,7 @@ class SmartRingRuntime extends EventTarget {
     this.serial = null;
     this.connected = false;
     this.lastState = null;
+    this.lastCommand = null;
   }
 
   isSupported() {
@@ -31,6 +32,10 @@ class SmartRingRuntime extends EventTarget {
 
   getLastState() {
     return this.lastState;
+  }
+
+  getLastCommand() {
+    return this.lastCommand;
   }
 
   getButtons() {
@@ -93,19 +98,34 @@ class SmartRingRuntime extends EventTarget {
       throw new Error('SmartRing 尚未連線，無法送出指令。');
     }
 
+    this.lastCommand = payload;
+    this.emitCommand(payload);
+
     await this.serial.writeLine(createJsonLine(payload));
+  }
+
+  async sendCommand(commandName, payload = {}) {
+    const commandPayload = {
+      cmd: commandName,
+      ...payload,
+    };
+
+    await this.sendJson(commandPayload);
+  }
+
+  getLedColorPayload(colorName) {
+    return LED_COLOR_TABLE[colorName] || LED_COLOR_TABLE.off;
   }
 
   async setLedColor(index, colorName) {
     const ledIndex = Number(index);
-    const color = LED_COLOR_TABLE[colorName] || LED_COLOR_TABLE.off;
+    const color = this.getLedColorPayload(colorName);
 
     if (!Number.isInteger(ledIndex) || ledIndex < 0 || ledIndex > 11) {
       throw new Error('LED 編號必須是 0 到 11 的整數。');
     }
 
-    await this.sendJson({
-      cmd: 'setLed',
+    await this.sendCommand('setLed', {
       index: ledIndex,
       color: colorName,
       r: color.r,
@@ -117,9 +137,7 @@ class SmartRingRuntime extends EventTarget {
   }
 
   async clearLeds() {
-    await this.sendJson({
-      cmd: 'clearLeds',
-    });
+    await this.sendCommand('clearLeds');
 
     this.emitLog('清除所有 LED');
   }
@@ -175,6 +193,17 @@ class SmartRingRuntime extends EventTarget {
     this.dispatchEvent(
       new CustomEvent('data', {
         detail,
+      })
+    );
+  }
+
+  emitCommand(payload) {
+    this.dispatchEvent(
+      new CustomEvent('command', {
+        detail: {
+          payload,
+          text: JSON.stringify(payload),
+        },
       })
     );
   }
