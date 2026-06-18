@@ -5,9 +5,11 @@ import { javascriptGenerator } from 'blockly/javascript';
 import * as ZhHant from 'blockly/msg/zh-hant';
 
 import { competitionToolbox } from './blockly/toolbox.js';
+import { registerSmartRingBlocks } from './blockly/smartring-blocks.js';
 import { smartRingRuntime } from './smartring/runtime.js';
 
 Blockly.setLocale(ZhHant);
+registerSmartRingBlocks();
 
 const blocklyDiv = document.getElementById('blocklyDiv');
 const codePreview = document.getElementById('codePreview');
@@ -65,16 +67,16 @@ const demoCourses = {
     level: '國小高年級 / 國中初階',
     goal: '透過按鈕與 LED 燈光互動，理解條件判斷與輸出控制。',
     description:
-      '未來本任務會要求學生連接 SmartRingController，按下指定按鈕後，讓指定 LED 顯示指定顏色。',
+      '本任務要求學生連接 SmartRingController，按下指定按鈕後，讓指定 LED 顯示指定顏色。',
     operation:
-      '學生需要先連線 SmartRingController，再使用按鈕判斷積木與 LED 控制積木完成互動任務。',
+      '學生需要先連線 SmartRingController，再使用「SmartRing 按鈕被按下？」與「設定 SmartRing LED 顏色」積木完成互動任務。',
     blockLimit:
-      '建議使用邏輯、迴圈、變數，以及未來的 SmartRing 按鈕與燈光積木。',
+      '建議使用邏輯、迴圈、變數、SmartRing 按鈕與 SmartRing 燈光積木。',
     smartRingRequirement:
       '需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。',
     scoring:
       '學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。',
-    hint: '目前 MVP-B05 已開始支援 SmartRing WebSerial 連線，但尚未新增 SmartRing Blockly 積木。',
+    hint: 'MVP-B06 已加入 SmartRing 基礎積木。LED 指令需搭配支援 cmd 指令的 ESP8266 韌體。',
   },
   'SR-A01': {
     id: 'SR-A01',
@@ -167,7 +169,7 @@ function clearOutput() {
   outputArea.textContent = '';
 }
 
-function runUserCode() {
+async function runUserCode() {
   if (!workspace) return;
 
   clearOutput();
@@ -198,13 +200,16 @@ function runUserCode() {
 
     const runner = new Function(
       'print',
+      'SmartRing',
       `
       "use strict";
-      ${code}
+      return (async () => {
+        ${code}
+      })();
       `
     );
 
-    runner(safePrint);
+    await runner(safePrint, smartRingRuntime);
 
     if (!outputArea.textContent.trim()) {
       outputArea.textContent = '程式執行完成，沒有輸出內容。';
@@ -321,6 +326,59 @@ function loadSample() {
   updateCodePreview();
   switchWorkspaceTab('blocks');
   outputArea.textContent = '已載入範例：重複累加分數。';
+}
+
+function loadSmartRingSample() {
+  if (!workspace) return;
+
+  workspace.clear();
+
+  const xmlText = `
+    <xml xmlns="https://developers.google.com/blockly/xml">
+      <block type="controls_if" x="40" y="40">
+        <value name="IF0">
+          <block type="smartring_button_pressed">
+            <field name="BUTTON">0</field>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="smartring_set_led_color">
+            <value name="INDEX">
+              <shadow type="math_number">
+                <field name="NUM">0</field>
+              </shadow>
+            </value>
+            <field name="COLOR">red</field>
+            <next>
+              <block type="smartring_wait_ms">
+                <value name="MS">
+                  <shadow type="math_number">
+                    <field name="NUM">100</field>
+                  </shadow>
+                </value>
+                <next>
+                  <block type="text_print">
+                    <value name="TEXT">
+                      <block type="text">
+                        <field name="TEXT">BTN1/F 被按下，點亮第 0 顆 LED</field>
+                      </block>
+                    </value>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </xml>
+  `;
+
+  const xmlDom = Blockly.utils.xml.textToDom(xmlText);
+  Blockly.Xml.domToWorkspace(xmlDom, workspace);
+
+  updateCodePreview();
+  switchWorkspaceTab('blocks');
+  outputArea.textContent = '已載入 SmartRing 範例：按鈕控制 LED。';
 }
 
 function getStudentProfile() {
@@ -502,7 +560,7 @@ function loadCourse() {
     currentCourse = null;
     taskInfo.innerHTML = `
       <h2>找不到課程：${code}</h2>
-      <p>目前 MVP-B05 只內建示範課程：</p>
+      <p>目前 MVP-B06 只內建示範課程：</p>
       <ul>
         <li>SR-B01：SmartRing 基礎任務</li>
         <li>SR-A01：SmartRing 陣列任務</li>
@@ -527,10 +585,15 @@ function loadCourse() {
 
   currentCourse = course;
   renderCourseInfo(course);
+
+  if (course.id === 'SR-B01') {
+    loadSmartRingSample();
+  }
+
   outputArea.textContent = `已載入課程：${course.id}｜${course.title}`;
 }
 
-function testTask() {
+async function testTask() {
   const profile = getStudentProfile();
 
   if (!currentCourse) {
@@ -538,7 +601,7 @@ function testTask() {
     return;
   }
 
-  runUserCode();
+  await runUserCode();
 
   const modeText =
     profile.mode === 'competition' ? '競賽模式' : '學習模式';
@@ -547,8 +610,7 @@ function testTask() {
   writeOutput('---');
   writeOutput(`任務測試模式：${modeText}`);
   writeOutput(`課程代碼：${currentCourse.id}`);
-  writeOutput('MVP-B05 測試結果：介面流程正常。');
-  writeOutput('SmartRing WebSerial 連線功能已加入。');
+  writeOutput('MVP-B06 測試結果：SmartRing 基礎積木流程正常。');
   writeOutput('正式測資評分功能將於後續 MVP-J01 建置。');
 }
 
@@ -573,7 +635,7 @@ function submitScore() {
   }
 
   outputArea.textContent = [
-    'MVP-B05：成績上傳介面測試',
+    'MVP-B06：成績上傳介面測試',
     `班級：${profile.className}`,
     `座號：${profile.seatNumber}`,
     `姓名：${profile.name}`,

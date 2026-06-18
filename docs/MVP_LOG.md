@@ -85,3 +85,96 @@ npm run dev
 ```powershell
 cd D:\YOSEP\blockly-lab
 npm run dev
+
+---
+
+## MVP-B06｜SmartRing 基礎積木版
+
+### 狀態
+
+已建立。
+
+### 本版目標
+
+在 B05 WebSerial 連線基礎上，新增 SmartRing 基礎 Blockly 積木，讓學生可以透過 Blockly 判斷按鈕狀態與送出 LED 控制指令。
+
+### 已完成項目
+
+- 新增 `src/blockly/smartring-blocks.js`
+- 新增 SmartRing 工具箱分類
+- 新增 SmartRing 基礎積木：
+  - SmartRing 已連線？
+  - SmartRing 按鈕是否被按下？
+  - 設定 SmartRing 第 N 顆 LED 顏色
+  - 清除 SmartRing 所有 LED
+  - 等待 N 毫秒
+- 更新 `smartRingRuntime`
+  - `isConnected()`
+  - `getLastState()`
+  - `getButtons()`
+  - `isButtonPressed(buttonIndex)`
+  - `setLedColor(index, colorName)`
+  - `clearLeds()`
+  - `wait(ms)`
+- 更新使用者程式執行器，支援 `await`
+- 讓 Blockly 產生的 JavaScript 可以呼叫 `SmartRing`
+- `SR-B01` 課程代碼會載入 SmartRing 範例積木
+
+### 尚未加入
+
+- LED buffer 暫存陣列
+- LED bar / score / life 顯示
+- SmartRing 動畫積木
+- SmartRing 陣列任務積木
+- SmartRing 任務自動評分
+- Google Sheet 上傳
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev
+
+---
+
+## MVP-B06-1｜工具箱順序與課程列版面修正版
+
+### 狀態
+
+已建立。
+
+### 本版目標
+
+針對 MVP-B06 測試後的介面回饋，調整 SmartRing 積木分類順序與課程操作列版面，使平台更符合教學使用情境。
+
+### 已完成項目
+
+- 調整 Blockly 工具箱分類順序
+  - 原本 SmartRing 位於清單與變數之間
+  - 改為 SmartRing 位於函式之後
+- 保留競賽 Blockly 標準分類順序
+  - 邏輯
+  - 迴圈
+  - 數學
+  - 文字
+  - 清單
+  - 變數
+  - 函式
+- 將 SmartRing 作為硬體擴充分類放在最後
+- 課程列改為標籤與輸入框同列
+- 降低課程列高度
+- 增加 Blockly 編輯區可視空間
+
+### 尚未加入
+
+- LED 指令協定校準
+- ESP8266 韌體接收指令確認
+- LED buffer 暫存陣列
+- SmartRing 動畫積木
+- SmartRing 任務評分
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev

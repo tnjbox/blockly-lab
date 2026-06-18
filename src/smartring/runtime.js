@@ -1,6 +1,17 @@
 import { SmartRingSerial } from './serial.js';
 import { createJsonLine, formatButtonState, parseSmartRingLine } from './protocol.js';
 
+const LED_COLOR_TABLE = {
+  red: { r: 255, g: 0, b: 0 },
+  green: { r: 0, g: 255, b: 0 },
+  blue: { r: 0, g: 0, b: 255 },
+  yellow: { r: 255, g: 180, b: 0 },
+  purple: { r: 180, g: 0, b: 255 },
+  cyan: { r: 0, g: 180, b: 255 },
+  white: { r: 255, g: 255, b: 255 },
+  off: { r: 0, g: 0, b: 0 },
+};
+
 class SmartRingRuntime extends EventTarget {
   constructor() {
     super();
@@ -16,6 +27,21 @@ class SmartRingRuntime extends EventTarget {
 
   isConnected() {
     return this.connected;
+  }
+
+  getLastState() {
+    return this.lastState;
+  }
+
+  getButtons() {
+    return this.lastState?.buttons || [];
+  }
+
+  isButtonPressed(buttonIndex) {
+    const index = Number(buttonIndex);
+    const buttons = this.getButtons();
+
+    return Boolean(buttons[index]);
   }
 
   async connect() {
@@ -68,6 +94,42 @@ class SmartRingRuntime extends EventTarget {
     }
 
     await this.serial.writeLine(createJsonLine(payload));
+  }
+
+  async setLedColor(index, colorName) {
+    const ledIndex = Number(index);
+    const color = LED_COLOR_TABLE[colorName] || LED_COLOR_TABLE.off;
+
+    if (!Number.isInteger(ledIndex) || ledIndex < 0 || ledIndex > 11) {
+      throw new Error('LED 編號必須是 0 到 11 的整數。');
+    }
+
+    await this.sendJson({
+      cmd: 'setLed',
+      index: ledIndex,
+      color: colorName,
+      r: color.r,
+      g: color.g,
+      b: color.b,
+    });
+
+    this.emitLog(`設定 LED ${ledIndex} 為 ${colorName}`);
+  }
+
+  async clearLeds() {
+    await this.sendJson({
+      cmd: 'clearLeds',
+    });
+
+    this.emitLog('清除所有 LED');
+  }
+
+  async wait(ms) {
+    const delay = Math.max(0, Number(ms) || 0);
+
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, delay);
+    });
   }
 
   handleIncomingLine(line) {

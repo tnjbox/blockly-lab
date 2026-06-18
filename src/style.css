@@ -146,10 +146,18 @@ button:disabled {
 
 .course-bar {
   display: grid;
-  grid-template-columns: 110px 90px 140px minmax(160px, 1fr) 140px auto auto auto;
+  grid-template-columns:
+    minmax(140px, 160px)
+    minmax(115px, 130px)
+    minmax(170px, 210px)
+    minmax(280px, 1fr)
+    minmax(180px, 210px)
+    auto
+    auto
+    auto;
   gap: 10px;
-  align-items: end;
-  padding: 12px 16px;
+  align-items: center;
+  padding: 10px 14px;
   background: #ffffff;
   border-bottom: 1px solid #cbd5e1;
   box-shadow: 0 4px 12px rgb(15 23 42 / 8%);
@@ -157,13 +165,16 @@ button:disabled {
 }
 
 .field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
 }
 
 .field-group span {
-  font-size: 13px;
+  white-space: nowrap;
+  font-size: 14px;
   font-weight: 800;
   color: #475569;
 }
@@ -171,7 +182,8 @@ button:disabled {
 .field-group input,
 .field-group select {
   width: 100%;
-  min-height: 39px;
+  min-width: 0;
+  min-height: 40px;
   padding: 8px 10px;
   font-size: 15px;
   color: #0f172a;
@@ -215,7 +227,7 @@ button:disabled {
 .workspace-panel {
   display: flex;
   flex-direction: column;
-  min-height: 680px;
+  min-height: 700px;
 }
 
 .workspace-tabs {
