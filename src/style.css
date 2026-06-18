@@ -19,9 +19,15 @@
 
 body {
   margin: 0;
-  min-width: 1024px;
+  min-width: 1180px;
   min-height: 100vh;
   background: #eef2f7;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
 }
 
 button {
@@ -48,6 +54,30 @@ button:hover {
 button:active {
   transform: translateY(0);
   box-shadow: none;
+}
+
+.secondary-button {
+  background: #475569;
+}
+
+.secondary-button:hover {
+  background: #334155;
+}
+
+.success-button {
+  background: #059669;
+}
+
+.success-button:hover {
+  background: #047857;
+}
+
+.warning-button {
+  background: #d97706;
+}
+
+.warning-button:hover {
+  background: #b45309;
 }
 
 .small-button {
@@ -78,13 +108,13 @@ button:active {
   background: linear-gradient(135deg, #1e3a8a, #2563eb);
 }
 
-.app-header h1 {
+.brand-block h1 {
   margin: 0;
   font-size: 28px;
   letter-spacing: 0.5px;
 }
 
-.app-header p {
+.brand-block p {
   margin: 4px 0 0;
   font-size: 15px;
   opacity: 0.9;
@@ -107,9 +137,58 @@ button:active {
   box-shadow: 0 4px 12px rgb(0 0 0 / 16%);
 }
 
+.course-bar {
+  display: grid;
+  grid-template-columns: 110px 90px 140px minmax(160px, 1fr) 140px auto auto auto;
+  gap: 10px;
+  align-items: end;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 8%);
+  z-index: 1;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-group span {
+  font-size: 13px;
+  font-weight: 800;
+  color: #475569;
+}
+
+.field-group input,
+.field-group select {
+  width: 100%;
+  min-height: 39px;
+  padding: 8px 10px;
+  font-size: 15px;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  outline: none;
+}
+
+.field-group input:focus,
+.field-group select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 14%);
+}
+
+.course-code-field input {
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
 .app-main {
   display: grid;
-  grid-template-columns: minmax(620px, 1fr) 420px;
+  grid-template-columns: minmax(700px, 1fr) 430px;
   gap: 16px;
   flex: 1;
   min-height: 0;
@@ -117,8 +196,8 @@ button:active {
 }
 
 .workspace-panel,
-.code-panel,
-.output-panel {
+.task-panel,
+.result-panel {
   overflow: hidden;
   border-radius: 16px;
   background: #ffffff;
@@ -128,12 +207,68 @@ button:active {
 .workspace-panel {
   display: flex;
   flex-direction: column;
-  min-height: 640px;
+  min-height: 680px;
+}
+
+.workspace-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.tab-button {
+  color: #475569;
+  background: #e2e8f0;
+  box-shadow: none;
+}
+
+.tab-button:hover {
+  color: #1e3a8a;
+  background: #dbeafe;
+  box-shadow: none;
+}
+
+.tab-button.active {
+  color: #ffffff;
+  background: #2563eb;
+}
+
+.workspace-tab-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.workspace-view {
+  display: none;
+  flex: 1;
+  min-height: 0;
+}
+
+.workspace-view.active {
+  display: flex;
+}
+
+#blocksView {
+  flex-direction: column;
+}
+
+#codeView {
+  flex-direction: column;
+}
+
+#blocklyDiv {
+  flex: 1;
+  min-height: 0;
 }
 
 .side-panel {
   display: grid;
-  grid-template-rows: 1fr 260px;
+  grid-template-rows: 270px minmax(300px, 1fr);
   gap: 16px;
   min-height: 0;
 }
@@ -151,9 +286,40 @@ button:active {
   background: #f8fafc;
 }
 
-#blocklyDiv {
-  flex: 1;
-  min-height: 0;
+.info-box {
+  height: calc(100% - 46px);
+  padding: 14px;
+  overflow: auto;
+  color: #334155;
+  background: #ffffff;
+}
+
+.info-box h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #1e3a8a;
+}
+
+.info-box p {
+  margin: 8px 0;
+  line-height: 1.55;
+}
+
+.info-box ul {
+  margin: 8px 0 0;
+  padding-left: 22px;
+}
+
+.info-box li {
+  margin: 4px 0;
+}
+
+.summary-note {
+  padding: 8px 10px;
+  color: #1e40af;
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
 }
 
 #codePreview,
@@ -175,20 +341,35 @@ button:active {
   background: #f8fafc;
 }
 
+#codePreview {
+  height: 100%;
+}
+
 #outputArea {
   color: #064e3b;
   background: #ecfdf5;
 }
 
 .app-footer {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   gap: 16px;
+  align-items: center;
   padding: 10px 18px;
   font-size: 13px;
   color: #475569;
   background: #e2e8f0;
   border-top: 1px solid #cbd5e1;
+}
+
+#modeStatus {
+  font-weight: 800;
+  color: #1e40af;
+}
+
+#smartRingStatus {
+  font-weight: 800;
+  color: #b45309;
 }
 
 .blocklyToolboxDiv {
@@ -205,4 +386,74 @@ button:active {
 
 .blocklyFlyoutBackground {
   fill: #f8fafc;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgb(15 23 42 / 56%);
+  z-index: 1000;
+}
+
+.modal-backdrop.active {
+  display: flex;
+}
+
+.modal-card {
+  width: min(920px, 96vw);
+  max-height: 88vh;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgb(15 23 42 / 36%);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.modal-body {
+  max-height: calc(88vh - 68px);
+  padding: 18px;
+  overflow: auto;
+  color: #334155;
+}
+
+.modal-section {
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-section:first-child {
+  padding-top: 0;
+}
+
+.modal-section:last-child {
+  border-bottom: 0;
+}
+
+.modal-section h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #1e3a8a;
+}
+
+.modal-section p {
+  margin: 6px 0;
+  line-height: 1.65;
 }
