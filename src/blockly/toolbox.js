@@ -183,6 +183,59 @@ export const competitionToolbox = {
             },
           },
         },
+        {
+          kind: 'sep',
+        },
+        {
+          kind: 'label',
+          text: 'LED 暫存陣列',
+        },
+        {
+          kind: 'block',
+          type: 'smartring_set_buffer_led_color',
+          inputs: {
+            INDEX: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 1,
+                },
+              },
+            },
+          },
+        },
+        { kind: 'block', type: 'smartring_clear_led_buffer' },
+        { kind: 'block', type: 'smartring_show_led_buffer' },
+        {
+          kind: 'block',
+          type: 'smartring_shift_led_buffer_left',
+          inputs: {
+            STEPS: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 1,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_shift_led_buffer_right',
+          inputs: {
+            STEPS: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 1,
+                },
+              },
+            },
+          },
+        },
+        { kind: 'block', type: 'smartring_set_odd_buffer_leds' },
+        { kind: 'block', type: 'smartring_set_even_buffer_leds' },
       ],
     },
   ],

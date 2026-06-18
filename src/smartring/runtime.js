@@ -1,6 +1,8 @@
 import { SmartRingSerial } from './serial.js';
 import { createJsonLine, formatButtonState, parseSmartRingLine } from './protocol.js';
 
+const LED_COUNT = 12;
+
 const LED_COLOR_TABLE = {
   red: { r: 255, g: 0, b: 0 },
   green: { r: 0, g: 255, b: 0 },
@@ -12,6 +14,18 @@ const LED_COLOR_TABLE = {
   off: { r: 0, g: 0, b: 0 },
 };
 
+function cloneColor(color) {
+  return {
+    r: Number(color?.r) || 0,
+    g: Number(color?.g) || 0,
+    b: Number(color?.b) || 0,
+  };
+}
+
+function createEmptyLedBuffer() {
+  return Array.from({ length: LED_COUNT }, () => cloneColor(LED_COLOR_TABLE.off));
+}
+
 class SmartRingRuntime extends EventTarget {
   constructor() {
     super();
@@ -20,6 +34,7 @@ class SmartRingRuntime extends EventTarget {
     this.connected = false;
     this.lastState = null;
     this.lastCommand = null;
+    this.ledBuffer = createEmptyLedBuffer();
   }
 
   isSupported() {
@@ -114,16 +129,28 @@ class SmartRingRuntime extends EventTarget {
   }
 
   getLedColorPayload(colorName) {
-    return LED_COLOR_TABLE[colorName] || LED_COLOR_TABLE.off;
+    return cloneColor(LED_COLOR_TABLE[colorName] || LED_COLOR_TABLE.off);
+  }
+
+  normalizeLedNumber(ledNumber) {
+    const ledIndex = Number(ledNumber);
+
+    if (!Number.isInteger(ledIndex) || ledIndex < 1 || ledIndex > LED_COUNT) {
+      throw new Error(`LED 編號必須是 1 到 ${LED_COUNT} 的整數。`);
+    }
+
+    return ledIndex;
+  }
+
+  normalizeSteps(steps) {
+    const value = Math.floor(Math.abs(Number(steps) || 0));
+
+    return value % LED_COUNT;
   }
 
   async setLedColor(ledNumber, colorName) {
-    const ledIndex = Number(ledNumber);
+    const ledIndex = this.normalizeLedNumber(ledNumber);
     const color = this.getLedColorPayload(colorName);
-
-    if (!Number.isInteger(ledIndex) || ledIndex < 1 || ledIndex > 12) {
-      throw new Error('LED 編號必須是 1 到 12 的整數。');
-    }
 
     await this.sendCommand('setLed', {
       index: ledIndex,
@@ -140,6 +167,103 @@ class SmartRingRuntime extends EventTarget {
     await this.sendCommand('clearLeds');
 
     this.emitLog('清除所有 LED');
+  }
+
+  setBufferLedColor(ledNumber, colorName) {
+    const ledIndex = this.normalizeLedNumber(ledNumber);
+    const color = this.getLedColorPayload(colorName);
+
+    this.ledBuffer[ledIndex - 1] = color;
+    this.emitLog(`設定暫存陣列第 ${ledIndex} 顆 LED 為 ${colorName}`);
+  }
+
+  clearLedBuffer() {
+    this.ledBuffer = createEmptyLedBuffer();
+    this.emitLog('清除 LED 暫存陣列');
+  }
+
+  getLedBuffer() {
+    return this.ledBuffer.map((color) => cloneColor(color));
+  }
+
+  setOddBufferLeds(colorName) {
+    const color = this.getLedColorPayload(colorName);
+
+    for (let index = 0; index < LED_COUNT; index += 1) {
+      const ledNumber = index + 1;
+
+      if (ledNumber % 2 === 1) {
+        this.ledBuffer[index] = cloneColor(color);
+      }
+    }
+
+    this.emitLog(`設定暫存陣列奇數燈為 ${colorName}`);
+  }
+
+  setEvenBufferLeds(colorName) {
+    const color = this.getLedColorPayload(colorName);
+
+    for (let index = 0; index < LED_COUNT; index += 1) {
+      const ledNumber = index + 1;
+
+      if (ledNumber % 2 === 0) {
+        this.ledBuffer[index] = cloneColor(color);
+      }
+    }
+
+    this.emitLog(`設定暫存陣列偶數燈為 ${colorName}`);
+  }
+
+  shiftLedBufferLeft(steps = 1) {
+    const moveSteps = this.normalizeSteps(steps);
+
+    if (moveSteps === 0) {
+      this.emitLog('暫存陣列左移 0 格');
+      return;
+    }
+
+    const nextBuffer = createEmptyLedBuffer();
+
+    for (let index = LED_COUNT - 1; index >= 0; index -= 1) {
+      const targetIndex = index + moveSteps;
+
+      if (targetIndex < LED_COUNT) {
+        nextBuffer[targetIndex] = cloneColor(this.ledBuffer[index]);
+      }
+    }
+
+    this.ledBuffer = nextBuffer;
+    this.emitLog(`暫存陣列向左移動 ${moveSteps} 格`);
+  }
+
+  shiftLedBufferRight(steps = 1) {
+    const moveSteps = this.normalizeSteps(steps);
+
+    if (moveSteps === 0) {
+      this.emitLog('暫存陣列右移 0 格');
+      return;
+    }
+
+    const nextBuffer = createEmptyLedBuffer();
+
+    for (let index = 0; index < LED_COUNT; index += 1) {
+      const targetIndex = index - moveSteps;
+
+      if (targetIndex >= 0) {
+        nextBuffer[targetIndex] = cloneColor(this.ledBuffer[index]);
+      }
+    }
+
+    this.ledBuffer = nextBuffer;
+    this.emitLog(`暫存陣列向右移動 ${moveSteps} 格`);
+  }
+
+  async showLedBuffer() {
+    await this.sendCommand('showBuffer', {
+      leds: this.getLedBuffer(),
+    });
+
+    this.emitLog('顯示 LED 暫存陣列到 SmartRing');
   }
 
   async wait(ms) {

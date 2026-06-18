@@ -352,3 +352,33 @@ npm run deploy
 ### 下一版建議
 
 進入 `MVP-B09｜Blockly LED Buffer 積木版`，建立前端 LED 暫存陣列，銜接八年級陣列概念。
+
+
+## MVP-B09｜Blockly LED Buffer 積木版
+
+### 狀態
+
+開發中。
+
+### 本版目標
+
+建立 SmartRing LED 暫存陣列，讓學生可以先在前端操作 12 顆 LED 的資料狀態，再一次顯示到 SmartRing，作為八年級陣列任務 SR-A01 的基礎。
+
+### 預計新增項目
+
+- 建立 12 顆 LED 暫存陣列
+- 新增設定暫存陣列第 N 顆 LED 顏色
+- 新增清除暫存陣列
+- 新增顯示暫存陣列到 SmartRing
+- 新增暫存陣列左移 / 右移
+- 新增奇數燈 / 偶數燈操作
+
+### LED 編號規則
+
+學生端維持 LED 1～12，程式內部轉為陣列 index 0～11。
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev
