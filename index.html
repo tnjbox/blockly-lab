@@ -3,46 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OSEP Blockly Lab</title>
-    <script type="module" crossorigin src="/blockly-lab/assets/index-BU09Cj3M.js"></script>
-    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-1CPayghs.css">
+    <title>Younger Dream Workshop</title>
+    <script type="module" crossorigin src="/blockly-lab/assets/index-DLmPxG41.js"></script>
+    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-BUMt6uEJ.css">
   </head>
   <body>
     <div id="app">
       <header class="app-header">
-        <div>
-          <h1>OSEP Blockly Lab</h1>
-          <p>競賽 Blockly × SmartRingController 教學實驗室</p>
+        <div class="brand-block">
+          <h1>Younger Dream Workshop</h1>
+          <p>Blockly x SmartRingControler 教學實驗室</p>
         </div>
 
         <div class="header-actions">
           <button id="btnLoadSample" type="button">載入範例</button>
           <button id="btnRun" type="button">執行程式</button>
+          <button id="btnSaveBlocks" type="button">存檔積木</button>
+          <button id="btnLoadBlocks" type="button">載入積木</button>
           <button id="btnClear" type="button">清除工作區</button>
+          <input id="blockFileInput" type="file" accept=".xml,.blockly,.blockly.xml,text/xml" hidden />
         </div>
       </header>
 
+      <section class="course-bar">
+        <label class="field-group">
+          <span>班級</span>
+          <input id="studentClass" type="text" placeholder="例如：701" />
+        </label>
+
+        <label class="field-group">
+          <span>座號</span>
+          <input id="studentNumber" type="text" placeholder="例如：08" />
+        </label>
+
+        <label class="field-group">
+          <span>姓名</span>
+          <input id="studentName" type="text" placeholder="請輸入姓名" />
+        </label>
+
+        <label class="field-group course-code-field">
+          <span>課程代碼</span>
+          <input id="courseCode" type="text" placeholder="例如：SR-B01" />
+        </label>
+
+        <label class="field-group">
+          <span>模式</span>
+          <select id="practiceMode">
+            <option value="learning">學習模式</option>
+            <option value="competition">競賽模式</option>
+          </select>
+        </label>
+
+        <button id="btnLoadCourse" type="button" class="secondary-button">載入課程</button>
+        <button id="btnTestTask" type="button" class="success-button">測試任務</button>
+        <button id="btnSubmitScore" type="button" class="warning-button">上傳成績</button>
+      </section>
+
       <main class="app-main">
         <section class="workspace-panel">
-          <div class="panel-title">
-            <span>Blockly 編輯區</span>
+          <div class="workspace-tabs">
+            <button id="tabBlocks" type="button" class="tab-button active">積木程式</button>
+            <button id="tabCode" type="button" class="tab-button">JavaScript 程式碼</button>
+            <div class="workspace-tab-actions">
+              <button id="btnCopyCode" type="button" class="small-button">複製程式碼</button>
+            </div>
           </div>
-          <div id="blocklyDiv"></div>
+
+          <div id="blocksView" class="workspace-view active">
+            <div id="blocklyDiv"></div>
+          </div>
+
+          <div id="codeView" class="workspace-view">
+            <pre id="codePreview"></pre>
+          </div>
         </section>
 
         <aside class="side-panel">
-          <section class="code-panel">
+          <section class="task-panel">
             <div class="panel-title">
-              <span>JavaScript 程式碼預覽</span>
-              <button id="btnCopyCode" type="button" class="small-button">複製程式碼</button>
+              <span>課程任務摘要</span>
+              <button id="btnOpenTaskModal" type="button" class="small-button">查看完整任務</button>
             </div>
-            <pre id="codePreview"></pre>
+            <div id="taskInfo" class="info-box">
+              <h2>尚未載入課程</h2>
+              <p>請輸入課程代碼，例如 SR-B01，按下「載入課程」。</p>
+              <ul>
+                <li>學習模式：顯示較多提示，不上傳成績。</li>
+                <li>競賽模式：未來會將評分結果上傳 Google Sheet。</li>
+              </ul>
+            </div>
           </section>
 
-          <section class="output-panel">
+          <section class="result-panel">
             <div class="panel-title">
-              <span>執行輸出</span>
-              <button id="btnClearOutput" type="button" class="small-button">清除輸出</button>
+              <span>測試結果 / 執行輸出</span>
+              <button id="btnClearOutput" type="button" class="small-button">清除結果</button>
             </div>
             <pre id="outputArea">尚未執行程式。</pre>
           </section>
@@ -50,9 +105,22 @@
       </main>
 
       <footer class="app-footer">
-        <span>MVP-B01｜Blockly 基礎網頁骨架</span>
-        <span>目前階段：尚未接 SmartRingController 硬體</span>
+        <span id="systemVersion">MVP-B04-1｜版面可用性與作品存取版</span>
+        <span id="modeStatus">目前模式：學習模式</span>
+        <span id="smartRingStatus">SmartRing：尚未連線</span>
       </footer>
+
+      <div id="taskModal" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+          <div class="modal-header">
+            <h2 id="taskModalTitle">完整任務說明</h2>
+            <button id="btnCloseTaskModal" type="button" class="small-button">關閉</button>
+          </div>
+          <div id="taskModalBody" class="modal-body">
+            <p>尚未載入課程。</p>
+          </div>
+        </div>
+      </div>
     </div>
 
   </body>
