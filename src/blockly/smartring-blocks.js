@@ -23,6 +23,16 @@ const SMART_RING_COLORS = [
   ['關閉', 'off'],
 ];
 
+
+const SMART_RING_PATTERNS = [
+  ['全亮', 'all'],
+  ['左半邊', 'leftHalf'],
+  ['右半邊', 'rightHalf'],
+  ['中間四顆', 'centerFour'],
+  ['外側四顆', 'outerFour'],
+  ['交錯燈', 'alternate'],
+];
+
 Blockly.Blocks.smartring_is_connected = {
   init() {
     this.appendDummyInput().appendField('SmartRing 已連線？');
@@ -236,6 +246,114 @@ javascriptGenerator.forBlock.smartring_set_even_buffer_leds = function (block) {
   const color = block.getFieldValue('COLOR');
 
   return `SmartRing.setEvenBufferLeds("${color}");\n`;
+};
+
+Blockly.Blocks.smartring_set_buffer_pattern = {
+  init() {
+    this.appendDummyInput()
+      .appendField('設定暫存陣列為圖樣')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_PATTERNS), 'PATTERN')
+      .appendField('顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('將暫存陣列設定成常用 LED 圖樣，需搭配「顯示暫存陣列到 SmartRing」。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_set_buffer_pattern = function (block) {
+  const pattern = block.getFieldValue('PATTERN');
+  const color = block.getFieldValue('COLOR');
+
+  return `SmartRing.setBufferPattern("${pattern}", "${color}");\n`;
+};
+
+Blockly.Blocks.smartring_set_buffer_progress = {
+  init() {
+    this.appendValueInput('COUNT')
+      .setCheck('Number')
+      .appendField('設定暫存陣列進度條');
+
+    this.appendDummyInput()
+      .appendField('顆 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('讓 LED 1 開始亮起指定顆數，超過 12 會自動限制為 12。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_set_buffer_progress = function (block, generator) {
+  const countCode = generator.valueToCode(block, 'COUNT', Order.NONE) || '0';
+  const color = block.getFieldValue('COLOR');
+
+  return `SmartRing.setProgressBufferLeds(${countCode}, "${color}");\n`;
+};
+
+Blockly.Blocks.smartring_set_buffer_score = {
+  init() {
+    this.appendValueInput('SCORE')
+      .setCheck('Number')
+      .appendField('設定暫存陣列分數');
+
+    this.appendValueInput('MAX_SCORE')
+      .setCheck('Number')
+      .appendField('滿分');
+
+    this.appendDummyInput()
+      .appendField('顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('依照分數與滿分比例，換算成 12 顆 LED 的顯示數量。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_set_buffer_score = function (block, generator) {
+  const scoreCode = generator.valueToCode(block, 'SCORE', Order.NONE) || '0';
+  const maxScoreCode = generator.valueToCode(block, 'MAX_SCORE', Order.NONE) || '100';
+  const color = block.getFieldValue('COLOR');
+
+  return `SmartRing.setScoreBufferLeds(${scoreCode}, ${maxScoreCode}, "${color}");\n`;
+};
+
+Blockly.Blocks.smartring_set_buffer_life = {
+  init() {
+    this.appendValueInput('LIFE')
+      .setCheck('Number')
+      .appendField('設定暫存陣列生命值');
+
+    this.appendValueInput('MAX_LIFE')
+      .setCheck('Number')
+      .appendField('最大生命');
+
+    this.appendDummyInput()
+      .appendField('顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('依照生命值與最大生命比例，換算成 12 顆 LED 的顯示數量。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_set_buffer_life = function (block, generator) {
+  const lifeCode = generator.valueToCode(block, 'LIFE', Order.NONE) || '0';
+  const maxLifeCode = generator.valueToCode(block, 'MAX_LIFE', Order.NONE) || '5';
+  const color = block.getFieldValue('COLOR');
+
+  return `SmartRing.setLifeBufferLeds(${lifeCode}, ${maxLifeCode}, "${color}");\n`;
 };
 
 Blockly.Blocks.smartring_wait_ms = {

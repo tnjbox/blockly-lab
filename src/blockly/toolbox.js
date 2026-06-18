@@ -236,6 +236,72 @@ export const competitionToolbox = {
         },
         { kind: 'block', type: 'smartring_set_odd_buffer_leds' },
         { kind: 'block', type: 'smartring_set_even_buffer_leds' },
+        {
+          kind: 'sep',
+        },
+        {
+          kind: 'label',
+          text: 'LED 圖樣與狀態顯示',
+        },
+        { kind: 'block', type: 'smartring_set_buffer_pattern' },
+        {
+          kind: 'block',
+          type: 'smartring_set_buffer_progress',
+          inputs: {
+            COUNT: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 6,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_set_buffer_score',
+          inputs: {
+            SCORE: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 50,
+                },
+              },
+            },
+            MAX_SCORE: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 100,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_set_buffer_life',
+          inputs: {
+            LIFE: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 3,
+                },
+              },
+            },
+            MAX_LIFE: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 5,
+                },
+              },
+            },
+          },
+        },
       ],
     },
   ],

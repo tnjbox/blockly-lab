@@ -26,6 +26,45 @@ function createEmptyLedBuffer() {
   return Array.from({ length: LED_COUNT }, () => cloneColor(LED_COLOR_TABLE.off));
 }
 
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function normalizeDisplayCount(value) {
+  return clamp(Math.floor(Number(value) || 0), 0, LED_COUNT);
+}
+
+function countFromRatio(value, maxValue) {
+  const current = Math.max(0, Number(value) || 0);
+  const maximum = Math.max(0, Number(maxValue) || 0);
+
+  if (maximum <= 0) {
+    return 0;
+  }
+
+  return normalizeDisplayCount(Math.round((current / maximum) * LED_COUNT));
+}
+
+function getPatternLedNumbers(patternName) {
+  switch (patternName) {
+    case 'all':
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    case 'leftHalf':
+      return [1, 2, 3, 4, 5, 6];
+    case 'rightHalf':
+      return [7, 8, 9, 10, 11, 12];
+    case 'centerFour':
+      return [5, 6, 7, 8];
+    case 'outerFour':
+      return [1, 2, 11, 12];
+    case 'alternate':
+      return [1, 3, 5, 7, 9, 11];
+    default:
+      return [];
+  }
+}
+
+
 class SmartRingRuntime extends EventTarget {
   constructor() {
     super();
@@ -256,6 +295,58 @@ class SmartRingRuntime extends EventTarget {
 
     this.ledBuffer = nextBuffer;
     this.emitLog(`暫存陣列向右移動 ${moveSteps} 格`);
+  }
+
+  setBufferPattern(patternName, colorName) {
+    const color = this.getLedColorPayload(colorName);
+    const ledNumbers = getPatternLedNumbers(patternName);
+
+    this.clearLedBuffer();
+
+    for (const ledNumber of ledNumbers) {
+      this.ledBuffer[ledNumber - 1] = cloneColor(color);
+    }
+
+    this.emitLog(`設定暫存陣列圖樣 ${patternName} 為 ${colorName}`);
+  }
+
+  setProgressBufferLeds(count, colorName) {
+    const ledCount = normalizeDisplayCount(count);
+    const color = this.getLedColorPayload(colorName);
+
+    this.clearLedBuffer();
+
+    for (let index = 0; index < ledCount; index += 1) {
+      this.ledBuffer[index] = cloneColor(color);
+    }
+
+    this.emitLog(`設定暫存陣列進度條 ${ledCount} 顆為 ${colorName}`);
+  }
+
+  setScoreBufferLeds(score, maxScore, colorName) {
+    const ledCount = countFromRatio(score, maxScore);
+    const color = this.getLedColorPayload(colorName);
+
+    this.clearLedBuffer();
+
+    for (let index = 0; index < ledCount; index += 1) {
+      this.ledBuffer[index] = cloneColor(color);
+    }
+
+    this.emitLog(`設定暫存陣列分數顯示：${score}/${maxScore}，亮 ${ledCount} 顆`);
+  }
+
+  setLifeBufferLeds(life, maxLife, colorName) {
+    const ledCount = countFromRatio(life, maxLife);
+    const color = this.getLedColorPayload(colorName);
+
+    this.clearLedBuffer();
+
+    for (let index = 0; index < ledCount; index += 1) {
+      this.ledBuffer[index] = cloneColor(color);
+    }
+
+    this.emitLog(`設定暫存陣列生命值顯示：${life}/${maxLife}，亮 ${ledCount} 顆`);
   }
 
   async showLedBuffer() {

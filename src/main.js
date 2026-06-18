@@ -79,25 +79,25 @@ const demoCourses = {
       '需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。',
     scoring:
       '學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。',
-    hint: 'MVP-B07 已固定前端 LED JSON 指令格式。若 LED 沒反應，下一步需更新 ESP8266 韌體端接收邏輯。',
+    hint: 'MVP-B10 已可使用 LED 暫存陣列、圖樣、進度條、分數與生命值積木。',
   },
   'SR-A01': {
     id: 'SR-A01',
-    title: 'SmartRing 陣列任務：LED 陣列平移',
+    title: 'SmartRing 陣列任務：LED 圖樣與進度顯示',
     type: 'SmartRing 陣列任務',
     level: '國中八年級',
-    goal: '透過 12 顆 LED 對應 12 格陣列，理解索引、平移與狀態更新。',
+    goal: '透過 12 顆 LED 對應 12 格陣列，理解索引、圖樣、比例顯示與狀態更新。',
     description:
-      '未來本任務會檢查學生是否能讓 LED 狀態依照規則往左或往右平移。',
+      '本任務讓學生使用 LED 暫存陣列建立圖樣、進度條、分數條與生命值顯示，理解陣列資料可以轉換成可視化輸出。',
     operation:
-      '學生需要建立 LED 狀態陣列，使用迴圈更新每一格資料，再將陣列顯示到 SmartRing。',
+      '學生先使用「清除暫存陣列」「設定暫存陣列圖樣」「設定進度條 / 分數 / 生命值」等積木安排 LED 狀態，再使用「顯示暫存陣列到 SmartRing」一次更新硬體。',
     blockLimit:
-      '建議使用清單、迴圈、變數、函式，以及未來的 SmartRing 陣列顯示積木。',
+      '建議使用 SmartRing LED 暫存陣列、LED 圖樣與狀態顯示積木，並搭配變數、迴圈與數學積木。',
     smartRingRequirement:
-      '需要使用 12 顆 LED 顯示陣列狀態。每一顆 LED 對應一個陣列索引。',
+      '需要使用 12 顆 LED 顯示陣列狀態。學生端 LED 編號維持 1～12。',
     scoring:
-      '未來評分會檢查 LED buffer 結果是否符合平移後的目標狀態。',
-    hint: '適合銜接陣列、迴圈與模組化程式設計。',
+      '未來評分會檢查 LED buffer 的圖樣、亮燈數量與比例顯示是否符合任務要求。',
+    hint: 'B10 適合銜接八年級陣列：資料格、索引、批次設定、比例換算與視覺化。',
   },
   'JS-B01': {
     id: 'JS-B01',
@@ -384,6 +384,86 @@ function loadSmartRingSample() {
   outputArea.textContent = '已載入 SmartRing 範例：按鈕控制 LED。';
 }
 
+function loadSmartRingArraySample() {
+  if (!workspace) return;
+
+  workspace.clear();
+
+  const xmlText = `
+    <xml xmlns="https://developers.google.com/blockly/xml">
+      <block type="smartring_clear_led_buffer" x="40" y="40">
+        <next>
+          <block type="smartring_set_buffer_pattern">
+            <field name="PATTERN">centerFour</field>
+            <field name="COLOR">blue</field>
+            <next>
+              <block type="smartring_show_led_buffer">
+                <next>
+                  <block type="smartring_wait_ms">
+                    <value name="MS">
+                      <shadow type="math_number">
+                        <field name="NUM">500</field>
+                      </shadow>
+                    </value>
+                    <next>
+                      <block type="smartring_set_buffer_progress">
+                        <value name="COUNT">
+                          <shadow type="math_number">
+                            <field name="NUM">6</field>
+                          </shadow>
+                        </value>
+                        <field name="COLOR">green</field>
+                        <next>
+                          <block type="smartring_show_led_buffer">
+                            <next>
+                              <block type="smartring_wait_ms">
+                                <value name="MS">
+                                  <shadow type="math_number">
+                                    <field name="NUM">500</field>
+                                  </shadow>
+                                </value>
+                                <next>
+                                  <block type="smartring_set_buffer_score">
+                                    <value name="SCORE">
+                                      <shadow type="math_number">
+                                        <field name="NUM">50</field>
+                                      </shadow>
+                                    </value>
+                                    <value name="MAX_SCORE">
+                                      <shadow type="math_number">
+                                        <field name="NUM">100</field>
+                                      </shadow>
+                                    </value>
+                                    <field name="COLOR">yellow</field>
+                                    <next>
+                                      <block type="smartring_show_led_buffer" />
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </xml>
+  `;
+
+  const xmlDom = Blockly.utils.xml.textToDom(xmlText);
+  Blockly.Xml.domToWorkspace(xmlDom, workspace);
+
+  updateCodePreview();
+  switchWorkspaceTab('blocks');
+  outputArea.textContent = '已載入 SR-A01 範例：LED 圖樣、進度條與分數顯示。';
+}
+
 function getStudentProfile() {
   return {
     className: studentClass.value.trim(),
@@ -593,6 +673,10 @@ function loadCourse() {
     loadSmartRingSample();
   }
 
+  if (course.id === 'SR-A01') {
+    loadSmartRingArraySample();
+  }
+
   outputArea.textContent = `已載入課程：${course.id}｜${course.title}`;
 }
 
@@ -613,8 +697,8 @@ async function testTask() {
   writeOutput('---');
   writeOutput(`任務測試模式：${modeText}`);
   writeOutput(`課程代碼：${currentCourse.id}`);
-  writeOutput('MVP-B07 測試結果：SmartRing LED 指令已送出。');
-  writeOutput('若 WS2812 未反應，請檢查 ESP8266 韌體是否支援 setLed / clearLeds 指令。');
+  writeOutput('MVP-B10 測試結果：已執行目前 Blockly 程式，請確認 SmartRing LED 顯示是否符合任務。');
+  writeOutput('若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
 }
 
 function submitScore() {
@@ -638,7 +722,7 @@ function submitScore() {
   }
 
   outputArea.textContent = [
-    'MVP-B07：成績上傳介面測試',
+    'MVP-B10：成績上傳介面測試',
     `班級：${profile.className}`,
     `座號：${profile.seatNumber}`,
     `姓名：${profile.name}`,
