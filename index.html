@@ -1,13 +1,58 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>blockly-lab</title>
+    <title>OSEP Blockly Lab</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <header class="app-header">
+        <div>
+          <h1>OSEP Blockly Lab</h1>
+          <p>競賽 Blockly × SmartRingController 教學實驗室</p>
+        </div>
+
+        <div class="header-actions">
+          <button id="btnLoadSample" type="button">載入範例</button>
+          <button id="btnRun" type="button">執行程式</button>
+          <button id="btnClear" type="button">清除工作區</button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <section class="workspace-panel">
+          <div class="panel-title">
+            <span>Blockly 編輯區</span>
+          </div>
+          <div id="blocklyDiv"></div>
+        </section>
+
+        <aside class="side-panel">
+          <section class="code-panel">
+            <div class="panel-title">
+              <span>JavaScript 程式碼預覽</span>
+              <button id="btnCopyCode" type="button" class="small-button">複製程式碼</button>
+            </div>
+            <pre id="codePreview"></pre>
+          </section>
+
+          <section class="output-panel">
+            <div class="panel-title">
+              <span>執行輸出</span>
+              <button id="btnClearOutput" type="button" class="small-button">清除輸出</button>
+            </div>
+            <pre id="outputArea">尚未執行程式。</pre>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="app-footer">
+        <span>MVP-B01｜Blockly 基礎網頁骨架</span>
+        <span>目前階段：尚未接 SmartRingController 硬體</span>
+      </footer>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
