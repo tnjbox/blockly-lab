@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Younger Dream Workshop</title>
-    <script type="module" crossorigin src="/blockly-lab/assets/index-BW9m8zsw.js"></script>
-    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-Bnno3xkQ.css">
+    <script type="module" crossorigin src="/blockly-lab/assets/index-CYZAgf1L.js"></script>
+    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-AoCVr76I.css">
   </head>
   <body>
     <div id="app">
@@ -100,9 +100,19 @@
             <div class="panel-title">
               <span>SmartRing 狀態</span>
             </div>
+
             <div class="smartring-info">
               <p><strong>連線狀態：</strong><span id="serialStatusValue">尚未連線</span></p>
               <p><strong>按鈕狀態：</strong><span id="buttonStateValue">尚無資料</span></p>
+
+              <div class="smartring-test-actions">
+                <button id="btnTestLedRed" type="button" class="small-button success-small">測試第 0 顆紅燈</button>
+                <button id="btnTestLedClear" type="button" class="small-button warning-small">清除 LED</button>
+              </div>
+
+              <p><strong>最後送出指令：</strong></p>
+              <pre id="lastCommandValue">尚未送出 LED 指令。</pre>
+
               <p><strong>原始資料：</strong></p>
               <pre id="rawStateValue">尚未收到 ESP8266 資料。</pre>
             </div>
@@ -119,7 +129,7 @@
       </main>
 
       <footer class="app-footer">
-        <span id="systemVersion">MVP-B05｜SmartRing WebSerial 連線版</span>
+        <span id="systemVersion">MVP-B07｜SmartRing LED 指令協定校準版</span>
         <span id="modeStatus">目前模式：學習模式</span>
         <span id="smartRingStatus">SmartRing：尚未連線</span>
       </footer>
