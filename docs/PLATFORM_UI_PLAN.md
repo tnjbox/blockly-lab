@@ -282,4 +282,85 @@ SmartRing 狀態面板新增：
 設定單顆 LED：
 
 ```json
-{"cmd":"setLed","index":0,"color":"red","r":255,"g":0,"b":0}
+{"cmd":"setLed","index":1,"color":"red","r":255,"g":0,"b":0}
+```
+
+
+---
+
+## 十四、MVP-B07-1 最後送出指令顯示修正
+
+MVP-B07-1 修正 SmartRing 狀態面板中「最後送出指令」不顯示的問題。
+
+### 介面修正
+
+- 顯示最後一次送出的 JSON 指令
+- 教師可直接確認 Blockly Lab 前端是否正確送出 `setLed` 或 `clearLeds`
+- 有助於分辨問題發生在前端、WebSerial 或 ESP8266 韌體端
+
+---
+
+## 十五、MVP-B08 ESP8266 統一韌體協定
+
+MVP-B08 將 Blockly Lab 與 ESP8266 SmartRingController 對齊為同一套統一韌體協定。
+
+### 介面定位
+
+- Blockly Lab 不需要因為不同任務重新燒錄韌體
+- Scratch / Blockly / GitHub 測試頁可共用同一份 ESP8266 韌體
+- 前端送出 LED 控制指令
+- ESP8266 持續輸出按鈕狀態
+
+### 支援指令
+
+- `setLed`
+- `clearLeds`
+- `setAllLeds`
+- `setBrightness`
+- `showBuffer`
+
+### 設計原則
+
+ESP8266 靜默接收 LED 指令，不額外回傳 ack，避免干擾前端解析按鈕狀態 JSON。
+
+---
+
+## 十六、MVP-B08-1 LED 編號 1 起算修正
+
+MVP-B08-1 將 SmartRing LED 編號改為教學上較容易理解的 1 起算。
+
+### 教學介面原則
+
+- 學生看到 LED 1～12
+- Blockly 積木輸入 LED 1～12
+- 前端送出的 JSON 使用 `index` 1～12
+- ESP8266 韌體內部轉換為 WS2812 index 0～11
+
+### 指令格式
+
+```json
+{"cmd":"setLed","index":1,"color":"red","r":255,"g":0,"b":0}
+```
+
+### 教學價值
+
+此設計符合國中小學生對清單與編號的直覺，避免學生一開始就被 0 起算混淆。等學生進入 JavaScript 或陣列課程時，再逐步說明程式內部常使用 0 起算。
+
+---
+
+## 十七、MVP-B09 Blockly LED Buffer 積木版規劃
+
+MVP-B09 預計加入 LED 暫存陣列，讓學生從實體 LED 顯示理解陣列概念。
+
+### 預計功能
+
+- 建立前端 LED 暫存陣列
+- 設定暫存陣列第 N 顆 LED 顏色
+- 清除暫存陣列
+- 顯示暫存陣列到 SmartRing
+- 暫存陣列左移 / 右移
+- 奇數燈 / 偶數燈
+
+### 教學定位
+
+學生先在 12 格暫存陣列中安排 LED 顏色，再一次顯示到 SmartRing。這能讓「陣列」從抽象資料結構轉化為可觀察、可操作的實體燈號。

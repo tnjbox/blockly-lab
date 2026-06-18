@@ -43,6 +43,7 @@
 ```powershell
 cd D:\YOSEP\blockly-lab
 npm run dev
+```
 
 ---
 
@@ -85,6 +86,7 @@ npm run dev
 ```powershell
 cd D:\YOSEP\blockly-lab
 npm run dev
+```
 
 ---
 
@@ -134,6 +136,7 @@ npm run dev
 ```powershell
 cd C:\YOSEP\blockly-lab
 npm run dev
+```
 
 ---
 
@@ -178,3 +181,174 @@ npm run dev
 ```powershell
 cd C:\YOSEP\blockly-lab
 npm run dev
+```
+
+
+---
+
+## MVP-B07｜SmartRing LED 指令協定校準版
+
+### 狀態
+
+已建立，已測試成功。
+
+### 本版目標
+
+建立 Blockly Lab 前端送往 ESP8266 SmartRingController 的 LED JSON 指令格式，並提供教師測試用按鈕，確認前端能正確送出 LED 控制指令。
+
+### 已完成項目
+
+- SmartRing 狀態面板新增「測試第 1 顆紅燈」
+- SmartRing 狀態面板新增「清除 LED」
+- SmartRing 狀態面板新增「最後送出指令」
+- 前端固定送出 `setLed` JSON 指令
+- 前端固定送出 `clearLeds` JSON 指令
+- 建立 LED 控制指令協定文件
+
+### 指令格式
+
+設定單顆 LED：
+
+```json
+{"cmd":"setLed","index":1,"color":"red","r":255,"g":0,"b":0}
+```
+
+清除所有 LED：
+
+```json
+{"cmd":"clearLeds"}
+```
+
+### 尚未加入
+
+- ESP8266 統一韌體接收完整指令
+- `setAllLeds`
+- `setBrightness`
+- `showBuffer`
+- LED buffer 暫存陣列積木
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev
+```
+
+---
+
+## MVP-B07-1｜最後送出指令顯示修正版
+
+### 狀態
+
+已建立，已測試成功。
+
+### 本版目標
+
+修正「最後送出指令」沒有正確顯示的問題，讓教師可以從畫面確認前端實際送出的 JSON 指令內容。
+
+### 已完成項目
+
+- `smartRingRuntime` 新增 `lastCommand`
+- 新增 `getLastCommand()`
+- 新增 `emitCommand(payload)`
+- `sendJson(payload)` 送出指令時同步更新最後指令
+- 畫面可即時顯示最後送出的 JSON 指令
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev
+```
+
+---
+
+## MVP-B08｜ESP8266 統一韌體協定版
+
+### 狀態
+
+已建立，韌體已燒錄測試成功，已推送到 GitHub。
+
+### 本版目標
+
+建立同一份 ESP8266 SmartRingController 統一韌體，讓 Scratch、Blockly、GitHub 測試頁可共用同一套 WebSerial JSON 協定，不需要因為切換教學介面而重新燒錄。
+
+### 已完成項目
+
+- 保留 ESP8266 持續輸出按鈕狀態 JSON
+- 新增接收 WebSerial JSON 指令
+- 支援 `setLed`
+- 支援 `clearLeds`
+- 支援 `setAllLeds`
+- 支援 `setBrightness`
+- 支援 `showBuffer`
+- 韌體採靜默接收 LED 指令，不額外回傳 ack，避免干擾前端按鈕狀態解析
+- 韌體檔案已加入 repo
+
+### 狀態資料格式
+
+```json
+{"btn":[false,false,false,false,false,false,false,false],"func":0,"mode":0}
+```
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev
+```
+
+---
+
+## MVP-B08-1｜LED 編號 1 起算修正版
+
+### 狀態
+
+已建立，已部署到 GitHub Pages，運作成功。
+
+### 本版目標
+
+將 SmartRing LED 編號統一調整為學生較容易理解的 1 起算。學生在 Blockly 與畫面上看到 LED 1～12，前端送出的 JSON 也使用 `index: 1`～`index: 12`，ESP8266 韌體內部再轉換為 WS2812 的 0～11。
+
+### 已完成項目
+
+- 前端 LED 編號改為 1～12
+- Blockly LED 積木預設值與限制改為 1～12
+- 測試按鈕改為送出第 1 顆 LED
+- 文件更新 LED 1～12 對應規則
+- 韌體負責將 `index` 1～12 轉換為內部 0～11
+
+### LED 編號規則
+
+| 學生看到的 LED 編號 | ESP8266 內部 WS2812 index |
+|---:|---:|
+| 1 | 0 |
+| 2 | 1 |
+| 3 | 2 |
+| 4 | 3 |
+| 5 | 4 |
+| 6 | 5 |
+| 7 | 6 |
+| 8 | 7 |
+| 9 | 8 |
+| 10 | 9 |
+| 11 | 10 |
+| 12 | 11 |
+
+### 指令格式
+
+```json
+{"cmd":"setLed","index":1,"color":"red","r":255,"g":0,"b":0}
+```
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev
+npm run deploy
+```
+
+### 下一版建議
+
+進入 `MVP-B09｜Blockly LED Buffer 積木版`，建立前端 LED 暫存陣列，銜接八年級陣列概念。
