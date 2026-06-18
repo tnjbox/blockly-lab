@@ -56,6 +56,13 @@ button:active {
   box-shadow: none;
 }
 
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .secondary-button {
   background: #475569;
 }
@@ -197,6 +204,7 @@ button:active {
 
 .workspace-panel,
 .task-panel,
+.smartring-panel,
 .result-panel {
   overflow: hidden;
   border-radius: 16px;
@@ -268,7 +276,7 @@ button:active {
 
 .side-panel {
   display: grid;
-  grid-template-rows: 270px minmax(300px, 1fr);
+  grid-template-rows: 240px 190px minmax(260px, 1fr);
   gap: 16px;
   min-height: 0;
 }
@@ -286,7 +294,8 @@ button:active {
   background: #f8fafc;
 }
 
-.info-box {
+.info-box,
+.smartring-info {
   height: calc(100% - 46px);
   padding: 14px;
   overflow: auto;
@@ -300,7 +309,8 @@ button:active {
   color: #1e3a8a;
 }
 
-.info-box p {
+.info-box p,
+.smartring-info p {
   margin: 8px 0;
   line-height: 1.55;
 }
@@ -319,6 +329,39 @@ button:active {
   color: #1e40af;
   background: #eff6ff;
   border-left: 4px solid #2563eb;
+  border-radius: 8px;
+}
+
+#serialStatusValue {
+  font-weight: 800;
+  color: #b45309;
+}
+
+#serialStatusValue.connected {
+  color: #047857;
+}
+
+#buttonStateValue {
+  font-weight: 800;
+  color: #1e3a8a;
+}
+
+#rawStateValue {
+  width: 100%;
+  max-height: 70px;
+  margin: 6px 0 0;
+  padding: 8px;
+  overflow: auto;
+  font-family:
+    "Cascadia Code",
+    Consolas,
+    "Courier New",
+    monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
 }
 
@@ -370,6 +413,10 @@ button:active {
 #smartRingStatus {
   font-weight: 800;
   color: #b45309;
+}
+
+#smartRingStatus.connected {
+  color: #047857;
 }
 
 .blocklyToolboxDiv {

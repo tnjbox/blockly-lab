@@ -43,3 +43,45 @@
 ```powershell
 cd D:\YOSEP\blockly-lab
 npm run dev
+
+---
+
+## MVP-B05｜SmartRing WebSerial 連線版
+
+### 狀態
+
+已建立。
+
+### 本版目標
+
+建立 SmartRingController 的 WebSerial 連線架構，讓網頁可以連接 ESP8266、讀取序列資料，並顯示 SmartRing 按鈕狀態。
+
+### 已完成項目
+
+- 新增 SmartRing WebSerial 模組
+  - `src/smartring/serial.js`
+  - `src/smartring/protocol.js`
+  - `src/smartring/runtime.js`
+- 新增「連線 SmartRing」按鈕
+- 新增「斷開 SmartRing」按鈕
+- 新增 SmartRing 狀態面板
+- 顯示連線狀態
+- 顯示按鈕狀態
+- 顯示 ESP8266 原始 JSON 資料
+- 更新下方 SmartRing 狀態列
+- 支援 WebSerial 瀏覽器檢查
+- 保留既有 Blockly 編輯、存檔、載入與課程模式功能
+
+### 尚未加入
+
+- SmartRing Blockly 積木
+- LED 控制積木
+- 按鈕判斷積木
+- SmartRing 陣列顯示積木
+- 自動評分與 Google Sheet 上傳
+
+### 測試方式
+
+```powershell
+cd D:\YOSEP\blockly-lab
+npm run dev

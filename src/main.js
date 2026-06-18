@@ -5,12 +5,16 @@ import { javascriptGenerator } from 'blockly/javascript';
 import * as ZhHant from 'blockly/msg/zh-hant';
 
 import { competitionToolbox } from './blockly/toolbox.js';
+import { smartRingRuntime } from './smartring/runtime.js';
 
 Blockly.setLocale(ZhHant);
 
 const blocklyDiv = document.getElementById('blocklyDiv');
 const codePreview = document.getElementById('codePreview');
 const outputArea = document.getElementById('outputArea');
+
+const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
+const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
 
 const btnLoadSample = document.getElementById('btnLoadSample');
 const btnRun = document.getElementById('btnRun');
@@ -34,6 +38,10 @@ const btnSubmitScore = document.getElementById('btnSubmitScore');
 const taskInfo = document.getElementById('taskInfo');
 const modeStatus = document.getElementById('modeStatus');
 const smartRingStatus = document.getElementById('smartRingStatus');
+
+const serialStatusValue = document.getElementById('serialStatusValue');
+const buttonStateValue = document.getElementById('buttonStateValue');
+const rawStateValue = document.getElementById('rawStateValue');
 
 const tabBlocks = document.getElementById('tabBlocks');
 const tabCode = document.getElementById('tabCode');
@@ -66,7 +74,7 @@ const demoCourses = {
       '需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。',
     scoring:
       '學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。',
-    hint: '目前 MVP-B04-1 尚未連接硬體，本課程只先展示課程載入介面與任務說明視窗。',
+    hint: '目前 MVP-B05 已開始支援 SmartRing WebSerial 連線，但尚未新增 SmartRing Blockly 積木。',
   },
   'SR-A01': {
     id: 'SR-A01',
@@ -494,7 +502,7 @@ function loadCourse() {
     currentCourse = null;
     taskInfo.innerHTML = `
       <h2>找不到課程：${code}</h2>
-      <p>目前 MVP-B04-1 只內建示範課程：</p>
+      <p>目前 MVP-B05 只內建示範課程：</p>
       <ul>
         <li>SR-B01：SmartRing 基礎任務</li>
         <li>SR-A01：SmartRing 陣列任務</li>
@@ -539,7 +547,8 @@ function testTask() {
   writeOutput('---');
   writeOutput(`任務測試模式：${modeText}`);
   writeOutput(`課程代碼：${currentCourse.id}`);
-  writeOutput('MVP-B04-1 測試結果：介面流程正常。');
+  writeOutput('MVP-B05 測試結果：介面流程正常。');
+  writeOutput('SmartRing WebSerial 連線功能已加入。');
   writeOutput('正式測資評分功能將於後續 MVP-J01 建置。');
 }
 
@@ -564,7 +573,7 @@ function submitScore() {
   }
 
   outputArea.textContent = [
-    'MVP-B04-1：成績上傳介面測試',
+    'MVP-B05：成績上傳介面測試',
     `班級：${profile.className}`,
     `座號：${profile.seatNumber}`,
     `姓名：${profile.name}`,
@@ -583,12 +592,86 @@ function closeTaskModal() {
   taskModal.setAttribute('aria-hidden', 'true');
 }
 
+function setSmartRingConnectedUi(isConnected, message) {
+  const text = message || (isConnected ? 'SmartRing 已連線' : 'SmartRing 尚未連線');
+
+  smartRingStatus.textContent = text;
+  serialStatusValue.textContent = isConnected ? '已連線' : '尚未連線';
+
+  smartRingStatus.classList.toggle('connected', isConnected);
+  serialStatusValue.classList.toggle('connected', isConnected);
+
+  btnConnectSmartRing.disabled = isConnected;
+  btnDisconnectSmartRing.disabled = !isConnected;
+}
+
+async function connectSmartRing() {
+  if (!smartRingRuntime.isSupported()) {
+    outputArea.textContent =
+      '此瀏覽器不支援 WebSerial。請使用 Chrome 或 Edge，並確認網頁在 localhost 或 HTTPS 環境執行。';
+    return;
+  }
+
+  try {
+    outputArea.textContent = '正在開啟 SmartRing 序列埠選擇視窗...';
+    await smartRingRuntime.connect();
+  } catch (error) {
+    outputArea.textContent = `SmartRing 連線失敗：\n${error.message}`;
+    setSmartRingConnectedUi(false, 'SmartRing：連線失敗');
+  }
+}
+
+async function disconnectSmartRing() {
+  try {
+    await smartRingRuntime.disconnect();
+    buttonStateValue.textContent = '尚無資料';
+    rawStateValue.textContent = '尚未收到 ESP8266 資料。';
+    outputArea.textContent = 'SmartRing 已斷開連線。';
+  } catch (error) {
+    outputArea.textContent = `SmartRing 斷線時發生錯誤：\n${error.message}`;
+  }
+}
+
+function bindSmartRingRuntimeEvents() {
+  smartRingRuntime.addEventListener('status', (event) => {
+    const { connected, message } = event.detail;
+    setSmartRingConnectedUi(connected, message);
+    writeOutput(message);
+  });
+
+  smartRingRuntime.addEventListener('data', (event) => {
+    const { ok, rawText, buttonText, message } = event.detail;
+
+    buttonStateValue.textContent = buttonText || '尚無資料';
+    rawStateValue.textContent = rawText || '尚未收到 ESP8266 資料。';
+
+    if (!ok && message) {
+      writeOutput(message);
+    }
+  });
+
+  smartRingRuntime.addEventListener('error', (event) => {
+    const { message } = event.detail;
+    setSmartRingConnectedUi(false, 'SmartRing：連線錯誤');
+    writeOutput(`SmartRing 錯誤：${message}`);
+  });
+
+  smartRingRuntime.addEventListener('log', (event) => {
+    const { message } = event.detail;
+    console.log('[SmartRing]', message);
+  });
+}
+
 function bindEvents() {
+  btnConnectSmartRing.addEventListener('click', connectSmartRing);
+  btnDisconnectSmartRing.addEventListener('click', disconnectSmartRing);
+
   btnLoadSample.addEventListener('click', loadSample);
   btnRun.addEventListener('click', runUserCode);
   btnClear.addEventListener('click', clearWorkspace);
   btnSaveBlocks.addEventListener('click', saveWorkspaceToFile);
   btnLoadBlocks.addEventListener('click', requestLoadWorkspaceFromFile);
+
   blockFileInput.addEventListener('change', (event) => {
     const file = event.target.files?.[0];
     loadWorkspaceFromFile(file);
@@ -607,6 +690,7 @@ function bindEvents() {
 
   btnOpenTaskModal.addEventListener('click', openTaskModal);
   btnCloseTaskModal.addEventListener('click', closeTaskModal);
+
   taskModal.addEventListener('click', (event) => {
     if (event.target === taskModal) {
       closeTaskModal();
@@ -626,9 +710,13 @@ function bindEvents() {
 
 function initStatus() {
   modeStatus.textContent = '目前模式：學習模式';
-  smartRingStatus.textContent = 'SmartRing：尚未連線';
+  setSmartRingConnectedUi(false, 'SmartRing：尚未連線');
+  serialStatusValue.textContent = '尚未連線';
+  buttonStateValue.textContent = '尚無資料';
+  rawStateValue.textContent = '尚未收到 ESP8266 資料。';
 }
 
 initBlockly();
 bindEvents();
+bindSmartRingRuntimeEvents();
 initStatus();
