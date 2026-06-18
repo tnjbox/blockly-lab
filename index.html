@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Younger Dream Workshop</title>
-    <script type="module" crossorigin src="/blockly-lab/assets/index-DLmPxG41.js"></script>
-    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-BUMt6uEJ.css">
+    <script type="module" crossorigin src="/blockly-lab/assets/index-DgORmEhQ.js"></script>
+    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-My3ZElVS.css">
   </head>
   <body>
     <div id="app">
@@ -16,6 +16,8 @@
         </div>
 
         <div class="header-actions">
+          <button id="btnConnectSmartRing" type="button">連線 SmartRing</button>
+          <button id="btnDisconnectSmartRing" type="button">斷開 SmartRing</button>
           <button id="btnLoadSample" type="button">載入範例</button>
           <button id="btnRun" type="button">執行程式</button>
           <button id="btnSaveBlocks" type="button">存檔積木</button>
@@ -94,6 +96,18 @@
             </div>
           </section>
 
+          <section class="smartring-panel">
+            <div class="panel-title">
+              <span>SmartRing 狀態</span>
+            </div>
+            <div class="smartring-info">
+              <p><strong>連線狀態：</strong><span id="serialStatusValue">尚未連線</span></p>
+              <p><strong>按鈕狀態：</strong><span id="buttonStateValue">尚無資料</span></p>
+              <p><strong>原始資料：</strong></p>
+              <pre id="rawStateValue">尚未收到 ESP8266 資料。</pre>
+            </div>
+          </section>
+
           <section class="result-panel">
             <div class="panel-title">
               <span>測試結果 / 執行輸出</span>
@@ -105,7 +119,7 @@
       </main>
 
       <footer class="app-footer">
-        <span id="systemVersion">MVP-B04-1｜版面可用性與作品存取版</span>
+        <span id="systemVersion">MVP-B05｜SmartRing WebSerial 連線版</span>
         <span id="modeStatus">目前模式：學習模式</span>
         <span id="smartRingStatus">SmartRing：尚未連線</span>
       </footer>
@@ -122,6 +136,6 @@
         </div>
       </div>
     </div>
-
+
   </body>
 </html>
