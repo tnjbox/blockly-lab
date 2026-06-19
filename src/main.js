@@ -124,11 +124,35 @@ function updateSubmitScoreVisibility() {
     isCompetitionMode() &&
       currentCourseGroup &&
       currentTask &&
-      hasCompetitionAssessmentResult
+      hasCompetitionAssessmentResult &&
+      !isUserProgramRunning
   );
 
   btnSubmitScore.hidden = false;
   btnSubmitScore.disabled = !shouldEnable;
+}
+
+function updateTaskActionButtons() {
+  if (btnTestTask) {
+    const canUseSystemAssessment = Boolean(
+      currentCourseGroup &&
+        currentTask &&
+        isProgrammingProblemTask() &&
+        !isUserProgramRunning
+    );
+
+    btnTestTask.disabled = !canUseSystemAssessment;
+
+    if (!currentTask) {
+      btnTestTask.title = '請先載入程式解題課程。';
+    } else if (!isProgrammingProblemTask()) {
+      btnTestTask.title = 'SmartRing 課程不進行系統評分，請使用「執行程式」。';
+    } else {
+      btnTestTask.title = '使用題目內建測資進行系統評分。';
+    }
+  }
+
+  updateSubmitScoreVisibility();
 }
 
 function resetCompetitionAssessmentResult() {
@@ -200,6 +224,8 @@ function setProgramRunningUi(isRunning) {
   if (btnStop) {
     btnStop.disabled = !isRunning;
   }
+
+  updateTaskActionButtons();
 }
 
 function stopUserCode() {
@@ -303,7 +329,8 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
       `
     );
 
-    await runner(safePrint, smartRingRuntime, promptReader, promptReader);
+    const promptArgument = shouldMockInput ? promptReader : originalPrompt.bind(window);
+    await runner(safePrint, smartRingRuntime, promptReader, promptArgument);
 
     return {
       ok: true,
@@ -933,9 +960,9 @@ function updateModeStatus({ announce = false } = {}) {
   if (!announce) return;
 
   if (isCompetitionMode()) {
-    writeOutput('已載入競賽模式題庫：請按「測試任務」，產生評分結果後才會啟用「上傳成績」。');
+    writeOutput('已載入競賽模式題庫：請按「系統評分」，產生評分結果後才會啟用「上傳成績」。');
   } else {
-    writeOutput('已載入學習模式題庫：目前只在本機顯示測試結果，「上傳成績」會維持灰色停用。');
+    writeOutput('已載入學習模式題庫：可以使用「系統評分」練習測資比對，「上傳成績」會維持灰色停用。');
   }
 }
 
@@ -1061,6 +1088,7 @@ function loadTask(task, courseGroup, { shouldLoadStarter = true } = {}) {
   currentTask = task;
   renderTaskSelector(courseGroup, task.id);
   renderTaskInfo(task, courseGroup);
+  updateTaskActionButtons();
 
   if (shouldLoadStarter) {
     const hasStarter = loadCourseStarter(task);
@@ -1090,6 +1118,7 @@ function loadCourse() {
     updateModeStatus();
     resetCompetitionAssessmentResult();
     resetTaskSelector();
+    updateTaskActionButtons();
     sidePanel?.classList.remove('programming-problem');
 
     if (taskPanelHeading) {
@@ -1127,6 +1156,7 @@ function loadCourse() {
     currentTask = null;
     resetCompetitionAssessmentResult();
     resetTaskSelector();
+    updateTaskActionButtons();
     sidePanel?.classList.remove('programming-problem');
 
     if (taskPanelHeading) {
@@ -1180,7 +1210,7 @@ function formatMultilineForOutput(value, emptyText = '無') {
 }
 
 function writeProgrammingAssessmentReport({ cases, passedCount, totalCount }) {
-  writeOutput('MVP-J03 本機測資結果：');
+  writeOutput('系統評分結果：');
   writeOutput(`通過 ${passedCount} / ${totalCount} 筆測資。`);
 
   cases.forEach((item, index) => {
@@ -1206,7 +1236,7 @@ async function runProgrammingTestCases() {
   if (testCases.length === 0) {
     await runUserCode();
     writeOutput('');
-    writeOutput('MVP-J03：此題尚未建立 testCases，因此只執行程式，不進行答案比對。');
+    writeOutput('此題尚未建立 testCases，無法進行系統評分。請改用「執行程式」自行試跑。');
     return {
       total: 0,
       passed: 0,
@@ -1216,7 +1246,7 @@ async function runProgrammingTestCases() {
   }
 
   clearOutput();
-  writeOutput(`正在執行 ${currentTask.id}｜${currentTask.title} 的本機測資...`);
+  writeOutput(`正在進行 ${currentTask.id}｜${currentTask.title} 的系統評分...`);
 
   const results = [];
 
@@ -1248,7 +1278,7 @@ async function runProgrammingTestCases() {
   writeOutput(`課程組代碼：${currentCourseGroup.id}`);
   writeOutput(`題目代碼：${currentTask.id}`);
   writeOutput(`題目名稱：${currentTask.problemTitle || currentTask.title}`);
-  writeOutput(`任務測試模式：${getModeText()}`);
+  writeOutput(`系統評分模式：${getModeText()}`);
   writeProgrammingAssessmentReport({
     cases: results,
     passedCount,
@@ -1291,22 +1321,9 @@ async function testTask() {
     return;
   }
 
-  await runUserCode();
-
-  writeOutput('');
-  writeOutput('---');
-  writeOutput(`任務測試模式：${getModeText()}`);
-  writeOutput(`課程組代碼：${currentCourseGroup.id}`);
-  writeOutput(`子任務代碼：${currentTask.id}`);
-  writeOutput('MVP-J03 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
-  writeOutput('若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
-
-  if (isCompetitionMode()) {
-    hasCompetitionAssessmentResult = true;
-  } else {
-    hasCompetitionAssessmentResult = false;
-  }
-
+  outputArea.textContent = 'SmartRing 課程不進行系統評分，請使用「執行程式」觀察硬體互動結果。';
+  hasCompetitionAssessmentResult = false;
+  lastAssessmentResult = null;
   updateSubmitScoreVisibility();
 }
 
@@ -1332,7 +1349,7 @@ function submitScore() {
   }
 
   if (!hasCompetitionAssessmentResult) {
-    outputArea.textContent = '請先按「測試任務」並產生評分結果後，再上傳成績。';
+    outputArea.textContent = '請先按「系統評分」並產生評分結果後，再上傳成績。';
     updateSubmitScoreVisibility();
     return;
   }
@@ -1530,6 +1547,7 @@ function initStatus() {
   renderLastCommand(null);
   setProgramRunningUi(false);
   resetTaskSelector();
+  updateTaskActionButtons();
   isSmartRingPanelCollapsed = false;
   updateSmartRingPanelCollapsed();
 }
