@@ -39,6 +39,7 @@ const btnLoadBlocks = document.getElementById('btnLoadBlocks');
 const blockFileInput = document.getElementById('blockFileInput');
 const btnCopyCode = document.getElementById('btnCopyCode');
 const btnClearOutput = document.getElementById('btnClearOutput');
+const btnToggleResultPanel = document.getElementById('btnToggleResultPanel');
 
 const studentClass = document.getElementById('studentClass');
 const studentNumber = document.getElementById('studentNumber');
@@ -60,6 +61,7 @@ const modeStatus = document.getElementById('modeStatus');
 const smartRingStatus = document.getElementById('smartRingStatus');
 const btnToggleSmartRingPanel = document.getElementById('btnToggleSmartRingPanel');
 const smartRingInfo = document.getElementById('smartRingInfo');
+const resultPanel = document.querySelector('.result-panel');
 
 const serialStatusValue = document.getElementById('serialStatusValue');
 const buttonStateValue = document.getElementById('buttonStateValue');
@@ -86,6 +88,7 @@ let hasCompetitionAssessmentResult = false;
 let lastAssessmentResult = null;
 let isSmartRingPanelCollapsed = false;
 let isTaskPanelCollapsed = false;
+let isResultPanelCollapsed = false;
 
 
 function normalizeCourseMode(mode) {
@@ -948,6 +951,28 @@ function toggleTaskPanel() {
   updateTaskPanelCollapsed();
 }
 
+function updateResultPanelCollapsed() {
+  resultPanel?.classList.toggle('collapsed', isResultPanelCollapsed);
+  sidePanel?.classList.toggle('result-panel-collapsed', isResultPanelCollapsed);
+
+  if (outputArea) {
+    outputArea.hidden = isResultPanelCollapsed;
+  }
+
+  if (btnToggleResultPanel) {
+    btnToggleResultPanel.setAttribute('aria-expanded', String(!isResultPanelCollapsed));
+    const toggleText = btnToggleResultPanel.querySelector('.panel-toggle-text');
+    if (toggleText) {
+      toggleText.textContent = isResultPanelCollapsed ? '展開 ▼' : '收合 ▲';
+    }
+  }
+}
+
+function toggleResultPanel() {
+  isResultPanelCollapsed = !isResultPanelCollapsed;
+  updateResultPanelCollapsed();
+}
+
 
 function updateModeStatus({ announce = false } = {}) {
   updateCourseModeDisplay();
@@ -1077,11 +1102,20 @@ function renderTaskInfo(task, courseGroup) {
   renderLearningTaskModal(task, courseGroup);
 }
 
+function getTaskSelectorLabel(task, courseGroup) {
+  const prefix = `${courseGroup.id}-`;
+  const shortTaskId = String(task.id || '').startsWith(prefix)
+    ? String(task.id).slice(prefix.length)
+    : String(task.id || '');
+
+  return shortTaskId ? `${shortTaskId}｜${task.title}` : task.title;
+}
+
 function renderTaskSelector(courseGroup, selectedTaskId) {
   taskSelector.innerHTML = courseGroup.tasks
     .map((task) => {
       const selected = task.id === selectedTaskId ? ' selected' : '';
-      return `<option value="${task.id}"${selected}>${task.id}｜${task.title}</option>`;
+      return `<option value="${task.id}"${selected}>${escapeHtml(getTaskSelectorLabel(task, courseGroup))}</option>`;
     })
     .join('');
 
@@ -1457,8 +1491,6 @@ function renderScoreUploadResult(payload, { status = 'preview', message = '' } =
       <table class="score-upload-table">
         <tbody>${rows}</tbody>
       </table>
-      <h3>送出資料</h3>
-      <pre class="score-payload-pre">${escapeHtml(JSON.stringify(payload, null, 2))}</pre>
     </article>
   `;
 }
@@ -1660,6 +1692,7 @@ function bindEvents() {
 
   btnToggleSmartRingPanel?.addEventListener('click', toggleSmartRingPanel);
   btnToggleTaskPanel?.addEventListener('click', toggleTaskPanel);
+  btnToggleResultPanel?.addEventListener('click', toggleResultPanel);
 
   tabBlocks.addEventListener('click', () => switchWorkspaceTab('blocks'));
   tabCode.addEventListener('click', () => switchWorkspaceTab('code'));
@@ -1699,6 +1732,8 @@ function initStatus() {
   updateTaskPanelCollapsed();
   isSmartRingPanelCollapsed = false;
   updateSmartRingPanelCollapsed();
+  isResultPanelCollapsed = false;
+  updateResultPanelCollapsed();
   renderPublicCourseCodes();
 }
 

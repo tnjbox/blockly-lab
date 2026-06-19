@@ -123,9 +123,12 @@
           </section>
 
           <section class="result-panel">
-            <div class="panel-title">
-              <span>測試結果 / 執行輸出</span>
-              <button id="btnClearOutput" type="button" class="small-button">清除結果</button>
+            <div class="panel-title panel-title-clickable result-panel-title">
+              <button id="btnToggleResultPanel" type="button" class="panel-toggle-button" aria-expanded="true" aria-controls="outputArea">
+                <span>測試結果 / 執行輸出</span>
+                <span class="panel-toggle-text">收合 ▲</span>
+              </button>
+              <button id="btnClearOutput" type="button" class="small-button result-clear-button">清除結果</button>
             </div>
             <div id="outputArea" class="output-area">尚未執行程式。</div>
           </section>
@@ -133,7 +136,7 @@
       </main>
 
       <footer class="app-footer">
-        <span id="systemVersion">MVP-J04｜系統評分結果顯示強化與成績上傳預備版</span>
+        <span id="systemVersion">MVP-J04-2｜成績上傳顯示與右側面板細節修正版</span>
         <span id="modeStatus">目前模式：學習模式</span>
         <span id="smartRingStatus">SmartRing：尚未連線</span>
       </footer>

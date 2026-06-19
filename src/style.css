@@ -802,6 +802,54 @@ button:disabled {
   grid-template-rows: 46px 46px minmax(240px, 1fr);
 }
 
+.result-panel-title {
+  position: relative;
+  gap: 8px;
+}
+
+.result-panel-title .panel-toggle-button {
+  padding-right: 96px;
+}
+
+.result-clear-button {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  z-index: 1;
+}
+
+.result-panel.collapsed .panel-title {
+  border-bottom: 0;
+}
+
+.side-panel.result-panel-collapsed {
+  grid-template-rows: minmax(260px, 34vh) 240px 46px;
+}
+
+.side-panel.programming-problem.result-panel-collapsed {
+  grid-template-rows: minmax(440px, 52vh) 220px 46px;
+}
+
+.side-panel.smart-ring-collapsed.result-panel-collapsed {
+  grid-template-rows: minmax(260px, 42vh) 46px 46px;
+}
+
+.side-panel.programming-problem.smart-ring-collapsed.result-panel-collapsed {
+  grid-template-rows: minmax(440px, 60vh) 46px 46px;
+}
+
+.side-panel.task-panel-collapsed.result-panel-collapsed {
+  grid-template-rows: 46px 240px 46px;
+}
+
+.side-panel.programming-problem.task-panel-collapsed.result-panel-collapsed {
+  grid-template-rows: 46px 220px 46px;
+}
+
+.side-panel.smart-ring-collapsed.task-panel-collapsed.result-panel-collapsed {
+  grid-template-rows: 46px 46px 46px;
+}
+
 .public-course-list {
   margin: 10px 0 14px;
   padding-left: 0;
