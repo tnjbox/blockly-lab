@@ -826,3 +826,202 @@ button:disabled {
   background: #dbeafe;
   border-radius: 6px;
 }
+
+/* MVP-J04：系統評分結果顯示強化 */
+.output-area {
+  width: 100%;
+  height: calc(100% - 46px);
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  font-family:
+    "Cascadia Code",
+    Consolas,
+    "Courier New",
+    monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: #064e3b;
+  background: #ecfdf5;
+}
+
+.assessment-report,
+.score-upload-preview {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans TC",
+    "Microsoft JhengHei",
+    sans-serif;
+  white-space: normal;
+  color: #0f172a;
+}
+
+.assessment-report h2,
+.score-upload-preview h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: #065f46;
+}
+
+.assessment-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.assessment-summary-card {
+  padding: 10px;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  background: #f0fdf4;
+}
+
+.assessment-summary-card.failed {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.assessment-summary-card.passed {
+  border-color: #86efac;
+  background: #dcfce7;
+}
+
+.assessment-summary-card span,
+.assessment-summary-card small {
+  display: block;
+  font-size: 12px;
+  color: #475569;
+}
+
+.assessment-summary-card strong {
+  display: block;
+  margin: 4px 0;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.assessment-table-wrap {
+  overflow: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.assessment-table,
+.score-upload-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.assessment-table th,
+.assessment-table td,
+.score-upload-table th,
+.score-upload-table td {
+  padding: 8px 10px;
+  vertical-align: top;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.assessment-table th,
+.score-upload-table th {
+  text-align: left;
+  color: #334155;
+  background: #f8fafc;
+}
+
+.assessment-table tr:last-child td,
+.score-upload-table tr:last-child th,
+.score-upload-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.assessment-row.passed {
+  background: #f0fdf4;
+}
+
+.assessment-row.failed {
+  background: #fff7ed;
+}
+
+.assessment-case-number {
+  width: 48px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.assessment-badge {
+  display: inline-block;
+  min-width: 58px;
+  padding: 4px 8px;
+  font-weight: 800;
+  text-align: center;
+  border-radius: 999px;
+}
+
+.assessment-badge.passed {
+  color: #065f46;
+  background: #bbf7d0;
+}
+
+.assessment-badge.failed {
+  color: #9a3412;
+  background: #fed7aa;
+}
+
+.assessment-pre,
+.score-payload-pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+  font-family:
+    "Cascadia Code",
+    Consolas,
+    "Courier New",
+    monospace;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.assessment-error {
+  margin-top: 6px;
+  padding: 6px 8px;
+  color: #991b1b;
+  background: #fee2e2;
+  border-radius: 8px;
+}
+
+.assessment-note {
+  margin: 8px 0 12px;
+  padding: 8px 10px;
+  color: #92400e;
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+}
+
+.score-upload-table {
+  margin-bottom: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.score-upload-table th {
+  width: 110px;
+}
+
+.score-payload-pre {
+  padding: 10px;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}

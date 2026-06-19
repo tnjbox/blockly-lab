@@ -1032,10 +1032,8 @@ function renderPublicCourseCodes() {
   }
 
   taskInfo.innerHTML = `
-    <h2>公開基礎課程代碼</h2>
-    <p>請輸入下列公開課程代碼，或輸入老師另外派發的課程代碼。</p>
+    <h2>公開課程代碼</h2>
     ${getPublicCourseGroupListHtml()}
-    <p class="summary-note">提醒：後續新增的非公開題庫不會顯示在這裡，必須由老師派發課程代碼後才能載入。</p>
   `;
 
   taskModalTitle.textContent = '公開課程代碼';
@@ -1218,25 +1216,98 @@ function formatMultilineForOutput(value, emptyText = '無') {
   return text.length > 0 ? text : emptyText;
 }
 
-function writeProgrammingAssessmentReport({ cases, passedCount, totalCount }) {
-  writeOutput('系統評分結果：');
-  writeOutput(`通過 ${passedCount} / ${totalCount} 筆測資。`);
+function getAssessmentScore(passedCount = 0, totalCount = 0) {
+  if (!totalCount) return 0;
+  return Math.round((passedCount / totalCount) * 100);
+}
 
-  cases.forEach((item, index) => {
-    const statusText = item.passed ? '通過' : '未通過';
-    writeOutput('');
-    writeOutput(`案例 ${index + 1}：${statusText}`);
-    writeOutput('使用者輸入：');
-    writeOutput(formatMultilineForOutput(item.input));
-    writeOutput('預期輸出：');
-    writeOutput(formatMultilineForOutput(item.expectedOutput));
-    writeOutput('實際輸出：');
-    writeOutput(formatMultilineForOutput(item.actualOutput, '沒有輸出'));
+function renderAssessmentCellPre(value, emptyText = '無') {
+  return `<pre class="assessment-pre">${escapeHtml(formatMultilineForOutput(value, emptyText))}</pre>`;
+}
 
-    if (item.errorMessage) {
-      writeOutput(`錯誤訊息：${item.errorMessage}`);
-    }
-  });
+function renderAssessmentResultHtml(assessment) {
+  const total = Number(assessment?.total || 0);
+  const passed = Number(assessment?.passed || 0);
+  const score = getAssessmentScore(passed, total);
+  const allPassed = total > 0 && passed === total;
+  const modeText = getModeText();
+  const statusText = allPassed ? '全部通過' : total > 0 ? '尚未全部通過' : '尚無測資';
+  const statusClass = allPassed ? 'passed' : 'failed';
+  const uploadNote = isCompetitionMode()
+    ? '競賽模式：系統評分完成後，可準備上傳本次成績。'
+    : '學習模式：本機測資僅供練習，不會啟用上傳成績。';
+
+  const rows = (assessment?.cases || [])
+    .map((item, index) => {
+      const caseStatusClass = item.passed ? 'passed' : 'failed';
+      const caseStatusText = item.passed ? '通過' : '未通過';
+      const errorCell = item.errorMessage
+        ? `<div class="assessment-error">${escapeHtml(item.errorMessage)}</div>`
+        : '';
+
+      return `
+        <tr class="assessment-row ${caseStatusClass}">
+          <td class="assessment-case-number">${index + 1}</td>
+          <td><span class="assessment-badge ${caseStatusClass}">${caseStatusText}</span></td>
+          <td>${renderAssessmentCellPre(item.input)}</td>
+          <td>${renderAssessmentCellPre(item.expectedOutput)}</td>
+          <td>${renderAssessmentCellPre(item.actualOutput, '沒有輸出')}${errorCell}</td>
+        </tr>
+      `;
+    })
+    .join('');
+
+  const tableHtml = total > 0
+    ? `
+      <div class="assessment-table-wrap">
+        <table class="assessment-table">
+          <thead>
+            <tr>
+              <th>案例</th>
+              <th>結果</th>
+              <th>使用者輸入</th>
+              <th>預期輸出</th>
+              <th>實際輸出</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `
+    : '<p class="assessment-note">此題尚未建立 testCases，無法進行系統評分。</p>';
+
+  return `
+    <article class="assessment-report">
+      <h2>系統評分結果</h2>
+      <div class="assessment-summary-grid">
+        <div class="assessment-summary-card">
+          <span>題目</span>
+          <strong>${escapeHtml(currentTask?.problemTitle || currentTask?.title || '尚未載入')}</strong>
+          <small>${escapeHtml(currentCourseGroup?.id || '')}｜${escapeHtml(currentTask?.id || '')}</small>
+        </div>
+        <div class="assessment-summary-card">
+          <span>模式</span>
+          <strong>${escapeHtml(modeText)}</strong>
+          <small>${isCompetitionMode() ? '可準備上傳成績' : '練習用，不上傳'}</small>
+        </div>
+        <div class="assessment-summary-card">
+          <span>通過筆數</span>
+          <strong>${passed} / ${total}</strong>
+          <small>通過率 ${score}%</small>
+        </div>
+        <div class="assessment-summary-card ${statusClass}">
+          <span>判定</span>
+          <strong>${statusText}</strong>
+          <small>${uploadNote}</small>
+        </div>
+      </div>
+      ${tableHtml}
+    </article>
+  `;
+}
+
+function showAssessmentResult(assessment) {
+  outputArea.innerHTML = renderAssessmentResultHtml(assessment);
 }
 
 async function runProgrammingTestCases() {
@@ -1249,6 +1320,7 @@ async function runProgrammingTestCases() {
     return {
       total: 0,
       passed: 0,
+      score: 0,
       allPassed: false,
       cases: [],
     };
@@ -1282,24 +1354,23 @@ async function runProgrammingTestCases() {
   const passedCount = results.filter((item) => item.passed).length;
   const totalCount = results.length;
 
-  clearOutput();
-  writeOutput('---');
-  writeOutput(`課程組代碼：${currentCourseGroup.id}`);
-  writeOutput(`題目代碼：${currentTask.id}`);
-  writeOutput(`題目名稱：${currentTask.problemTitle || currentTask.title}`);
-  writeOutput(`系統評分模式：${getModeText()}`);
-  writeProgrammingAssessmentReport({
-    cases: results,
-    passedCount,
-    totalCount,
-  });
-
-  return {
+  const assessment = {
+    courseId: currentCourseGroup.id,
+    courseTitle: currentCourseGroup.title,
+    taskId: currentTask.id,
+    taskTitle: currentTask.problemTitle || currentTask.title,
+    mode: normalizeCourseMode(currentCourseMode),
+    modeText: getModeText(),
     total: totalCount,
     passed: passedCount,
+    score: getAssessmentScore(passedCount, totalCount),
     allPassed: totalCount > 0 && passedCount === totalCount,
     cases: results,
+    assessedAt: new Date().toISOString(),
   };
+
+  showAssessmentResult(assessment);
+  return assessment;
 }
 
 async function testTask() {
@@ -1314,16 +1385,8 @@ async function testTask() {
 
     if (isCompetitionMode()) {
       hasCompetitionAssessmentResult = assessment.total > 0;
-      writeOutput('');
-      writeOutput(
-        assessment.allPassed
-          ? '競賽評分結果：所有本機測資通過，可以上傳成績。'
-          : '競賽評分結果：尚有測資未通過，仍可保留本次測試紀錄。'
-      );
     } else {
       hasCompetitionAssessmentResult = false;
-      writeOutput('');
-      writeOutput('學習模式：本機測資僅供練習，不會啟用「上傳成績」。');
     }
 
     updateSubmitScoreVisibility();
@@ -1336,6 +1399,57 @@ async function testTask() {
   updateSubmitScoreVisibility();
 }
 
+function buildScoreUploadPayload(profile) {
+  return {
+    version: 'MVP-J04',
+    submittedAt: new Date().toISOString(),
+    className: profile.className,
+    seatNumber: profile.seatNumber,
+    studentName: profile.name,
+    courseId: currentCourseGroup?.id || '',
+    courseTitle: currentCourseGroup?.title || '',
+    taskId: currentTask?.id || '',
+    taskTitle: currentTask?.problemTitle || currentTask?.title || '',
+    mode: normalizeCourseMode(currentCourseMode),
+    score: lastAssessmentResult?.score ?? 0,
+    passed: lastAssessmentResult?.passed ?? 0,
+    total: lastAssessmentResult?.total ?? 0,
+    allPassed: Boolean(lastAssessmentResult?.allPassed),
+  };
+}
+
+function renderScoreUploadPreview(payload) {
+  const rows = [
+    ['班級', payload.className],
+    ['座號', payload.seatNumber],
+    ['姓名', payload.studentName],
+    ['課程組', `${payload.courseId}｜${payload.courseTitle}`],
+    ['子任務', `${payload.taskId}｜${payload.taskTitle}`],
+    ['分數', `${payload.score}`],
+    ['本機測資', `${payload.passed} / ${payload.total}`],
+    ['通過狀態', payload.allPassed ? '全部通過' : '尚未全部通過'],
+    ['上傳狀態', '預備完成，尚未接 Google Sheet。'],
+  ]
+    .map(([label, value]) => `
+      <tr>
+        <th>${escapeHtml(label)}</th>
+        <td>${escapeHtml(value)}</td>
+      </tr>
+    `)
+    .join('');
+
+  return `
+    <article class="score-upload-preview">
+      <h2>成績上傳資料預覽</h2>
+      <p class="assessment-note">MVP-J04 先建立上傳資料格式，尚未實際寫入 Google Sheet。</p>
+      <table class="score-upload-table">
+        <tbody>${rows}</tbody>
+      </table>
+      <h3>預備送出資料</h3>
+      <pre class="score-payload-pre">${escapeHtml(JSON.stringify(payload, null, 2))}</pre>
+    </article>
+  `;
+}
 
 function submitScore() {
   const profile = getStudentProfile();
@@ -1357,23 +1471,14 @@ function submitScore() {
     return;
   }
 
-  if (!hasCompetitionAssessmentResult) {
+  if (!hasCompetitionAssessmentResult || !lastAssessmentResult) {
     outputArea.textContent = '請先按「系統評分」並產生評分結果後，再上傳成績。';
     updateSubmitScoreVisibility();
     return;
   }
 
-  outputArea.textContent = [
-    'MVP-J02：成績上傳介面測試',
-    `班級：${profile.className}`,
-    `座號：${profile.seatNumber}`,
-    `姓名：${profile.name}`,
-    `課程組代碼：${currentCourseGroup.id}`,
-    `子任務代碼：${currentTask.id}`,
-    `本機測資：${lastAssessmentResult ? `${lastAssessmentResult.passed}/${lastAssessmentResult.total}` : '尚無資料'}`,
-    `通過狀態：${lastAssessmentResult?.allPassed ? '全部通過' : '尚未全部通過或尚無測資'}`,
-    '狀態：尚未接 Google Sheet，後續 MVP-J04 會建置正式成績上傳功能。',
-  ].join('\n');
+  const payload = buildScoreUploadPayload(profile);
+  outputArea.innerHTML = renderScoreUploadPreview(payload);
 }
 
 function openTaskModal() {
