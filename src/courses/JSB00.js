@@ -7,11 +7,7 @@ const normalizeExamples = (overrides, merged) => {
 
   const sampleInput = overrides.sampleInput ?? merged.sampleInput ?? '';
   const sampleOutput = overrides.sampleOutput ?? merged.sampleOutput ?? '';
-  const sampleExplanation =
-    overrides.sampleExplanation ||
-    overrides.problemNote ||
-    overrides.description ||
-    '請比對使用者輸入、輸出與題目要求是否一致。';
+  const sampleExplanation = overrides.sampleExplanation || overrides.problemNote || '';
 
   if (!sampleInput && !sampleOutput) {
     return [];
@@ -45,14 +41,11 @@ const cloneTask = (baseTask, overrides) => {
 
   const problemTitle = overrides.problemTitle || overrides.title || merged.title;
   const statement = overrides.statement || overrides.problemStatement || merged.description;
-  const inputDescription =
-    overrides.inputDescription || '本題為 Blockly 基礎練習，請依題目要求設定資料或使用起始積木。';
-  const outputDescription = overrides.outputDescription || '請使用「輸出」積木印出題目要求的結果。';
+  const inputDescription = overrides.inputDescription || '請依照題目輸入說明，使用 Blockly 原生輸入積木讀取資料。';
+  const outputDescription = overrides.outputDescription || '請使用「輸出」積木輸出題目要求的結果。';
   const examples = normalizeExamples(overrides, merged);
   const testCases = normalizeTestCases(overrides.testCases);
-  const problemNote =
-    overrides.problemNote ||
-    '本題目前屬於學習模式題目；題庫轉換器日後若在 TXT 開頭偵測到「模式：競賽模式」，會輸出 mode: contest。';
+  const problemNote = overrides.problemNote || '';
 
   return {
     ...merged,
@@ -77,32 +70,44 @@ const printTextXml = (text) => `
   </block>
 </xml>`;
 
-const arithmeticXml = ({ a = 10, b = 20, op = 'ADD', varName = 'answer', message = '答案：' } = {}) => `
+const hintXml = (text) => printTextXml(text);
+
+const promptNumberSumXml = () => `
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="variables_set" x="40" y="40">
-    <field name="VAR" id="${varName}">${varName}</field>
+    <field name="VAR" id="a">a</field>
     <value name="VALUE">
-      <block type="math_arithmetic">
-        <field name="OP">${op}</field>
-        <value name="A"><shadow type="math_number"><field name="NUM">${a}</field></shadow></value>
-        <value name="B"><shadow type="math_number"><field name="NUM">${b}</field></shadow></value>
+      <block type="text_prompt_ext">
+        <mutation type="NUMBER"></mutation>
+        <field name="TYPE">NUMBER</field>
+        <value name="TEXT"><shadow type="text"><field name="TEXT">請輸入第一個數字</field></shadow></value>
       </block>
     </value>
     <next>
-      <block type="text_print">
-        <value name="TEXT">
-          <block type="text_join">
-            <mutation items="2"></mutation>
-            <value name="ADD0"><block type="text"><field name="TEXT">${message}</field></block></value>
-            <value name="ADD1"><block type="variables_get"><field name="VAR" id="${varName}">${varName}</field></block></value>
+      <block type="variables_set">
+        <field name="VAR" id="b">b</field>
+        <value name="VALUE">
+          <block type="text_prompt_ext">
+            <mutation type="NUMBER"></mutation>
+            <field name="TYPE">NUMBER</field>
+            <value name="TEXT"><shadow type="text"><field name="TEXT">請輸入第二個數字</field></shadow></value>
           </block>
         </value>
+        <next>
+          <block type="text_print">
+            <value name="TEXT">
+              <block type="math_arithmetic">
+                <field name="OP">ADD</field>
+                <value name="A"><block type="variables_get"><field name="VAR" id="a">a</field></block></value>
+                <value name="B"><block type="variables_get"><field name="VAR" id="b">b</field></block></value>
+              </block>
+            </value>
+          </block>
+        </next>
       </block>
     </next>
   </block>
 </xml>`;
-
-const hintXml = (text) => printTextXml(text);
 
 const base = smartRingCourses['JS-B01'];
 
@@ -112,11 +117,11 @@ export const JSB00 = {
   mode: 'learning',
   type: 'programming',
   description:
-    '從輸出、四則運算、變數與條件判斷開始，為後續程式解題與自動評分做準備。J02 先建立正式題目欄位與測資資料結構。',
+    '以 Google Blockly 原生積木練習輸出、輸入、清單、迴圈、變數與條件判斷，並使用 testCases 進行本機系統評分。',
   level: '國中初階',
   defaultTaskId: 'JSB00-01',
   sourceFormatNote:
-    '未來 TXT 題目組轉 JS 時，若題目檔開頭有「模式：競賽模式」，課程組會輸出 mode: contest；未指定則預設 mode: learning。',
+    '未來 TXT 題目組轉 JS 時，若題目檔開頭有「模式：競賽模式」，課程組會輸出 mode: contest；未指定則預設 mode: learning。題目內容只做欄位對應與安全顯示，不改寫題面文字。',
   tasks: [
     cloneTask(base, {
       id: 'JSB00-01',
@@ -126,11 +131,17 @@ export const JSB00 = {
       problemStatement: '請輸出一行文字：Hello world。',
       inputDescription: '無輸入。',
       outputDescription: '輸出一行文字，內容必須與範例輸出相同。',
-      sampleOutput: 'Hello world',
+      examples: [
+        {
+          input: '無輸入',
+          output: 'Hello world',
+          explanation: '程式直接輸出 Hello world。',
+        },
+      ],
       testCases: [{ input: '', output: 'Hello world' }],
       demoObserve: '觀察執行程式後，右側輸出區會出現文字。',
-      practiceTask: '將文字改成自己的問候語。',
-      functionTask: '暫不需要函式，先熟悉輸出。',
+      practiceTask: '將文字改成指定輸出內容。',
+      functionTask: '暫不需要函式。',
       challenge: '連續輸出三行不同文字。',
       starterXml: printTextXml('Hello world'),
       starterMessage: '已載入 JSB00-01：Hello world。',
@@ -143,10 +154,16 @@ export const JSB00 = {
       problemStatement: '請輸出一行文字：一起學習吧。',
       inputDescription: '無輸入。',
       outputDescription: '輸出指定文字，內容必須與範例輸出相同。',
-      sampleOutput: '一起學習吧',
+      examples: [
+        {
+          input: '無輸入',
+          output: '一起學習吧',
+          explanation: '程式直接輸出指定文字。',
+        },
+      ],
       testCases: [{ input: '', output: '一起學習吧' }],
       demoObserve: '觀察輸出文字與積木內容是否一致。',
-      practiceTask: '輸出「一起學習吧」，再嘗試加入自己的名字。',
+      practiceTask: '輸出「一起學習吧」。',
       functionTask: '暫不需要函式。',
       challenge: '用兩個輸出積木印出兩行文字。',
       starterXml: printTextXml('一起學習吧'),
@@ -154,104 +171,200 @@ export const JSB00 = {
     }),
     cloneTask(base, {
       id: 'JSB00-03',
-      title: '數字加總',
-      goal: '理解數字、變數與加法運算。',
-      description: '練習將兩個數字相加並輸出結果。',
-      problemStatement: '請計算 10 與 20 的總和，並輸出加總結果。',
-      inputDescription: '本題 J02 階段無鍵盤輸入，請在程式中使用固定數字 10 與 20。',
-      outputDescription: '輸出格式為「總和：答案」。',
-      sampleOutput: '總和：30',
-      testCases: [{ input: '', output: '總和：30' }],
-      demoObserve: '觀察 10 + 20 的結果。',
-      practiceTask: '修改兩個數字，觀察答案變化。',
+      title: '兩數加總',
+      goal: '使用 Blockly 原生輸入積木讀取數字並輸出加總結果。',
+      description: '練習要求輸入數字、變數與加法運算。',
+      problemStatement: '請設計一個程式，第一行輸入整數 A，第二行輸入整數 B，輸出 A+B 的結果。',
+      inputDescription: '第一行輸入一個整數 A。第二行輸入一個整數 B。',
+      outputDescription: '輸出 A+B 的結果。',
+      examples: [
+        {
+          input: '10\n20',
+          output: '30',
+          explanation: '第一行輸入 10，第二行輸入 20，10+20=30。',
+        },
+        {
+          input: '7\n8',
+          output: '15',
+          explanation: '第一行輸入 7，第二行輸入 8，7+8=15。',
+        },
+      ],
+      testCases: [
+        { input: '10\n20', output: '30' },
+        { input: '7\n8', output: '15' },
+        { input: '100\n250', output: '350' },
+      ],
+      demoObserve: '觀察兩次輸入如何依序提供給程式。',
+      practiceTask: '使用「要求輸入數字」讀取兩個數字並相加。',
       functionTask: '進階可整理成 add(a, b) 函式。',
       challenge: '改成三個數字相加。',
-      starterXml: arithmeticXml({ a: 10, b: 20, op: 'ADD', varName: 'sum', message: '總和：' }),
-      starterMessage: '已載入 JSB00-03：數字加總。',
+      starterXml: promptNumberSumXml(),
+      starterMessage: '已載入 JSB00-03：兩數加總。',
     }),
     cloneTask(base, {
       id: 'JSB00-04',
-      title: '數字平均',
-      goal: '理解加總後再除以數量的平均概念。',
-      description: '練習計算兩個數字的平均。',
-      problemStatement: '請計算 80 與 90 的平均值。',
-      inputDescription: '本題 J02 階段無鍵盤輸入，請在程式中使用固定數字 80 與 90。',
-      outputDescription: '輸出格式為「平均：答案」。',
-      sampleOutput: '平均：85',
-      testCases: [{ input: '', output: '平均：85' }],
-      demoObserve: '觀察加法與除法的組合。',
-      practiceTask: '修改起始積木，將總和再除以 2，輸出平均值。',
-      functionTask: '進階可整理成 average(a, b) 函式。',
-      challenge: '改成三個數字的平均。',
-      starterXml: arithmeticXml({ a: 80, b: 90, op: 'ADD', varName: 'total', message: '先算總和：' }),
-      starterMessage: '已載入 JSB00-04：數字平均。',
+      title: '跳繩比賽',
+      goal: '使用多行輸入、清單與迴圈完成資料加總。',
+      description: '練習第一行讀取 N，第二行讀取 N 筆以半形空白分隔的資料。',
+      problemStatement:
+        '體育課上，學生進行跳繩小組競賽，小組人數不定，每人跳的次數也不同。請設計一個程式，計算小組全部人員總共跳繩幾次。',
+      inputDescription:
+        '第一行輸入數字 N，代表小組有 N 人。第二行輸入一串共 N 筆整數，序列的數字以半形空白間隔。',
+      outputDescription: '程式輸出小組全部人員總共跳繩幾次。',
+      examples: [
+        {
+          input: '5\n20 19 36 25 30',
+          output: '130',
+          explanation:
+            '第一行輸入 5，表示小組有 5 人。第二行輸入 20 19 36 25 30，表示小組每人分別跳 20、19、36、25、30 下。程式輸出小組累計共跳 130 下。',
+        },
+        {
+          input: '3\n6 12 18',
+          output: '36',
+          explanation:
+            '第一行輸入 3，表示小組有 3 人。第二行輸入 6 12 18，表示小組每人分別跳 6、12、18 下。程式輸出小組累計共跳 36 下。',
+        },
+      ],
+      testCases: [
+        { input: '5\n20 19 36 25 30', output: '130' },
+        { input: '3\n6 12 18', output: '36' },
+        { input: '4\n10 20 30 40', output: '100' },
+        { input: '1\n99', output: '99' },
+      ],
+      demoObserve: '觀察第二行文字如何用半形空白切成清單。',
+      practiceTask: '使用原生輸入積木、從文本製作清單、迴圈與加總變數完成題目。',
+      functionTask: '進階可整理成 sumList(list) 函式。',
+      challenge: '改成輸出平均跳繩次數。',
+      starterXml: hintXml('提示：第一行用「要求輸入數字」讀取 N；第二行用「要求輸入文字」讀取整串資料；用半形空白切成清單後逐項加總。'),
+      starterMessage: '已載入 JSB00-04：跳繩比賽。',
     }),
     cloneTask(base, {
       id: 'JSB00-05',
-      title: '比較大小',
-      goal: '理解條件判斷與比較運算。',
-      description: '練習比較兩個數字大小。',
-      problemStatement: '已知 a = 17、b = 25，請比較兩個數字，輸出比較結果。',
-      inputDescription: '本題 J02 階段無鍵盤輸入，請在程式中建立 a 與 b 兩個變數。',
-      outputDescription: '若 a 比較大，輸出「a 比較大」；若 b 比較大，輸出「b 比較大」；若相等，輸出「一樣大」。',
-      sampleOutput: 'b 比較大',
-      testCases: [{ input: '', output: 'b 比較大' }],
-      demoObserve: '觀察 a > b、a < b、a = b 三種條件。',
-      practiceTask: '建立 a、b 變數並完成 if / else if / else 判斷。',
-      functionTask: '進階可整理成 compare(a, b) 函式。',
-      challenge: '修改 a 與 b 的值，測試三種結果。',
-      starterXml: hintXml('提示：建立 a=17、b=25，使用 if 判斷並輸出比較結果。'),
-      starterMessage: '已載入 JSB00-05：比較大小。',
+      title: '數字平均',
+      goal: '使用多行輸入計算一組數字的平均值。',
+      description: '練習加總後再除以數量。',
+      problemStatement: '請設計一個程式，第一行輸入 N，第二行輸入 N 個整數，輸出這 N 個整數的平均值。',
+      inputDescription: '第一行輸入數字 N。第二行輸入 N 個以半形空白分隔的整數。',
+      outputDescription: '輸出平均值；本題測資皆可整除，不會出現小數。',
+      examples: [
+        {
+          input: '4\n80 90 70 60',
+          output: '75',
+          explanation: '80+90+70+60=300，300/4=75。',
+        },
+        {
+          input: '3\n10 20 30',
+          output: '20',
+          explanation: '10+20+30=60，60/3=20。',
+        },
+      ],
+      testCases: [
+        { input: '4\n80 90 70 60', output: '75' },
+        { input: '3\n10 20 30', output: '20' },
+        { input: '5\n5 10 15 20 25', output: '15' },
+      ],
+      demoObserve: '觀察平均值等於總和除以資料筆數。',
+      practiceTask: '先完成加總，再除以 N。',
+      functionTask: '進階可整理成 averageList(list) 函式。',
+      challenge: '若平均值不是整數，改為輸出小數。',
+      starterXml: hintXml('提示：讀取 N 與一整行資料，將文字以半形空白切成清單，逐項轉成數字後加總，再除以 N。'),
+      starterMessage: '已載入 JSB00-05：數字平均。',
     }),
     cloneTask(base, {
       id: 'JSB00-06',
-      title: '台斤公斤大PK',
-      goal: '練習單位換算與數學運算。',
-      description: '將台斤換算成公斤，理解輸入、運算與輸出。',
-      problemStatement: '已知 1 台斤 = 0.6 公斤，請將 10 台斤換算成公斤。',
-      inputDescription: '本題 J02 階段無鍵盤輸入，請在程式中使用固定數字 10。',
-      outputDescription: '輸出格式為「公斤：答案」。',
-      sampleOutput: '公斤：6',
-      testCases: [{ input: '', output: '公斤：6' }],
-      demoObserve: '觀察台斤數乘以 0.6 後的公斤數。',
-      practiceTask: '修改台斤數並輸出公斤。',
-      functionTask: '整理成 jinToKg(jin) 函式。',
-      challenge: '加入公斤轉台斤。',
-      starterXml: arithmeticXml({ a: 10, b: 0.6, op: 'MULTIPLY', varName: 'kg', message: '公斤：' }),
-      starterMessage: '已載入 JSB00-06：台斤公斤大PK。',
+      title: '比較大小',
+      goal: '使用條件判斷比較兩個輸入數字。',
+      description: '練習 if / else if / else。',
+      problemStatement: '請設計一個程式，輸入兩個整數 A、B，判斷哪一個比較大。',
+      inputDescription: '第一行輸入整數 A。第二行輸入整數 B。',
+      outputDescription: '若 A 比較大，輸出 A。若 B 比較大，輸出 B。若兩數相同，輸出 SAME。',
+      examples: [
+        {
+          input: '17\n25',
+          output: 'B',
+          explanation: '17 小於 25，因此輸出 B。',
+        },
+        {
+          input: '30\n30',
+          output: 'SAME',
+          explanation: '兩個數字相同，因此輸出 SAME。',
+        },
+      ],
+      testCases: [
+        { input: '17\n25', output: 'B' },
+        { input: '30\n30', output: 'SAME' },
+        { input: '100\n3', output: 'A' },
+      ],
+      demoObserve: '觀察大於、小於、等於三種分支。',
+      practiceTask: '使用兩次「要求輸入數字」與 if 判斷。',
+      functionTask: '進階可整理成 compare(a, b) 函式。',
+      challenge: '改成輸出較大的數值。',
+      starterXml: hintXml('提示：讀取 A 與 B，使用 if 判斷 A>B、A<B、其他狀況。'),
+      starterMessage: '已載入 JSB00-06：比較大小。',
     }),
     cloneTask(base, {
       id: 'JSB00-07',
       title: '判斷奇偶數',
-      goal: '理解餘數與條件判斷。',
-      description: '使用除以 2 的餘數判斷奇數或偶數。',
-      problemStatement: '請判斷 number = 24 是奇數還是偶數。',
-      inputDescription: '本題 J02 階段無鍵盤輸入，請在程式中建立 number 變數並設定為 24。',
-      outputDescription: '若 number 可被 2 整除，輸出「偶數」；否則輸出「奇數」。',
-      sampleOutput: '偶數',
-      testCases: [{ input: '', output: '偶數' }],
-      demoObserve: '觀察 number 除以 2 的餘數。',
-      practiceTask: '修改 number，判斷不同數字。',
-      functionTask: '整理成 isEven(n) 函式。',
-      challenge: '測試奇數、偶數與 0。',
-      starterXml: hintXml('提示：建立 number=24，使用「餘數」與 if 判斷奇偶數。'),
+      goal: '使用餘數與條件判斷。',
+      description: '練習將輸入數字除以 2 後觀察餘數。',
+      problemStatement: '請設計一個程式，輸入一個整數 N，判斷它是奇數或偶數。',
+      inputDescription: '第一行輸入一個整數 N。',
+      outputDescription: '若 N 是偶數，輸出 EVEN。若 N 是奇數，輸出 ODD。',
+      examples: [
+        {
+          input: '24',
+          output: 'EVEN',
+          explanation: '24 可以被 2 整除，因此輸出 EVEN。',
+        },
+        {
+          input: '15',
+          output: 'ODD',
+          explanation: '15 除以 2 餘 1，因此輸出 ODD。',
+        },
+      ],
+      testCases: [
+        { input: '24', output: 'EVEN' },
+        { input: '15', output: 'ODD' },
+        { input: '0', output: 'EVEN' },
+      ],
+      demoObserve: '觀察 N 除以 2 的餘數。',
+      practiceTask: '使用「餘數」與 if 判斷奇偶數。',
+      functionTask: '進階可整理成 isEven(n) 函式。',
+      challenge: '測試 0、正數與較大的數字。',
+      starterXml: hintXml('提示：讀取 N，若 N 除以 2 的餘數是 0，輸出 EVEN，否則輸出 ODD。'),
       starterMessage: '已載入 JSB00-07：判斷奇偶數。',
     }),
     cloneTask(base, {
       id: 'JSB00-08',
       title: '成績等第',
       goal: '練習多條件判斷。',
-      description: '依照成績輸出 A、B、C 或需要加油。',
-      problemStatement: '請依照 score = 92 判斷成績等第。',
-      inputDescription: '本題 J02 階段無鍵盤輸入，請在程式中建立 score 變數並設定為 92。',
-      outputDescription: 'score >= 90 輸出 A；score >= 80 輸出 B；score >= 70 輸出 C；未達 70 輸出「需要加油」。',
-      sampleOutput: 'A',
-      testCases: [{ input: '', output: 'A' }],
-      demoObserve: '觀察不同分數對應不同等第。',
+      description: '依照輸入成績輸出等第。',
+      problemStatement: '請設計一個程式，輸入一個整數分數 S，依照分數輸出等第。',
+      inputDescription: '第一行輸入一個整數 S，代表分數。',
+      outputDescription: 'S >= 90 輸出 A；S >= 80 輸出 B；S >= 70 輸出 C；未達 70 輸出 D。',
+      examples: [
+        {
+          input: '92',
+          output: 'A',
+          explanation: '92 大於等於 90，因此輸出 A。',
+        },
+        {
+          input: '75',
+          output: 'C',
+          explanation: '75 大於等於 70 且未達 80，因此輸出 C。',
+        },
+      ],
+      testCases: [
+        { input: '92', output: 'A' },
+        { input: '85', output: 'B' },
+        { input: '75', output: 'C' },
+        { input: '60', output: 'D' },
+      ],
+      demoObserve: '觀察 if / else if 的判斷順序。',
       practiceTask: '建立 score 變數並使用 if / else if 判斷等第。',
-      functionTask: '整理成 getGrade(score) 函式。',
-      challenge: '修改 score，測試 A、B、C、需要加油四種結果。',
-      starterXml: hintXml('提示：建立 score=92，使用 if / else if 判斷成績等第。'),
+      functionTask: '進階可整理成 getGrade(score) 函式。',
+      challenge: '加入更多等第，例如 A+。',
+      starterXml: hintXml('提示：讀取 S，依序判斷 S>=90、S>=80、S>=70，最後輸出 D。'),
       starterMessage: '已載入 JSB00-08：成績等第。',
     }),
   ],
