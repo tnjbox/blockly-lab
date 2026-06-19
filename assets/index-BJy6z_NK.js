@@ -1236,12 +1236,268 @@ function ${t.FUNCTION_NAME_PLACEHOLDER_}(type, direction) {
 `},g.smartring_rgb_channel={init(){this.appendDummyInput().appendField(new Se(Im),`CHANNEL`),this.setInputsInline(!0),this.setOutput(!0,`String`),this.setColour(`#14b8a6`),this.setTooltip(`選擇 RGB 色彩通道。這個輸入也可以改接文字或變數。`),this.setHelpUrl(``)}},E.forBlock.smartring_rgb_channel=function(e){return[`"${e.getFieldValue(`CHANNEL`)}"`,T.ATOMIC]},g.smartring_clear_led_buffer={init(){this.appendDummyInput().appendField(`清除暫存陣列`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`清除前端 LED 暫存陣列，需搭配「顯示暫存陣列到 SmartRing」才會更新硬體。`),this.setHelpUrl(``)}},E.forBlock.smartring_clear_led_buffer=function(){return`SmartRing.clearLedBuffer();
 `},g.smartring_set_buffer_led_color={init(){this.appendValueInput(`INDEX`).setCheck(`Number`).appendField(`設定暫存陣列第`),this.appendDummyInput().appendField(`顆 LED 顏色為`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`只修改前端 LED 暫存陣列，不會立刻顯示到 SmartRing。LED 編號為 1 到 12。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_buffer_led_color=function(e,t){return`SmartRing.setBufferLedColor(${t.valueToCode(e,`INDEX`,T.NONE)||`1`}, "${e.getFieldValue(`COLOR`)}");\n`},g.smartring_set_buffer_led_channel={init(){this.appendValueInput(`INDEX`).setCheck(`Number`).appendField(`暫存陣列第`),this.appendValueInput(`CHANNEL`).appendField(`顆 LED 顏色`),this.appendValueInput(`VALUE`).setCheck(`Number`).appendField(`為`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`設定暫存陣列中指定 LED 的單一 RGB 色彩通道，數值建議 0～30。通道可用 R/G/B 選單，也可改接文字或變數。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_buffer_led_channel=function(e,t){return`SmartRing.setBufferLedChannel(${t.valueToCode(e,`INDEX`,T.NONE)||`1`}, ${t.valueToCode(e,`CHANNEL`,T.NONE)||`"r"`}, ${t.valueToCode(e,`VALUE`,T.NONE)||`0`});\n`},g.smartring_set_buffer_led_rgb={init(){this.appendValueInput(`INDEX`).setCheck(`Number`).appendField(`設定暫存陣列第`),this.appendValueInput(`R`).setCheck(`Number`).appendField(`顆 LED 紅色為`),this.appendValueInput(`G`).setCheck(`Number`).appendField(`綠色為`),this.appendValueInput(`B`).setCheck(`Number`).appendField(`藍色為`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`一次設定暫存陣列中指定 LED 的完整 RGB 數值，數值建議 0～30。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_buffer_led_rgb=function(e,t){return`SmartRing.setBufferLedRgb(${t.valueToCode(e,`INDEX`,T.NONE)||`1`}, ${t.valueToCode(e,`R`,T.NONE)||`0`}, ${t.valueToCode(e,`G`,T.NONE)||`0`}, ${t.valueToCode(e,`B`,T.NONE)||`0`});\n`},g.smartring_show_led_buffer={init(){this.appendDummyInput().appendField(`顯示暫存陣列到 SmartRing`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`將目前前端 LED 暫存陣列一次送到 SmartRing 顯示。`),this.setHelpUrl(``)}},E.forBlock.smartring_show_led_buffer=function(){return`await SmartRing.showLedBuffer();
 `},g.smartring_shift_led_buffer_left={init(){this.appendValueInput(`STEPS`).setCheck(`Number`).appendField(`暫存陣列向左移動`),this.appendDummyInput().appendField(`格`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`將暫存陣列向左移動。教學定義：LED 1 會移到 LED 2。超出 LED 12 的資料會消失。`),this.setHelpUrl(``)}},E.forBlock.smartring_shift_led_buffer_left=function(e,t){return`SmartRing.shiftLedBufferLeft(${t.valueToCode(e,`STEPS`,T.NONE)||`1`});\n`},g.smartring_shift_led_buffer_right={init(){this.appendValueInput(`STEPS`).setCheck(`Number`).appendField(`暫存陣列向右移動`),this.appendDummyInput().appendField(`格`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`將暫存陣列向右移動。教學定義：LED 12 會移到 LED 11。超出 LED 1 的資料會消失。`),this.setHelpUrl(``)}},E.forBlock.smartring_shift_led_buffer_right=function(e,t){return`SmartRing.shiftLedBufferRight(${t.valueToCode(e,`STEPS`,T.NONE)||`1`});\n`},g.smartring_set_odd_buffer_leds={init(){this.appendDummyInput().appendField(`設定暫存陣列奇數燈顏色為`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`設定暫存陣列 LED 1、3、5、7、9、11 的顏色。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_odd_buffer_leds=function(e){return`SmartRing.setOddBufferLeds("${e.getFieldValue(`COLOR`)}");\n`},g.smartring_set_even_buffer_leds={init(){this.appendDummyInput().appendField(`設定暫存陣列偶數燈顏色為`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#14b8a6`),this.setTooltip(`設定暫存陣列 LED 2、4、6、8、10、12 的顏色。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_even_buffer_leds=function(e){return`SmartRing.setEvenBufferLeds("${e.getFieldValue(`COLOR`)}");\n`},g.smartring_demo_pattern={init(){this.appendDummyInput().appendField(`示範圖樣`).appendField(new Se(Lm),`PATTERN`).appendField(`顏色`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接在 SmartRing 顯示指定圖樣，作為課程任務 DEMO。學生可觀察後嘗試用暫存陣列重做。`),this.setHelpUrl(``)}},E.forBlock.smartring_demo_pattern=function(e){return`await SmartRing.demoPattern("${e.getFieldValue(`PATTERN`)}", "${e.getFieldValue(`COLOR`)}");\n`},g.smartring_demo_status_display={init(){this.appendDummyInput().appendField(`示範狀態顯示`).appendField(new Se(Rm),`STATUS`),this.appendValueInput(`VALUE`).setCheck(`Number`).appendField(`值`),this.appendValueInput(`MAX`).setCheck(`Number`).appendField(`最大`),this.appendDummyInput().appendField(`顏色`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接示範分數、生命或進度條的比例顯示。學生可觀察後用暫存陣列與函式重做。`),this.setHelpUrl(``)}},E.forBlock.smartring_demo_status_display=function(e,t){return`await SmartRing.demoStatusDisplay("${e.getFieldValue(`STATUS`)}", ${t.valueToCode(e,`VALUE`,T.NONE)||`0`}, ${t.valueToCode(e,`MAX`,T.NONE)||`100`}, "${e.getFieldValue(`COLOR`)}");\n`},g.smartring_play_blink_animation={init(){this.appendDummyInput().appendField(`播放閃爍動畫 顏色`).appendField(new Se(Fm),`COLOR`),this.appendValueInput(`TIMES`).setCheck(`Number`).appendField(`次數`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放全亮與全滅交替的閃爍動畫。學生可觀察後用重複、等待與清除重做。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_blink_animation=function(e,t){return`await SmartRing.playBlinkAnimation("${e.getFieldValue(`COLOR`)}", ${t.valueToCode(e,`TIMES`,T.NONE)||`3`});\n`},g.smartring_play_fill_animation={init(){this.appendDummyInput().appendField(`播放填滿動畫 顏色`).appendField(new Se(Fm),`COLOR`),this.appendValueInput(`SPEED`).setCheck(`Number`).appendField(`速度`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放 LED 1 到 LED 12 逐顆亮起的填滿動畫。速度單位為毫秒。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_fill_animation=function(e,t){return`await SmartRing.playFillAnimation("${e.getFieldValue(`COLOR`)}", ${t.valueToCode(e,`SPEED`,T.NONE)||`100`});\n`},g.smartring_play_clear_animation={init(){this.appendValueInput(`SPEED`).setCheck(`Number`).appendField(`播放清除動畫 速度`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放 LED 1 到 LED 12 逐顆熄滅的清除動畫。速度單位為毫秒。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_clear_animation=function(e,t){return`await SmartRing.playClearAnimation(${t.valueToCode(e,`SPEED`,T.NONE)||`100`});\n`},g.smartring_play_running_light_animation={init(){this.appendDummyInput().appendField(`播放跑馬燈動畫 顏色`).appendField(new Se(Fm),`COLOR`),this.appendValueInput(`SPEED`).setCheck(`Number`).appendField(`速度`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放單顆 LED 從 1 到 12 依序移動的跑馬燈動畫。速度單位為毫秒。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_running_light_animation=function(e,t){return`await SmartRing.playRunningLightAnimation("${e.getFieldValue(`COLOR`)}", ${t.valueToCode(e,`SPEED`,T.NONE)||`100`});\n`},g.smartring_play_shift_left_animation={init(){this.appendDummyInput().appendField(`播放左移動畫 顏色`).appendField(new Se(Fm),`COLOR`),this.appendValueInput(`TIMES`).setCheck(`Number`).appendField(`次數`),this.appendValueInput(`SPEED`).setCheck(`Number`).appendField(`速度`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放單顆 LED 從 LED 1 移動到 LED 12 的左移動畫。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_shift_left_animation=function(e,t){return`await SmartRing.playShiftLeftAnimation("${e.getFieldValue(`COLOR`)}", ${t.valueToCode(e,`TIMES`,T.NONE)||`1`}, ${t.valueToCode(e,`SPEED`,T.NONE)||`100`});\n`},g.smartring_play_shift_right_animation={init(){this.appendDummyInput().appendField(`播放右移動畫 顏色`).appendField(new Se(Fm),`COLOR`),this.appendValueInput(`TIMES`).setCheck(`Number`).appendField(`次數`),this.appendValueInput(`SPEED`).setCheck(`Number`).appendField(`速度`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放單顆 LED 從 LED 12 移動到 LED 1 的右移動畫。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_shift_right_animation=function(e,t){return`await SmartRing.playShiftRightAnimation("${e.getFieldValue(`COLOR`)}", ${t.valueToCode(e,`TIMES`,T.NONE)||`1`}, ${t.valueToCode(e,`SPEED`,T.NONE)||`100`});\n`},g.smartring_play_bounce_animation={init(){this.appendDummyInput().appendField(`播放來回移動動畫 顏色`).appendField(new Se(Fm),`COLOR`),this.appendValueInput(`TIMES`).setCheck(`Number`).appendField(`次數`),this.appendValueInput(`SPEED`).setCheck(`Number`).appendField(`速度`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放單顆 LED 在 LED 1 和 LED 12 之間來回移動的動畫。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_bounce_animation=function(e,t){return`await SmartRing.playBounceAnimation("${e.getFieldValue(`COLOR`)}", ${t.valueToCode(e,`TIMES`,T.NONE)||`1`}, ${t.valueToCode(e,`SPEED`,T.NONE)||`100`});\n`},g.smartring_play_alternate_blink_animation={init(){this.appendDummyInput().appendField(`播放交錯閃爍動畫 顏色1`).appendField(new Se(Fm),`COLOR1`).appendField(`顏色2`).appendField(new Se(Fm),`COLOR2`),this.appendValueInput(`TIMES`).setCheck(`Number`).appendField(`次數`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放奇數燈與偶數燈顏色交錯閃爍的動畫。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_alternate_blink_animation=function(e,t){return`await SmartRing.playAlternateBlinkAnimation("${e.getFieldValue(`COLOR1`)}", "${e.getFieldValue(`COLOR2`)}", ${t.valueToCode(e,`TIMES`,T.NONE)||`3`});\n`},g.smartring_play_breathing_animation={init(){this.appendDummyInput().appendField(`播放呼吸燈動畫 顏色`).appendField(new Se(Fm),`COLOR`),this.appendValueInput(`TIMES`).setCheck(`Number`).appendField(`次數`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放全環 LED 由暗到亮、再由亮到暗的呼吸燈動畫。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_breathing_animation=function(e,t){return`await SmartRing.playBreathingAnimation("${e.getFieldValue(`COLOR`)}", ${t.valueToCode(e,`TIMES`,T.NONE)||`3`});\n`},g.smartring_play_rainbow_animation={init(){this.appendValueInput(`SPEED`).setCheck(`Number`).appendField(`播放彩虹動畫 速度`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`直接播放彩虹色在 SmartRing 上流動的展示動畫。`),this.setHelpUrl(``)}},E.forBlock.smartring_play_rainbow_animation=function(e,t){return`await SmartRing.playRainbowAnimation(${t.valueToCode(e,`SPEED`,T.NONE)||`100`});\n`},g.smartring_set_buffer_pattern={init(){this.appendDummyInput().appendField(`設定暫存陣列為圖樣`).appendField(new Se(Lm),`PATTERN`).appendField(`顏色`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`將暫存陣列設定成常用 LED 圖樣，需搭配「顯示暫存陣列到 SmartRing」。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_buffer_pattern=function(e){return`SmartRing.setBufferPattern("${e.getFieldValue(`PATTERN`)}", "${e.getFieldValue(`COLOR`)}");\n`},g.smartring_set_buffer_progress={init(){this.appendValueInput(`COUNT`).setCheck(`Number`).appendField(`設定暫存陣列進度條`),this.appendDummyInput().appendField(`顆 顏色`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`讓 LED 1 開始亮起指定顆數，超過 12 會自動限制為 12。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_buffer_progress=function(e,t){return`SmartRing.setProgressBufferLeds(${t.valueToCode(e,`COUNT`,T.NONE)||`0`}, "${e.getFieldValue(`COLOR`)}");\n`},g.smartring_set_buffer_score={init(){this.appendValueInput(`SCORE`).setCheck(`Number`).appendField(`設定暫存陣列分數`),this.appendValueInput(`MAX_SCORE`).setCheck(`Number`).appendField(`滿分`),this.appendDummyInput().appendField(`顏色`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`依照分數與滿分比例，換算成 12 顆 LED 的顯示數量。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_buffer_score=function(e,t){return`SmartRing.setScoreBufferLeds(${t.valueToCode(e,`SCORE`,T.NONE)||`0`}, ${t.valueToCode(e,`MAX_SCORE`,T.NONE)||`100`}, "${e.getFieldValue(`COLOR`)}");\n`},g.smartring_set_buffer_life={init(){this.appendValueInput(`LIFE`).setCheck(`Number`).appendField(`設定暫存陣列生命值`),this.appendValueInput(`MAX_LIFE`).setCheck(`Number`).appendField(`最大生命`),this.appendDummyInput().appendField(`顏色`).appendField(new Se(Fm),`COLOR`),this.setInputsInline(!0),this.setPreviousStatement(!0,null),this.setNextStatement(!0,null),this.setColour(`#0ea5e9`),this.setTooltip(`依照生命值與最大生命比例，換算成 12 顆 LED 的顯示數量。`),this.setHelpUrl(``)}},E.forBlock.smartring_set_buffer_life=function(e,t){return`SmartRing.setLifeBufferLeds(${t.valueToCode(e,`LIFE`,T.NONE)||`0`}, ${t.valueToCode(e,`MAX_LIFE`,T.NONE)||`5`}, "${e.getFieldValue(`COLOR`)}");\n`};var zm=class{constructor(e={}){this.baudRate=e.baudRate||115200,this.port=null,this.reader=null,this.keepReading=!1,this.onOpen=e.onOpen||null,this.onClose=e.onClose||null,this.onLine=e.onLine||null,this.onError=e.onError||null,this.onLog=e.onLog||null}isWebSerialSupported(){return`serial`in navigator}isConnected(){return!!(this.port&&this.keepReading)}async connect(){if(!this.isWebSerialSupported())throw Error(`此瀏覽器不支援 WebSerial，請使用 Chrome 或 Edge。`);if(this.isConnected()){this.log(`SmartRing 已經連線。`);return}this.port=await navigator.serial.requestPort(),await this.port.open({baudRate:this.baudRate}),this.keepReading=!0,this.onOpen?.(),this.log(`SmartRing Serial 已開啟，baudRate=${this.baudRate}`),this.readLoop()}async readLoop(){let e=new TextDecoder,t=``;try{for(;this.keepReading&&this.port?.readable;){this.reader=this.port.readable.getReader();try{for(;this.keepReading;){let{value:n,done:r}=await this.reader.read();if(r)break;if(!n)continue;t+=e.decode(n,{stream:!0});let i=t.split(/\r?\n/);t=i.pop()||``;for(let e of i){let t=e.trim();t&&this.onLine?.(t)}}}finally{this.reader.releaseLock(),this.reader=null}}}catch(e){this.keepReading&&this.onError?.(e)}finally{this.keepReading=!1,this.onClose?.()}}async writeLine(e){if(!this.port?.writable)throw Error(`SmartRing 尚未連線，無法送出資料。`);let t=this.port.writable.getWriter();try{let n=new TextEncoder,r=e.endsWith(`
-`)?e:`${e}\n`;await t.write(n.encode(r))}finally{t.releaseLock()}}async disconnect(){if(this.keepReading=!1,this.reader)try{await this.reader.cancel()}catch{}if(await new Promise(e=>{window.setTimeout(e,50)}),this.port)try{await this.port.close()}catch{}this.reader=null,this.port=null,this.onClose?.(),this.log(`SmartRing Serial 已斷線。`)}log(e){this.onLog?.(e)}},Bm=[`BTN1 / F`,`BTN2 / B`,`BTN3 / L`,`BTN4 / R`,`BTN0 / U`,`BTN5 / D`,`BTN6 / O`,`BTN7 / C`];function Vm(e){let t=String(e||``).trim();if(!t)return null;let n=null;try{n=JSON.parse(t)}catch{return{ok:!1,rawText:t,error:`收到的資料不是有效 JSON。`}}let r=Array.isArray(n.btn)?n.btn.map(e=>!!e):[],i=r.map((e,t)=>e?Bm[t]||`BTN${t}`:null).filter(Boolean);return{ok:!0,rawText:t,raw:n,buttons:r,pressedButtons:i,func:Number(n.func||0),mode:Number(n.mode||0),timestamp:Date.now()}}function Hm(e){return e?.ok?e.pressedButtons.length?e.pressedButtons.join(`、`):`目前沒有按鈕被按下`:`資料格式錯誤`}function Um(e){return`${JSON.stringify(e)}\n`}var Wm=12;function Gm(){let e=Error(`程式已中止。`);return e.name=`AbortError`,e}var Km={red:{r:255,g:0,b:0},green:{r:0,g:255,b:0},blue:{r:0,g:0,b:255},yellow:{r:255,g:180,b:0},purple:{r:180,g:0,b:255},cyan:{r:0,g:180,b:255},white:{r:255,g:255,b:255},off:{r:0,g:0,b:0}};function qm(e){return{r:Number(e?.r)||0,g:Number(e?.g)||0,b:Number(e?.b)||0}}function Jm(){return Array.from({length:Wm},()=>qm(Km.off))}function Ym(e,t,n){return Math.min(n,Math.max(t,e))}function Xm(e){let t=Ym(Math.round(Number(e)||0),0,30);return Math.round(t/30*255)}function Zm(e){let t=String(e||``).trim().toLowerCase();if(t===`r`||t===`red`||t===`紅`||t===`紅色`)return`r`;if(t===`g`||t===`green`||t===`綠`||t===`綠色`)return`g`;if(t===`b`||t===`blue`||t===`藍`||t===`藍色`)return`b`;throw Error(`顏色通道必須是 R、G 或 B。`)}function Qm(e){return Ym(Math.floor(Number(e)||0),0,Wm)}function $m(e,t){let n=Math.max(0,Number(e)||0),r=Math.max(0,Number(t)||0);return r<=0?0:Qm(Math.round(n/r*Wm))}function eh(e){switch(e){case`all`:return[1,2,3,4,5,6,7,8,9,10,11,12];case`leftHalf`:return[1,2,3,4,5,6];case`rightHalf`:return[7,8,9,10,11,12];case`centerFour`:return[5,6,7,8];case`outerFour`:return[1,2,11,12];case`alternate`:return[1,3,5,7,9,11];default:return[]}}var th=new class extends EventTarget{constructor(){super(),this.serial=null,this.connected=!1,this.lastState=null,this.lastCommand=null,this.ledBuffer=Jm(),this.programStopRequested=!1}isSupported(){return`serial`in navigator}isConnected(){return this.connected}getLastState(){return this.lastState}getLastCommand(){return this.lastCommand}resetProgramStop(){this.programStopRequested=!1}stopProgram(){this.programStopRequested||(this.programStopRequested=!0,this.emitLog(`收到中止程式請求。`),this.dispatchEvent(new CustomEvent(`programstop`)))}isProgramStopRequested(){return this.programStopRequested}throwIfProgramStopped(){if(this.programStopRequested)throw Gm()}getButtons(){return this.lastState?.buttons||[]}isButtonPressed(e){let t=Number(e);return!!this.getButtons()[t]}async connect(){if(this.connected){this.emitStatus(`SmartRing 已連線。`);return}this.serial=new zm({baudRate:115200,onOpen:()=>{this.connected=!0,this.emitStatus(`SmartRing 已連線。`)},onClose:()=>{this.connected=!1,this.emitStatus(`SmartRing 尚未連線。`)},onLine:e=>{this.handleIncomingLine(e)},onError:e=>{this.emitError(e)},onLog:e=>{this.emitLog(e)}}),await this.serial.connect()}async disconnect(){if(!this.serial){this.connected=!1,this.emitStatus(`SmartRing 尚未連線。`);return}await this.serial.disconnect(),this.connected=!1,this.serial=null,this.emitStatus(`SmartRing 尚未連線。`)}async sendJson(e){if(this.throwIfProgramStopped(),!this.serial||!this.connected)throw Error(`SmartRing 尚未連線，無法送出指令。`);this.lastCommand=e,this.emitCommand(e),await this.serial.writeLine(Um(e)),this.throwIfProgramStopped()}async sendCommand(e,t={}){this.throwIfProgramStopped();let n={cmd:e,...t};await this.sendJson(n)}getLedColorPayload(e){return qm(Km[e]||Km.off)}normalizeLedNumber(e){let t=Number(e);if(!Number.isInteger(t)||t<1||t>Wm)throw Error(`LED 編號必須是 1 到 ${Wm} 的整數。`);return t}normalizeSteps(e){return Math.floor(Math.abs(Number(e)||0))%Wm}async setLedColor(e,t){let n=this.normalizeLedNumber(e),r=this.getLedColorPayload(t);await this.sendCommand(`setLed`,{index:n,color:t,r:r.r,g:r.g,b:r.b}),this.emitLog(`設定第 ${n} 顆 LED 為 ${t}`)}async clearLeds(){await this.sendCommand(`clearLeds`),this.emitLog(`清除所有 LED`)}async setLedRgb(e,t,n,r){let i=this.normalizeLedNumber(e),a={r:Xm(t),g:Xm(n),b:Xm(r)};await this.sendCommand(`setLed`,{index:i,color:`custom`,r:a.r,g:a.g,b:a.b}),this.emitLog(`設定第 ${i} 顆 LED RGB 為 (${a.r}, ${a.g}, ${a.b})`)}async setAllLeds(e){let t=this.getLedColorPayload(e);await this.sendCommand(`setAllLeds`,{color:e,r:t.r,g:t.g,b:t.b}),this.emitLog(`設定全部 LED 為 ${e}`)}setBufferLedColor(e,t){let n=this.normalizeLedNumber(e),r=this.getLedColorPayload(t);this.ledBuffer[n-1]=r,this.emitLog(`設定暫存陣列第 ${n} 顆 LED 為 ${t}`)}setBufferLedChannel(e,t,n){let r=this.normalizeLedNumber(e),i=Zm(t),a=Xm(n),o=qm(this.ledBuffer[r-1]);o[i]=a,this.ledBuffer[r-1]=o,this.emitLog(`設定暫存陣列第 ${r} 顆 LED ${i.toUpperCase()} 為 ${a}`)}setBufferLedRgb(e,t,n,r){let i=this.normalizeLedNumber(e),a={r:Xm(t),g:Xm(n),b:Xm(r)};this.ledBuffer[i-1]=a,this.emitLog(`設定暫存陣列第 ${i} 顆 LED RGB 為 (${a.r}, ${a.g}, ${a.b})`)}clearLedBuffer(){this.ledBuffer=Jm(),this.emitLog(`清除 LED 暫存陣列`)}getLedBuffer(){return this.ledBuffer.map(e=>qm(e))}setOddBufferLeds(e){let t=this.getLedColorPayload(e);for(let e=0;e<Wm;e+=1)(e+1)%2==1&&(this.ledBuffer[e]=qm(t));this.emitLog(`設定暫存陣列奇數燈為 ${e}`)}setEvenBufferLeds(e){let t=this.getLedColorPayload(e);for(let e=0;e<Wm;e+=1)(e+1)%2==0&&(this.ledBuffer[e]=qm(t));this.emitLog(`設定暫存陣列偶數燈為 ${e}`)}shiftLedBufferLeft(e=1){let t=this.normalizeSteps(e);if(t===0){this.emitLog(`暫存陣列左移 0 格`);return}let n=Jm();for(let e=Wm-1;e>=0;--e){let r=e+t;r<Wm&&(n[r]=qm(this.ledBuffer[e]))}this.ledBuffer=n,this.emitLog(`暫存陣列向左移動 ${t} 格`)}shiftLedBufferRight(e=1){let t=this.normalizeSteps(e);if(t===0){this.emitLog(`暫存陣列右移 0 格`);return}let n=Jm();for(let e=0;e<Wm;e+=1){let r=e-t;r>=0&&(n[r]=qm(this.ledBuffer[e]))}this.ledBuffer=n,this.emitLog(`暫存陣列向右移動 ${t} 格`)}setBufferPattern(e,t){let n=this.getLedColorPayload(t),r=eh(e);this.clearLedBuffer();for(let e of r)this.ledBuffer[e-1]=qm(n);this.emitLog(`設定暫存陣列圖樣 ${e} 為 ${t}`)}setProgressBufferLeds(e,t){let n=Qm(e),r=this.getLedColorPayload(t);this.clearLedBuffer();for(let e=0;e<n;e+=1)this.ledBuffer[e]=qm(r);this.emitLog(`設定暫存陣列進度條 ${n} 顆為 ${t}`)}setScoreBufferLeds(e,t,n){let r=$m(e,t),i=this.getLedColorPayload(n);this.clearLedBuffer();for(let e=0;e<r;e+=1)this.ledBuffer[e]=qm(i);this.emitLog(`設定暫存陣列分數顯示：${e}/${t}，亮 ${r} 顆`)}setLifeBufferLeds(e,t,n){let r=$m(e,t),i=this.getLedColorPayload(n);this.clearLedBuffer();for(let e=0;e<r;e+=1)this.ledBuffer[e]=qm(i);this.emitLog(`設定暫存陣列生命值顯示：${e}/${t}，亮 ${r} 顆`)}setStatusBufferLeds(e,t,n,r){let i=$m(t,n),a=this.getLedColorPayload(r),o={score:`分數`,life:`生命`,progress:`進度條`}[e]||`狀態`;this.clearLedBuffer();for(let e=0;e<i;e+=1)this.ledBuffer[e]=qm(a);this.emitLog(`設定暫存陣列${o}顯示：${t}/${n}，亮 ${i} 顆`)}async demoPattern(e,t){this.setBufferPattern(e,t),await this.showLedBuffer(),this.emitLog(`示範圖樣 ${e}`)}async demoStatusDisplay(e,t,n,r){this.setStatusBufferLeds(e,t,n,r),await this.showLedBuffer(),this.emitLog(`示範狀態顯示 ${e}`)}async playBlinkAnimation(e,t=3){let n=Ym(Math.floor(Number(t)||0),1,20);for(let t=0;t<n;t+=1)await this.setAllLeds(e),await this.wait(250),await this.clearLeds(),await this.wait(250);this.emitLog(`播放閃爍動畫 ${e}，次數 ${n}`)}async playFillAnimation(e,t=100){let n=Ym(Math.floor(Number(t)||100),20,2e3),r=this.getLedColorPayload(e);await this.clearLeds();for(let t=1;t<=Wm;t+=1)await this.sendCommand(`setLed`,{index:t,color:e,r:r.r,g:r.g,b:r.b}),await this.wait(n);this.emitLog(`播放填滿動畫 ${e}，速度 ${n} ms`)}async playClearAnimation(e=100){let t=Ym(Math.floor(Number(e)||100),20,2e3);for(let e=1;e<=Wm;e+=1)await this.sendCommand(`setLed`,{index:e,color:`off`,r:0,g:0,b:0}),await this.wait(t);this.emitLog(`播放清除動畫，速度 ${t} ms`)}async playRunningLightAnimation(e,t=100){let n=Ym(Math.floor(Number(t)||100),20,2e3),r=this.getLedColorPayload(e);for(let t=1;t<=Wm;t+=1)await this.clearLeds(),await this.sendCommand(`setLed`,{index:t,color:e,r:r.r,g:r.g,b:r.b}),await this.wait(n);this.emitLog(`播放跑馬燈動畫 ${e}，速度 ${n} ms`)}async showAnimationBuffer(e){this.throwIfProgramStopped(),await this.sendCommand(`showBuffer`,{leds:e.map(e=>qm(e))})}async showSingleLedFrame(e,t){let n=this.normalizeLedNumber(e),r=this.getLedColorPayload(t),i=Jm();i[n-1]=qm(r),await this.showAnimationBuffer(i)}async playShiftLeftAnimation(e,t=1,n=100){let r=Ym(Math.floor(Number(t)||1),1,20),i=Ym(Math.floor(Number(n)||100),20,2e3);for(let t=0;t<r;t+=1)for(let t=1;t<=Wm;t+=1)await this.showSingleLedFrame(t,e),await this.wait(i);await this.clearLeds(),this.emitLog(`播放左移動畫 ${e}，次數 ${r}，速度 ${i} ms`)}async playShiftRightAnimation(e,t=1,n=100){let r=Ym(Math.floor(Number(t)||1),1,20),i=Ym(Math.floor(Number(n)||100),20,2e3);for(let t=0;t<r;t+=1)for(let t=Wm;t>=1;--t)await this.showSingleLedFrame(t,e),await this.wait(i);await this.clearLeds(),this.emitLog(`播放右移動畫 ${e}，次數 ${r}，速度 ${i} ms`)}async playBounceAnimation(e,t=1,n=100){let r=Ym(Math.floor(Number(t)||1),1,20),i=Ym(Math.floor(Number(n)||100),20,2e3),a=[...Array.from({length:Wm},(e,t)=>t+1),...Array.from({length:Wm-2},(e,t)=>Wm-1-t)];for(let t=0;t<r;t+=1)for(let t of a)await this.showSingleLedFrame(t,e),await this.wait(i);await this.clearLeds(),this.emitLog(`播放來回移動動畫 ${e}，次數 ${r}，速度 ${i} ms`)}async playAlternateBlinkAnimation(e,t,n=3){let r=Ym(Math.floor(Number(n)||3),1,20),i=this.getLedColorPayload(e),a=this.getLedColorPayload(t);for(let e=0;e<r;e+=1){let e=Jm(),t=Jm();for(let n=0;n<Wm;n+=1){let r=(n+1)%2==1;e[n]=qm(r?i:a),t[n]=qm(r?a:i)}await this.showAnimationBuffer(e),await this.wait(250),await this.showAnimationBuffer(t),await this.wait(250)}await this.clearLeds(),this.emitLog(`播放交錯閃爍動畫 ${e}/${t}，次數 ${r}`)}createScaledColorFrame(e,t){let n=this.getLedColorPayload(e),r=Ym(Math.round(Number(t)||0),0,30)/30,i={r:Math.round(n.r*r),g:Math.round(n.g*r),b:Math.round(n.b*r)};return Array.from({length:Wm},()=>qm(i))}wheelColor(e){let t=(Math.floor(Number(e)||0)%256+256)%256;if(t<85)return{r:255-t*3,g:t*3,b:0};if(t<170){let e=t-85;return{r:0,g:255-e*3,b:e*3}}let n=t-170;return{r:n*3,g:0,b:255-n*3}}async playBreathingAnimation(e,t=3){let n=Ym(Math.floor(Number(t)||3),1,20),r=[0,3,6,9,12,15,18,21,24,27,30,27,24,21,18,15,12,9,6,3,0];for(let t=0;t<n;t+=1)for(let t of r)await this.showAnimationBuffer(this.createScaledColorFrame(e,t)),await this.wait(45);await this.clearLeds(),this.emitLog(`播放呼吸燈動畫 ${e}，次數 ${n}`)}async playRainbowAnimation(e=100){let t=Ym(Math.floor(Number(e)||100),20,2e3);for(let e=0;e<24;e+=1){let n=Array.from({length:Wm},(t,n)=>{let r=Math.floor((n*256/Wm+e*12)%256);return this.wheelColor(r)});await this.showAnimationBuffer(n),await this.wait(t)}this.emitLog(`播放彩虹動畫，速度 ${t} ms`)}async showLedBuffer(){await this.sendCommand(`showBuffer`,{leds:this.getLedBuffer()}),this.emitLog(`顯示 LED 暫存陣列到 SmartRing`)}async wait(e){let t=Math.max(0,Number(e)||0);this.throwIfProgramStopped(),t!==0&&(await new Promise((e,n)=>{let r=null,i=()=>{r!==null&&window.clearTimeout(r),this.removeEventListener(`programstop`,a)},a=()=>{i(),n(Gm())};r=window.setTimeout(()=>{i(),e()},t),this.addEventListener(`programstop`,a,{once:!0})}),this.throwIfProgramStopped())}handleIncomingLine(e){let t=Vm(e);if(t){if(!t.ok){this.emitData({ok:!1,rawText:t.rawText,buttonText:`資料格式錯誤`,message:t.error});return}this.lastState=t,this.emitData({ok:!0,rawText:t.rawText,state:t,buttonText:Hm(t),message:`收到 SmartRing 狀態資料。`})}}emitStatus(e){this.dispatchEvent(new CustomEvent(`status`,{detail:{connected:this.connected,message:e}}))}emitData(e){this.dispatchEvent(new CustomEvent(`data`,{detail:e}))}emitCommand(e){this.dispatchEvent(new CustomEvent(`command`,{detail:{payload:e,text:JSON.stringify(e)}}))}emitError(e){this.dispatchEvent(new CustomEvent(`error`,{detail:{message:e?.message||String(e)}}))}emitLog(e){this.dispatchEvent(new CustomEvent(`log`,{detail:{message:e}}))}};Hn(Zn);var nh=document.getElementById(`blocklyDiv`),rh=document.getElementById(`codePreview`),$=document.getElementById(`outputArea`),ih=document.getElementById(`btnConnectSmartRing`),ah=document.getElementById(`btnDisconnectSmartRing`),oh=document.getElementById(`btnTestLedRed`),sh=document.getElementById(`btnTestLedClear`),ch=document.getElementById(`btnLoadSample`),lh=document.getElementById(`btnRun`),uh=document.getElementById(`btnStop`),dh=document.getElementById(`btnClear`),fh=document.getElementById(`btnSaveBlocks`),ph=document.getElementById(`btnLoadBlocks`),mh=document.getElementById(`blockFileInput`),hh=document.getElementById(`btnCopyCode`),gh=document.getElementById(`btnClearOutput`),_h=document.getElementById(`studentClass`),vh=document.getElementById(`studentNumber`),yh=document.getElementById(`studentName`),bh=document.getElementById(`courseCode`),xh=document.getElementById(`practiceMode`),Sh=document.getElementById(`btnLoadCourse`),Ch=document.getElementById(`btnTestTask`),wh=document.getElementById(`btnSubmitScore`),Th=document.getElementById(`taskInfo`),Eh=document.getElementById(`modeStatus`),Dh=document.getElementById(`smartRingStatus`),Oh=document.getElementById(`serialStatusValue`),kh=document.getElementById(`buttonStateValue`),Ah=document.getElementById(`rawStateValue`),jh=document.getElementById(`lastCommandValue`),Mh=document.getElementById(`tabBlocks`),Nh=document.getElementById(`tabCode`),Ph=document.getElementById(`blocksView`),Fh=document.getElementById(`codeView`),Ih=document.getElementById(`taskModal`),Lh=document.getElementById(`taskModalTitle`),Rh=document.getElementById(`taskModalBody`),zh=document.getElementById(`btnOpenTaskModal`),Bh=document.getElementById(`btnCloseTaskModal`),Vh=null,Hh=null,Uh=!1,Wh={"SR-B01":{id:`SR-B01`,title:`SmartRing 基礎任務：按鈕控制燈光`,type:`SmartRing 互動任務`,level:`國小高年級 / 國中初階`,goal:`透過按鈕與 LED 燈光互動，理解條件判斷與輸出控制。`,description:`本任務要求學生連接 SmartRingController，按下指定按鈕後，讓指定 LED 顯示指定顏色。`,operation:`學生需要先連線 SmartRingController，再使用「SmartRing 按鈕被按下？」與「設定 SmartRing LED 顏色」積木完成互動任務。`,blockLimit:`建議使用邏輯、迴圈、變數、SmartRing 按鈕與 SmartRing 燈光積木。`,smartRingRequirement:`需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。`,scoring:`學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。`,hint:`MVP-B13 已加入中止程式與陣列位移動畫 DEMO 積木，學生可先觀察動畫，再用暫存陣列與函式仿作。`},"SR-A01":{id:`SR-A01`,title:`SmartRing 陣列任務：程式中止、陣列位移動畫 DEMO 與暫存陣列仿作`,type:`SmartRing 陣列任務`,level:`國中八年級`,goal:`透過 SmartRing DEMO 觀察 LED 圖樣、狀態顯示與基礎動畫、陣列位移動畫與程式中止控制，再使用暫存陣列與 RGB 參數寫出對應程式。`,description:`本任務先用 DEMO 積木示範圖樣、狀態顯示與基礎動畫、陣列位移與交錯閃爍效果，再引導學生使用 LED 暫存陣列、RGB 通道、完整 RGB 參數與函式重做相同效果。`,operation:`學生先執行「示範圖樣」「示範狀態顯示」與基礎動畫 DEMO 觀察效果，再使用「清除暫存陣列」「設定暫存陣列第 N 顆 LED」「顯示暫存陣列到 SmartRing」完成仿作。`,blockLimit:`建議使用 SmartRing LED 暫存陣列、RGB 通道、完整 RGB 設定、變數、迴圈、數學、等待與函式積木。DEMO 積木僅作觀察與任務示範。`,smartRingRequirement:`需要使用 12 顆 LED 顯示陣列狀態。學生端 LED 編號維持 1～12。`,scoring:`未來評分會檢查學生是否能不用 DEMO 積木，而以暫存陣列、迴圈、等待與函式完成指定圖樣、狀態顯示或基礎動畫。`,hint:`B13 的教學脈絡是：先看 DEMO，再分析 LED 變化，最後用暫存陣列、迴圈、等待與函式自己寫出來。`},"JS-B01":{id:`JS-B01`,title:`Blockly 解題任務：重複累加`,type:`程式解題任務`,level:`國中初階`,goal:`使用變數與迴圈完成累加，並輸出結果。`,description:`未來本任務會載入測資與標準答案，學生按下測試後由系統自動評分。`,operation:`學生使用變數紀錄目前總和，透過迴圈重複累加，最後輸出結果。`,blockLimit:`建議使用變數、迴圈、數學與文字輸出積木。`,smartRingRequirement:`本題不需要連接 SmartRingController。`,scoring:`未來評分會比對程式輸出與標準答案，計算通過測資數。`,hint:`目前可先使用「載入範例」觀察變數、迴圈與輸出。`}};function Gh(){Vh=Sn(nh,{toolbox:Nm,trashcan:!0,scrollbars:!0,move:{scrollbars:!0,drag:!0,wheel:!0},zoom:{controls:!0,wheel:!0,startScale:.9,maxScale:1.4,minScale:.5,scaleSpeed:1.1},grid:{spacing:24,length:3,colour:`#d8dce3`,snap:!0},renderer:`geras`}),Vh.addChangeListener(Kh),Kh()}function Kh(){Vh&&(rh.textContent=E.workspaceToCode(Vh).trim()||`// 尚未建立程式`)}function qh(e){let t=$.textContent;if(t===`尚未執行程式。`||t===``){$.textContent=String(e);return}$.textContent+=`\n${String(e)}`}function Jh(){$.textContent=``}function Yh(e){Uh=e,lh&&(lh.disabled=e),uh&&(uh.disabled=!e)}function Xh(){if(!Uh){$.textContent=`目前沒有正在執行的程式。`;return}th.stopProgram(),qh(`已送出中止程式請求，程式會在下一個 SmartRing 等待或硬體指令處停止。`)}async function Zh(){if(!Vh)return;if(Uh){qh(`程式仍在執行中，請先按「中止程式」。`);return}Jh();let e=E.workspaceToCode(Vh);if(!e.trim()){$.textContent=`目前沒有可以執行的程式。`;return}let t=window.alert,n=console.log;th.resetProgramStop(),Yh(!0);try{window.alert=e=>{qh(e)},console.log=(...e)=>{qh(e.join(` `)),n(...e)},await Function(`print`,`SmartRing`,`
+`)?e:`${e}\n`;await t.write(n.encode(r))}finally{t.releaseLock()}}async disconnect(){if(this.keepReading=!1,this.reader)try{await this.reader.cancel()}catch{}if(await new Promise(e=>{window.setTimeout(e,50)}),this.port)try{await this.port.close()}catch{}this.reader=null,this.port=null,this.onClose?.(),this.log(`SmartRing Serial 已斷線。`)}log(e){this.onLog?.(e)}},Bm=[`BTN1 / F`,`BTN2 / B`,`BTN3 / L`,`BTN4 / R`,`BTN0 / U`,`BTN5 / D`,`BTN6 / O`,`BTN7 / C`];function Vm(e){let t=String(e||``).trim();if(!t)return null;let n=null;try{n=JSON.parse(t)}catch{return{ok:!1,rawText:t,error:`收到的資料不是有效 JSON。`}}let r=Array.isArray(n.btn)?n.btn.map(e=>!!e):[],i=r.map((e,t)=>e?Bm[t]||`BTN${t}`:null).filter(Boolean);return{ok:!0,rawText:t,raw:n,buttons:r,pressedButtons:i,func:Number(n.func||0),mode:Number(n.mode||0),timestamp:Date.now()}}function Hm(e){return e?.ok?e.pressedButtons.length?e.pressedButtons.join(`、`):`目前沒有按鈕被按下`:`資料格式錯誤`}function Um(e){return`${JSON.stringify(e)}\n`}var Wm=12;function Gm(){let e=Error(`程式已中止。`);return e.name=`AbortError`,e}var Km={red:{r:255,g:0,b:0},green:{r:0,g:255,b:0},blue:{r:0,g:0,b:255},yellow:{r:255,g:180,b:0},purple:{r:180,g:0,b:255},cyan:{r:0,g:180,b:255},white:{r:255,g:255,b:255},off:{r:0,g:0,b:0}};function qm(e){return{r:Number(e?.r)||0,g:Number(e?.g)||0,b:Number(e?.b)||0}}function Jm(){return Array.from({length:Wm},()=>qm(Km.off))}function Ym(e,t,n){return Math.min(n,Math.max(t,e))}function Xm(e){let t=Ym(Math.round(Number(e)||0),0,30);return Math.round(t/30*255)}function Zm(e){let t=String(e||``).trim().toLowerCase();if(t===`r`||t===`red`||t===`紅`||t===`紅色`)return`r`;if(t===`g`||t===`green`||t===`綠`||t===`綠色`)return`g`;if(t===`b`||t===`blue`||t===`藍`||t===`藍色`)return`b`;throw Error(`顏色通道必須是 R、G 或 B。`)}function Qm(e){return Ym(Math.floor(Number(e)||0),0,Wm)}function $m(e,t){let n=Math.max(0,Number(e)||0),r=Math.max(0,Number(t)||0);return r<=0?0:Qm(Math.round(n/r*Wm))}function eh(e){switch(e){case`all`:return[1,2,3,4,5,6,7,8,9,10,11,12];case`leftHalf`:return[1,2,3,4,5,6];case`rightHalf`:return[7,8,9,10,11,12];case`centerFour`:return[5,6,7,8];case`outerFour`:return[1,2,11,12];case`alternate`:return[1,3,5,7,9,11];default:return[]}}var th=new class extends EventTarget{constructor(){super(),this.serial=null,this.connected=!1,this.lastState=null,this.lastCommand=null,this.ledBuffer=Jm(),this.programStopRequested=!1}isSupported(){return`serial`in navigator}isConnected(){return this.connected}getLastState(){return this.lastState}getLastCommand(){return this.lastCommand}resetProgramStop(){this.programStopRequested=!1}stopProgram(){this.programStopRequested||(this.programStopRequested=!0,this.emitLog(`收到中止程式請求。`),this.dispatchEvent(new CustomEvent(`programstop`)))}isProgramStopRequested(){return this.programStopRequested}throwIfProgramStopped(){if(this.programStopRequested)throw Gm()}getButtons(){return this.lastState?.buttons||[]}isButtonPressed(e){let t=Number(e);return!!this.getButtons()[t]}async connect(){if(this.connected){this.emitStatus(`SmartRing 已連線。`);return}this.serial=new zm({baudRate:115200,onOpen:()=>{this.connected=!0,this.emitStatus(`SmartRing 已連線。`)},onClose:()=>{this.connected=!1,this.emitStatus(`SmartRing 尚未連線。`)},onLine:e=>{this.handleIncomingLine(e)},onError:e=>{this.emitError(e)},onLog:e=>{this.emitLog(e)}}),await this.serial.connect()}async disconnect(){if(!this.serial){this.connected=!1,this.emitStatus(`SmartRing 尚未連線。`);return}await this.serial.disconnect(),this.connected=!1,this.serial=null,this.emitStatus(`SmartRing 尚未連線。`)}async sendJson(e){if(this.throwIfProgramStopped(),!this.serial||!this.connected)throw Error(`SmartRing 尚未連線，無法送出指令。`);this.lastCommand=e,this.emitCommand(e),await this.serial.writeLine(Um(e)),this.throwIfProgramStopped()}async sendCommand(e,t={}){this.throwIfProgramStopped();let n={cmd:e,...t};await this.sendJson(n)}getLedColorPayload(e){return qm(Km[e]||Km.off)}normalizeLedNumber(e){let t=Number(e);if(!Number.isInteger(t)||t<1||t>Wm)throw Error(`LED 編號必須是 1 到 ${Wm} 的整數。`);return t}normalizeSteps(e){return Math.floor(Math.abs(Number(e)||0))%Wm}async setLedColor(e,t){let n=this.normalizeLedNumber(e),r=this.getLedColorPayload(t);await this.sendCommand(`setLed`,{index:n,color:t,r:r.r,g:r.g,b:r.b}),this.emitLog(`設定第 ${n} 顆 LED 為 ${t}`)}async clearLeds(){await this.sendCommand(`clearLeds`),this.emitLog(`清除所有 LED`)}async setLedRgb(e,t,n,r){let i=this.normalizeLedNumber(e),a={r:Xm(t),g:Xm(n),b:Xm(r)};await this.sendCommand(`setLed`,{index:i,color:`custom`,r:a.r,g:a.g,b:a.b}),this.emitLog(`設定第 ${i} 顆 LED RGB 為 (${a.r}, ${a.g}, ${a.b})`)}async setAllLeds(e){let t=this.getLedColorPayload(e);await this.sendCommand(`setAllLeds`,{color:e,r:t.r,g:t.g,b:t.b}),this.emitLog(`設定全部 LED 為 ${e}`)}setBufferLedColor(e,t){let n=this.normalizeLedNumber(e),r=this.getLedColorPayload(t);this.ledBuffer[n-1]=r,this.emitLog(`設定暫存陣列第 ${n} 顆 LED 為 ${t}`)}setBufferLedChannel(e,t,n){let r=this.normalizeLedNumber(e),i=Zm(t),a=Xm(n),o=qm(this.ledBuffer[r-1]);o[i]=a,this.ledBuffer[r-1]=o,this.emitLog(`設定暫存陣列第 ${r} 顆 LED ${i.toUpperCase()} 為 ${a}`)}setBufferLedRgb(e,t,n,r){let i=this.normalizeLedNumber(e),a={r:Xm(t),g:Xm(n),b:Xm(r)};this.ledBuffer[i-1]=a,this.emitLog(`設定暫存陣列第 ${i} 顆 LED RGB 為 (${a.r}, ${a.g}, ${a.b})`)}clearLedBuffer(){this.ledBuffer=Jm(),this.emitLog(`清除 LED 暫存陣列`)}getLedBuffer(){return this.ledBuffer.map(e=>qm(e))}setOddBufferLeds(e){let t=this.getLedColorPayload(e);for(let e=0;e<Wm;e+=1)(e+1)%2==1&&(this.ledBuffer[e]=qm(t));this.emitLog(`設定暫存陣列奇數燈為 ${e}`)}setEvenBufferLeds(e){let t=this.getLedColorPayload(e);for(let e=0;e<Wm;e+=1)(e+1)%2==0&&(this.ledBuffer[e]=qm(t));this.emitLog(`設定暫存陣列偶數燈為 ${e}`)}shiftLedBufferLeft(e=1){let t=this.normalizeSteps(e);if(t===0){this.emitLog(`暫存陣列左移 0 格`);return}let n=Jm();for(let e=Wm-1;e>=0;--e){let r=e+t;r<Wm&&(n[r]=qm(this.ledBuffer[e]))}this.ledBuffer=n,this.emitLog(`暫存陣列向左移動 ${t} 格`)}shiftLedBufferRight(e=1){let t=this.normalizeSteps(e);if(t===0){this.emitLog(`暫存陣列右移 0 格`);return}let n=Jm();for(let e=0;e<Wm;e+=1){let r=e-t;r>=0&&(n[r]=qm(this.ledBuffer[e]))}this.ledBuffer=n,this.emitLog(`暫存陣列向右移動 ${t} 格`)}setBufferPattern(e,t){let n=this.getLedColorPayload(t),r=eh(e);this.clearLedBuffer();for(let e of r)this.ledBuffer[e-1]=qm(n);this.emitLog(`設定暫存陣列圖樣 ${e} 為 ${t}`)}setProgressBufferLeds(e,t){let n=Qm(e),r=this.getLedColorPayload(t);this.clearLedBuffer();for(let e=0;e<n;e+=1)this.ledBuffer[e]=qm(r);this.emitLog(`設定暫存陣列進度條 ${n} 顆為 ${t}`)}setScoreBufferLeds(e,t,n){let r=$m(e,t),i=this.getLedColorPayload(n);this.clearLedBuffer();for(let e=0;e<r;e+=1)this.ledBuffer[e]=qm(i);this.emitLog(`設定暫存陣列分數顯示：${e}/${t}，亮 ${r} 顆`)}setLifeBufferLeds(e,t,n){let r=$m(e,t),i=this.getLedColorPayload(n);this.clearLedBuffer();for(let e=0;e<r;e+=1)this.ledBuffer[e]=qm(i);this.emitLog(`設定暫存陣列生命值顯示：${e}/${t}，亮 ${r} 顆`)}setStatusBufferLeds(e,t,n,r){let i=$m(t,n),a=this.getLedColorPayload(r),o={score:`分數`,life:`生命`,progress:`進度條`}[e]||`狀態`;this.clearLedBuffer();for(let e=0;e<i;e+=1)this.ledBuffer[e]=qm(a);this.emitLog(`設定暫存陣列${o}顯示：${t}/${n}，亮 ${i} 顆`)}async demoPattern(e,t){this.setBufferPattern(e,t),await this.showLedBuffer(),this.emitLog(`示範圖樣 ${e}`)}async demoStatusDisplay(e,t,n,r){this.setStatusBufferLeds(e,t,n,r),await this.showLedBuffer(),this.emitLog(`示範狀態顯示 ${e}`)}async playBlinkAnimation(e,t=3){let n=Ym(Math.floor(Number(t)||0),1,20);for(let t=0;t<n;t+=1)await this.setAllLeds(e),await this.wait(250),await this.clearLeds(),await this.wait(250);this.emitLog(`播放閃爍動畫 ${e}，次數 ${n}`)}async playFillAnimation(e,t=100){let n=Ym(Math.floor(Number(t)||100),20,2e3),r=this.getLedColorPayload(e);await this.clearLeds();for(let t=1;t<=Wm;t+=1)await this.sendCommand(`setLed`,{index:t,color:e,r:r.r,g:r.g,b:r.b}),await this.wait(n);this.emitLog(`播放填滿動畫 ${e}，速度 ${n} ms`)}async playClearAnimation(e=100){let t=Ym(Math.floor(Number(e)||100),20,2e3);for(let e=1;e<=Wm;e+=1)await this.sendCommand(`setLed`,{index:e,color:`off`,r:0,g:0,b:0}),await this.wait(t);this.emitLog(`播放清除動畫，速度 ${t} ms`)}async playRunningLightAnimation(e,t=100){let n=Ym(Math.floor(Number(t)||100),20,2e3),r=this.getLedColorPayload(e);for(let t=1;t<=Wm;t+=1)await this.clearLeds(),await this.sendCommand(`setLed`,{index:t,color:e,r:r.r,g:r.g,b:r.b}),await this.wait(n);this.emitLog(`播放跑馬燈動畫 ${e}，速度 ${n} ms`)}async showAnimationBuffer(e){this.throwIfProgramStopped(),await this.sendCommand(`showBuffer`,{leds:e.map(e=>qm(e))})}async showSingleLedFrame(e,t){let n=this.normalizeLedNumber(e),r=this.getLedColorPayload(t),i=Jm();i[n-1]=qm(r),await this.showAnimationBuffer(i)}async playShiftLeftAnimation(e,t=1,n=100){let r=Ym(Math.floor(Number(t)||1),1,20),i=Ym(Math.floor(Number(n)||100),20,2e3);for(let t=0;t<r;t+=1)for(let t=1;t<=Wm;t+=1)await this.showSingleLedFrame(t,e),await this.wait(i);await this.clearLeds(),this.emitLog(`播放左移動畫 ${e}，次數 ${r}，速度 ${i} ms`)}async playShiftRightAnimation(e,t=1,n=100){let r=Ym(Math.floor(Number(t)||1),1,20),i=Ym(Math.floor(Number(n)||100),20,2e3);for(let t=0;t<r;t+=1)for(let t=Wm;t>=1;--t)await this.showSingleLedFrame(t,e),await this.wait(i);await this.clearLeds(),this.emitLog(`播放右移動畫 ${e}，次數 ${r}，速度 ${i} ms`)}async playBounceAnimation(e,t=1,n=100){let r=Ym(Math.floor(Number(t)||1),1,20),i=Ym(Math.floor(Number(n)||100),20,2e3),a=[...Array.from({length:Wm},(e,t)=>t+1),...Array.from({length:Wm-2},(e,t)=>Wm-1-t)];for(let t=0;t<r;t+=1)for(let t of a)await this.showSingleLedFrame(t,e),await this.wait(i);await this.clearLeds(),this.emitLog(`播放來回移動動畫 ${e}，次數 ${r}，速度 ${i} ms`)}async playAlternateBlinkAnimation(e,t,n=3){let r=Ym(Math.floor(Number(n)||3),1,20),i=this.getLedColorPayload(e),a=this.getLedColorPayload(t);for(let e=0;e<r;e+=1){let e=Jm(),t=Jm();for(let n=0;n<Wm;n+=1){let r=(n+1)%2==1;e[n]=qm(r?i:a),t[n]=qm(r?a:i)}await this.showAnimationBuffer(e),await this.wait(250),await this.showAnimationBuffer(t),await this.wait(250)}await this.clearLeds(),this.emitLog(`播放交錯閃爍動畫 ${e}/${t}，次數 ${r}`)}createScaledColorFrame(e,t){let n=this.getLedColorPayload(e),r=Ym(Math.round(Number(t)||0),0,30)/30,i={r:Math.round(n.r*r),g:Math.round(n.g*r),b:Math.round(n.b*r)};return Array.from({length:Wm},()=>qm(i))}wheelColor(e){let t=(Math.floor(Number(e)||0)%256+256)%256;if(t<85)return{r:255-t*3,g:t*3,b:0};if(t<170){let e=t-85;return{r:0,g:255-e*3,b:e*3}}let n=t-170;return{r:n*3,g:0,b:255-n*3}}async playBreathingAnimation(e,t=3){let n=Ym(Math.floor(Number(t)||3),1,20),r=[0,3,6,9,12,15,18,21,24,27,30,27,24,21,18,15,12,9,6,3,0];for(let t=0;t<n;t+=1)for(let t of r)await this.showAnimationBuffer(this.createScaledColorFrame(e,t)),await this.wait(45);await this.clearLeds(),this.emitLog(`播放呼吸燈動畫 ${e}，次數 ${n}`)}async playRainbowAnimation(e=100){let t=Ym(Math.floor(Number(e)||100),20,2e3);for(let e=0;e<24;e+=1){let n=Array.from({length:Wm},(t,n)=>{let r=Math.floor((n*256/Wm+e*12)%256);return this.wheelColor(r)});await this.showAnimationBuffer(n),await this.wait(t)}this.emitLog(`播放彩虹動畫，速度 ${t} ms`)}async showLedBuffer(){await this.sendCommand(`showBuffer`,{leds:this.getLedBuffer()}),this.emitLog(`顯示 LED 暫存陣列到 SmartRing`)}async wait(e){let t=Math.max(0,Number(e)||0);this.throwIfProgramStopped(),t!==0&&(await new Promise((e,n)=>{let r=null,i=()=>{r!==null&&window.clearTimeout(r),this.removeEventListener(`programstop`,a)},a=()=>{i(),n(Gm())};r=window.setTimeout(()=>{i(),e()},t),this.addEventListener(`programstop`,a,{once:!0})}),this.throwIfProgramStopped())}handleIncomingLine(e){let t=Vm(e);if(t){if(!t.ok){this.emitData({ok:!1,rawText:t.rawText,buttonText:`資料格式錯誤`,message:t.error});return}this.lastState=t,this.emitData({ok:!0,rawText:t.rawText,state:t,buttonText:Hm(t),message:`收到 SmartRing 狀態資料。`})}}emitStatus(e){this.dispatchEvent(new CustomEvent(`status`,{detail:{connected:this.connected,message:e}}))}emitData(e){this.dispatchEvent(new CustomEvent(`data`,{detail:e}))}emitCommand(e){this.dispatchEvent(new CustomEvent(`command`,{detail:{payload:e,text:JSON.stringify(e)}}))}emitError(e){this.dispatchEvent(new CustomEvent(`error`,{detail:{message:e?.message||String(e)}}))}emitLog(e){this.dispatchEvent(new CustomEvent(`log`,{detail:{message:e}}))}},nh={"SR-B01":{id:`SR-B01`,title:`SmartRing 基礎任務：按鈕控制燈光`,type:`SmartRing 互動任務`,level:`國小高年級 / 國中初階`,goal:`透過按鈕與 LED 燈光互動，理解條件判斷、輸入偵測與輸出控制。`,description:`本任務要求學生連接 SmartRingController，按下指定按鈕後，讓指定 LED 顯示指定 RGB 顏色。`,demoObserve:`觀察 SmartRing 按鈕被按下時，單顆 LED 如何被即時控制。`,practiceTask:`修改按鈕、LED 編號與 RGB 數值，完成不同按鈕對應不同顏色的互動效果。`,functionTask:`進階挑戰：整理成自己的 lightLed(index, r, g, b) 函式。`,challenge:`加入 while true 持續偵測按鈕，並使用「中止程式」按鈕停止互動程式。`,operation:`學生需要先連線 SmartRingController，再使用「SmartRing 按鈕被按下？」與「設定 SmartRing 第 N 顆 LED RGB」積木完成互動任務。`,blockLimit:`建議使用邏輯、迴圈、SmartRing 按鈕、等待與 SmartRing 基礎 LED 控制積木。`,smartRingRequirement:`需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。`,scoring:`學習模式以觀察是否能正確觸發 LED 為主；競賽模式未來可檢查按鈕反應與 LED 狀態。`,hint:`若使用無限迴圈偵測按鈕，請保留等待 1 毫秒，並使用「中止程式」停止。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+
+  <block type="controls_if" x="40" y="40">
+    <value name="IF0">
+      <block type="smartring_button_pressed">
+        <field name="BUTTON">1</field>
+      </block>
+    </value>
+    <statement name="DO0">
+      <block type="smartring_set_led_rgb">
+        <value name="INDEX"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+        <value name="R"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+        <value name="G"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+        <value name="B"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+        <next>
+          <block type="smartring_wait_ms">
+            <value name="MS"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+            <next>
+              <block type="text_print">
+                <value name="TEXT">
+                  <block type="text"><field name="TEXT">BTN1/F 被按下，用 RGB 點亮第 1 顆 LED</field></block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+
+</xml>`,starterMessage:`已載入 SR-B01：按鈕控制 LED RGB 範例。`},"SR-A01":{id:`SR-A01`,title:`SmartRing 陣列任務：LED 圖樣陣列仿作`,type:`SmartRing 陣列任務`,level:`國中八年級`,goal:`透過 DEMO 觀察 LED 圖樣，再使用暫存陣列指定 LED 位置，理解陣列索引與資料顯示。`,description:`本任務先示範「中間四顆」圖樣，再要求學生不用 DEMO 積木，改用 LED 暫存陣列做出相同圖樣。`,demoObserve:`執行「示範圖樣：中間四顆藍色」，觀察哪些 LED 亮起。`,practiceTask:`使用「清除暫存陣列」「設定暫存陣列第 N 顆 LED 顏色」「顯示暫存陣列到 SmartRing」仿作相同圖樣。`,functionTask:`整理成 showCenterFour(color) 或 showPattern() 函式，讓圖樣可重複使用。`,challenge:`改做左半邊、右半邊、外側四顆或交錯燈圖樣。`,operation:`先執行 DEMO 觀察，再使用暫存陣列積木重做。DEMO 積木只作觀察，不作為任務解答。`,blockLimit:`仿作階段建議不要使用「示範圖樣」積木，改用 LED 暫存陣列群組。`,smartRingRequirement:`SmartRing 需顯示與 DEMO 相同的 LED 位置與顏色。`,scoring:`未來評分可檢查是否使用暫存陣列，並比對 LED 位置是否正確。`,hint:`把 LED 1～12 想成陣列第 1～12 格；圖樣就是一組被設定的格子。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+
+  <block type="smartring_demo_pattern" x="40" y="40">
+    <field name="PATTERN">centerFour</field>
+    <field name="COLOR">blue</field>
+    <next>
+      <block type="smartring_wait_ms">
+        <value name="MS"><shadow type="math_number"><field name="NUM">800</field></shadow></value>
+        <next>
+          <block type="smartring_clear_led_buffer">
+            <next>
+              <block type="smartring_set_buffer_led_color">
+                <value name="INDEX"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+                <field name="COLOR">blue</field>
+                <next>
+                  <block type="smartring_set_buffer_led_color">
+                    <value name="INDEX"><shadow type="math_number"><field name="NUM">6</field></shadow></value>
+                    <field name="COLOR">blue</field>
+                    <next>
+                      <block type="smartring_set_buffer_led_color">
+                        <value name="INDEX"><shadow type="math_number"><field name="NUM">7</field></shadow></value>
+                        <field name="COLOR">blue</field>
+                        <next>
+                          <block type="smartring_set_buffer_led_color">
+                            <value name="INDEX"><shadow type="math_number"><field name="NUM">8</field></shadow></value>
+                            <field name="COLOR">blue</field>
+                            <next>
+                              <block type="smartring_show_led_buffer" />
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+
+</xml>`,starterMessage:`已載入 SR-A01：LED 圖樣觀察與陣列仿作範例。`},"SR-A02":{id:`SR-A02`,title:`SmartRing 陣列任務：狀態顯示與進度條仿作`,type:`SmartRing 陣列任務`,level:`國中八年級`,goal:`將數值轉換為 LED 顯示數量，理解變數、比例、迴圈與陣列資料產生。`,description:`本任務先示範進度條或分數顯示，再要求學生用變數與迴圈自行設定暫存陣列。`,demoObserve:`執行「示範狀態顯示：進度條 值 6 最大 12」，觀察 LED 1～6 亮起。`,practiceTask:`使用變數 value 與 for 迴圈，讓 LED 1～value 亮起，完成進度條。`,functionTask:`整理成 showProgress(value, maxValue, color) 函式，讓不同數值都能轉成 LED 顯示。`,challenge:`將 value/maxValue 換算成 12 顆 LED 的數量，例如分數 50/100 顯示 6 顆。`,operation:`先看 DEMO，再以暫存陣列、變數與迴圈實作。`,blockLimit:`仿作階段建議使用變數、迴圈、數學與 LED 暫存陣列積木。`,smartRingRequirement:`LED 顆數需能依 value 變化。`,scoring:`未來可用不同 value 測試 LED 顆數是否正確。`,hint:`先做 value=6、max=12，再挑戰 value=50、max=100。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+
+  <block type="variables_set" x="40" y="40">
+    <field name="VAR" id="value">value</field>
+    <value name="VALUE"><block type="math_number"><field name="NUM">6</field></block></value>
+    <next>
+      <block type="smartring_demo_status_display">
+        <field name="STATUS">progress</field>
+        <value name="VALUE"><block type="variables_get"><field name="VAR" id="value">value</field></block></value>
+        <value name="MAX"><shadow type="math_number"><field name="NUM">12</field></shadow></value>
+        <field name="COLOR">green</field>
+        <next>
+          <block type="smartring_wait_ms">
+            <value name="MS"><shadow type="math_number"><field name="NUM">800</field></shadow></value>
+            <next>
+              <block type="smartring_clear_led_buffer">
+                <next>
+                  <block type="controls_for">
+                    <field name="VAR" id="i">i</field>
+                    <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                    <value name="TO"><block type="variables_get"><field name="VAR" id="value">value</field></block></value>
+                    <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                    <statement name="DO">
+                      <block type="smartring_set_buffer_led_color">
+                        <value name="INDEX"><block type="variables_get"><field name="VAR" id="i">i</field></block></value>
+                        <field name="COLOR">green</field>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="smartring_show_led_buffer" />
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+
+</xml>`,starterMessage:`已載入 SR-A02：狀態顯示與進度條仿作範例。`},"SR-F01":{id:`SR-F01`,title:`SmartRing 函式任務：填滿動畫函式仿作`,type:`SmartRing 函式仿作任務`,level:`國中八年級 / 九年級`,goal:`從填滿動畫 DEMO 回推迴圈與暫存陣列流程，並整理成可重複使用的函式。`,description:`本任務先播放填滿動畫，再要求學生用 for 迴圈逐顆設定 LED，最後整理成自訂函式。`,demoObserve:`觀察 LED 如何從第 1 顆逐步亮到第 12 顆。`,practiceTask:`用 for 迴圈、暫存陣列、顯示暫存陣列與等待，仿作填滿動畫。`,functionTask:`建立 fillAnimation(color, speed) 函式，讓顏色與速度可以變成參數。`,challenge:`改成從 LED 12 填回 LED 1，或只填滿前 N 顆。`,operation:`先執行 DEMO，再完成仿作，最後用函式積木整理程式。`,blockLimit:`仿作階段建議不要使用「播放填滿動畫」積木。`,smartRingRequirement:`LED 應逐顆增加亮起，直到 12 顆全部亮起。`,scoring:`未來可檢查是否有迴圈、等待與暫存陣列顯示。`,hint:`每次迴圈設定一顆 LED，顯示，再等待。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+
+  <block type="smartring_play_fill_animation" x="40" y="40">
+    <field name="COLOR">yellow</field>
+    <value name="SPEED"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+    <next>
+      <block type="smartring_wait_ms">
+        <value name="MS"><shadow type="math_number"><field name="NUM">800</field></shadow></value>
+        <next>
+          <block type="smartring_clear_led_buffer">
+            <next>
+              <block type="controls_for">
+                <field name="VAR" id="i">i</field>
+                <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                <value name="TO"><shadow type="math_number"><field name="NUM">12</field></shadow></value>
+                <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                <statement name="DO">
+                  <block type="smartring_set_buffer_led_color">
+                    <value name="INDEX"><block type="variables_get"><field name="VAR" id="i">i</field></block></value>
+                    <field name="COLOR">yellow</field>
+                    <next>
+                      <block type="smartring_show_led_buffer">
+                        <next>
+                          <block type="smartring_wait_ms">
+                            <value name="MS"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </statement>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+
+</xml>`,starterMessage:`已載入 SR-F01：填滿動畫 DEMO 與仿作起始積木。`},"SR-F02":{id:`SR-F02`,title:`SmartRing 函式任務：跑馬燈函式仿作`,type:`SmartRing 函式仿作任務`,level:`國中八年級 / 九年級`,goal:`使用位置變數控制單顆 LED 移動，理解索引變化、清除、顯示與函式封裝。`,description:`本任務先播放跑馬燈 DEMO，再要求學生用位置變數與暫存陣列做出單顆 LED 移動。`,demoObserve:`觀察只有一顆 LED 亮起，並從 LED 1 移動到 LED 12。`,practiceTask:`每次迴圈先清除暫存陣列，再設定目前位置 LED，顯示後等待。`,functionTask:`建立 runningLight(color, speed) 函式，讓動畫可以重複呼叫。`,challenge:`加入方向參數，讓跑馬燈可由左到右或由右到左。`,operation:`先看 DEMO，再用暫存陣列仿作，最後整理成函式。`,blockLimit:`仿作階段建議不要使用「播放跑馬燈動畫」積木。`,smartRingRequirement:`同一時間只應有一顆 LED 亮起。`,scoring:`未來可檢查是否有清除暫存陣列、位置變數與等待。`,hint:`跑馬燈的關鍵是 position 變數。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+
+  <block type="smartring_play_running_light_animation" x="40" y="40">
+    <field name="COLOR">cyan</field>
+    <value name="SPEED"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+    <next>
+      <block type="smartring_wait_ms">
+        <value name="MS"><shadow type="math_number"><field name="NUM">800</field></shadow></value>
+        <next>
+          <block type="controls_for">
+            <field name="VAR" id="pos">pos</field>
+            <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="TO"><shadow type="math_number"><field name="NUM">12</field></shadow></value>
+            <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <statement name="DO">
+              <block type="smartring_clear_led_buffer">
+                <next>
+                  <block type="smartring_set_buffer_led_color">
+                    <value name="INDEX"><block type="variables_get"><field name="VAR" id="pos">pos</field></block></value>
+                    <field name="COLOR">cyan</field>
+                    <next>
+                      <block type="smartring_show_led_buffer">
+                        <next>
+                          <block type="smartring_wait_ms">
+                            <value name="MS"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+
+</xml>`,starterMessage:`已載入 SR-F02：跑馬燈 DEMO 與仿作起始積木。`},"SR-F03":{id:`SR-F03`,title:`SmartRing 函式任務：按鈕觸發動畫`,type:`SmartRing 互動函式任務`,level:`國中八年級 / 九年級`,goal:`使用按鈕偵測觸發動畫函式，理解無限迴圈、條件判斷、事件反應與程式中止。`,description:`本任務使用 while true 持續偵測 SmartRing 按鈕，按下指定按鈕時播放或呼叫自製動畫。`,demoObserve:`觀察按下 BTN1/F 時，動畫才會被觸發。`,practiceTask:`將內建動畫替換成自己用暫存陣列寫出的動畫流程。`,functionTask:`把自製動畫整理成函式，按下不同按鈕呼叫不同函式。`,challenge:`讓 BTN1 播放填滿、BTN2 播放跑馬燈、BTN3 清除 LED。`,operation:`執行後會進入無限偵測，請使用「中止程式」停止。`,blockLimit:`需要使用 while true、如果、SmartRing 按鈕、等待與函式。`,smartRingRequirement:`按鈕按下時應觸發指定 LED 動畫。`,scoring:`未來可檢查不同按鈕是否觸發不同動畫。`,hint:`無限迴圈中一定要加入等待 1 毫秒，避免瀏覽器卡住。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+
+  <block type="text_print" x="40" y="20">
+    <value name="TEXT">
+      <block type="text"><field name="TEXT">提示：執行後可用「中止程式」停止無限偵測。</field></block>
+    </value>
+  </block>
+
+  <block type="controls_whileUntil" x="40" y="120">
+    <field name="MODE">WHILE</field>
+    <value name="BOOL">
+      <block type="logic_boolean"><field name="BOOL">TRUE</field></block>
+    </value>
+    <statement name="DO">
+      <block type="controls_if">
+        <value name="IF0">
+          <block type="smartring_button_pressed">
+            <field name="BUTTON">0</field>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="smartring_play_running_light_animation">
+            <field name="COLOR">red</field>
+            <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
+          </block>
+        </statement>
+        <next>
+          <block type="smartring_wait_ms">
+            <value name="MS"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+
+</xml>`,starterMessage:`已載入 SR-F03：按鈕觸發動畫起始積木。`},"JS-B01":{id:`JS-B01`,title:`Blockly 解題任務：重複累加`,type:`程式解題任務`,level:`國中初階`,goal:`使用變數與迴圈完成累加，並輸出結果。`,description:`未來本任務會載入測資與標準答案，學生按下測試後由系統自動評分。`,demoObserve:`觀察變數 score 如何在迴圈中逐次增加。`,practiceTask:`修改重複次數與累加值，觀察輸出結果。`,functionTask:`進階挑戰：整理成 sumTo(n) 或 addScore(times) 函式。`,challenge:`改成累加 1 到 100，或只累加偶數。`,operation:`學生使用變數紀錄目前總和，透過迴圈重複累加，最後輸出結果。`,blockLimit:`建議使用變數、迴圈、數學與文字輸出積木。`,smartRingRequirement:`本題不需要連接 SmartRingController。`,scoring:`未來評分會比對程式輸出與標準答案，計算通過測資數。`,hint:`目前可先使用「載入範例」觀察變數、迴圈與輸出。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+
+  <block type="variables_set" x="40" y="40">
+    <field name="VAR" id="score">score</field>
+    <value name="VALUE"><block type="math_number"><field name="NUM">0</field></block></value>
+    <next>
+      <block type="controls_repeat_ext">
+        <value name="TIMES"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+        <statement name="DO">
+          <block type="math_change">
+            <field name="VAR" id="score">score</field>
+            <value name="DELTA"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <next>
+              <block type="text_print">
+                <value name="TEXT">
+                  <block type="text_join">
+                    <mutation items="2"></mutation>
+                    <value name="ADD0"><block type="text"><field name="TEXT">目前分數：</field></block></value>
+                    <value name="ADD1"><block type="variables_get"><field name="VAR" id="score">score</field></block></value>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </next>
+  </block>
+
+</xml>`,starterMessage:`已載入 JS-B01：重複累加範例。`}};function rh(){return Object.keys(nh)}function ih(){return rh().map(e=>{let t=nh[e];return`<li>${t.id}：${t.title}</li>`}).join(``)}Hn(Zn);var ah=document.getElementById(`blocklyDiv`),oh=document.getElementById(`codePreview`),$=document.getElementById(`outputArea`),sh=document.getElementById(`btnConnectSmartRing`),ch=document.getElementById(`btnDisconnectSmartRing`),lh=document.getElementById(`btnTestLedRed`),uh=document.getElementById(`btnTestLedClear`),dh=document.getElementById(`btnLoadSample`),fh=document.getElementById(`btnRun`),ph=document.getElementById(`btnStop`),mh=document.getElementById(`btnClear`),hh=document.getElementById(`btnSaveBlocks`),gh=document.getElementById(`btnLoadBlocks`),_h=document.getElementById(`blockFileInput`),vh=document.getElementById(`btnCopyCode`),yh=document.getElementById(`btnClearOutput`),bh=document.getElementById(`studentClass`),xh=document.getElementById(`studentNumber`),Sh=document.getElementById(`studentName`),Ch=document.getElementById(`courseCode`),wh=document.getElementById(`practiceMode`),Th=document.getElementById(`btnLoadCourse`),Eh=document.getElementById(`btnTestTask`),Dh=document.getElementById(`btnSubmitScore`),Oh=document.getElementById(`taskInfo`),kh=document.getElementById(`modeStatus`),Ah=document.getElementById(`smartRingStatus`),jh=document.getElementById(`serialStatusValue`),Mh=document.getElementById(`buttonStateValue`),Nh=document.getElementById(`rawStateValue`),Ph=document.getElementById(`lastCommandValue`),Fh=document.getElementById(`tabBlocks`),Ih=document.getElementById(`tabCode`),Lh=document.getElementById(`blocksView`),Rh=document.getElementById(`codeView`),zh=document.getElementById(`taskModal`),Bh=document.getElementById(`taskModalTitle`),Vh=document.getElementById(`taskModalBody`),Hh=document.getElementById(`btnOpenTaskModal`),Uh=document.getElementById(`btnCloseTaskModal`),Wh=null,Gh=null,Kh=!1,qh=nh;function Jh(){Wh=Sn(ah,{toolbox:Nm,trashcan:!0,scrollbars:!0,move:{scrollbars:!0,drag:!0,wheel:!0},zoom:{controls:!0,wheel:!0,startScale:.9,maxScale:1.4,minScale:.5,scaleSpeed:1.1},grid:{spacing:24,length:3,colour:`#d8dce3`,snap:!0},renderer:`geras`}),Wh.addChangeListener(Yh),Yh()}function Yh(){Wh&&(oh.textContent=E.workspaceToCode(Wh).trim()||`// 尚未建立程式`)}function Xh(e){let t=$.textContent;if(t===`尚未執行程式。`||t===``){$.textContent=String(e);return}$.textContent+=`\n${String(e)}`}function Zh(){$.textContent=``}function Qh(e){Kh=e,fh&&(fh.disabled=e),ph&&(ph.disabled=!e)}function $h(){if(!Kh){$.textContent=`目前沒有正在執行的程式。`;return}th.stopProgram(),Xh(`已送出中止程式請求，程式會在下一個 SmartRing 等待或硬體指令處停止。`)}async function eg(){if(!Wh)return;if(Kh){Xh(`程式仍在執行中，請先按「中止程式」。`);return}Zh();let e=E.workspaceToCode(Wh);if(!e.trim()){$.textContent=`目前沒有可以執行的程式。`;return}let t=window.alert,n=console.log;th.resetProgramStop(),Qh(!0);try{window.alert=e=>{Xh(e)},console.log=(...e)=>{Xh(e.join(` `)),n(...e)},await Function(`print`,`SmartRing`,`
       "use strict";
       return (async () => {
         ${e}
       })();
-      `)(e=>{qh(e)},th),$.textContent.trim()||($.textContent=`程式執行完成，沒有輸出內容。`)}catch(e){e?.name===`AbortError`||e?.message===`程式已中止。`?$.textContent=`程式已中止。`:$.textContent=`程式執行發生錯誤：\n${e.message}`}finally{window.alert=t,console.log=n,Yh(!1),th.resetProgramStop()}}function Qh(){Vh&&window.confirm(`確定要清除目前所有積木嗎？`)&&(Vh.clear(),Kh(),$.textContent=`已清除工作區。`)}function $h(){let e=rh.textContent||``;navigator.clipboard.writeText(e).then(()=>{$.textContent=`已複製 JavaScript 程式碼。`}).catch(()=>{$.textContent=`複製失敗，請手動選取程式碼。`})}function eg(e){let t=e===`code`;Mh.classList.toggle(`active`,!t),Nh.classList.toggle(`active`,t),Ph.classList.toggle(`active`,!t),Fh.classList.toggle(`active`,t),Kh(),!t&&Vh&&setTimeout(()=>{Wn(Vh)},0)}function tg(){if(!Vh)return;Vh.clear();let e=qn.xml.textToDom(`
+      `)(e=>{Xh(e)},th),$.textContent.trim()||($.textContent=`程式執行完成，沒有輸出內容。`)}catch(e){e?.name===`AbortError`||e?.message===`程式已中止。`?$.textContent=`程式已中止。`:$.textContent=`程式執行發生錯誤：\n${e.message}`}finally{window.alert=t,console.log=n,Qh(!1),th.resetProgramStop()}}function tg(){Wh&&window.confirm(`確定要清除目前所有積木嗎？`)&&(Wh.clear(),Yh(),$.textContent=`已清除工作區。`)}function ng(){let e=oh.textContent||``;navigator.clipboard.writeText(e).then(()=>{$.textContent=`已複製 JavaScript 程式碼。`}).catch(()=>{$.textContent=`複製失敗，請手動選取程式碼。`})}function rg(e){let t=e===`code`;Fh.classList.toggle(`active`,!t),Ih.classList.toggle(`active`,t),Lh.classList.toggle(`active`,!t),Rh.classList.toggle(`active`,t),Yh(),!t&&Wh&&setTimeout(()=>{Wn(Wh)},0)}function ig(){if(!Wh)return;Wh.clear();let e=qn.xml.textToDom(`
     <xml xmlns="https://developers.google.com/blockly/xml">
       <block type="variables_set" x="40" y="40">
         <field name="VAR" id="score">score</field>
@@ -1290,201 +1546,19 @@ function ${t.FUNCTION_NAME_PLACEHOLDER_}(type, direction) {
         </next>
       </block>
     </xml>
-  `);Qt.domToWorkspace(e,Vh),Kh(),eg(`blocks`),$.textContent=`已載入範例：重複累加分數。`}function ng(){if(!Vh)return;Vh.clear();let e=qn.xml.textToDom(`
-    <xml xmlns="https://developers.google.com/blockly/xml">
-      <block type="controls_if" x="40" y="40">
-        <value name="IF0">
-          <block type="smartring_button_pressed">
-            <field name="BUTTON">1</field>
-          </block>
-        </value>
-        <statement name="DO0">
-          <block type="smartring_set_led_rgb">
-            <value name="INDEX">
-              <shadow type="math_number">
-                <field name="NUM">1</field>
-              </shadow>
-            </value>
-            <value name="R">
-              <shadow type="math_number">
-                <field name="NUM">30</field>
-              </shadow>
-            </value>
-            <value name="G">
-              <shadow type="math_number">
-                <field name="NUM">0</field>
-              </shadow>
-            </value>
-            <value name="B">
-              <shadow type="math_number">
-                <field name="NUM">0</field>
-              </shadow>
-            </value>
-            <next>
-              <block type="smartring_wait_ms">
-                <value name="MS">
-                  <shadow type="math_number">
-                    <field name="NUM">100</field>
-                  </shadow>
-                </value>
-                <next>
-                  <block type="text_print">
-                    <value name="TEXT">
-                      <block type="text">
-                        <field name="TEXT">BTN1/F 被按下，用 RGB 點亮第 1 顆 LED</field>
-                      </block>
-                    </value>
-                  </block>
-                </next>
-              </block>
-            </next>
-          </block>
-        </statement>
-      </block>
-    </xml>
-  `);Qt.domToWorkspace(e,Vh),Kh(),eg(`blocks`),$.textContent=`已載入 SmartRing 範例：按鈕控制 LED。`}function rg(){if(!Vh)return;Vh.clear();let e=qn.xml.textToDom(`
-    <xml xmlns="https://developers.google.com/blockly/xml">
-      <block type="smartring_demo_pattern" x="40" y="40">
-        <field name="PATTERN">centerFour</field>
-        <field name="COLOR">blue</field>
-        <next>
-          <block type="smartring_wait_ms">
-            <value name="MS"><shadow type="math_number"><field name="NUM">500</field></shadow></value>
-            <next>
-              <block type="smartring_demo_status_display">
-                <field name="STATUS">progress</field>
-                <value name="VALUE"><shadow type="math_number"><field name="NUM">6</field></shadow></value>
-                <value name="MAX"><shadow type="math_number"><field name="NUM">12</field></shadow></value>
-                <field name="COLOR">green</field>
-                <next>
-                  <block type="smartring_wait_ms">
-                    <value name="MS"><shadow type="math_number"><field name="NUM">500</field></shadow></value>
-                    <next>
-                      <block type="smartring_play_blink_animation">
-                        <field name="COLOR">red</field>
-                        <value name="TIMES"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
-                        <next>
-                          <block type="smartring_wait_ms">
-                            <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
-                            <next>
-                              <block type="smartring_play_fill_animation">
-                                <field name="COLOR">yellow</field>
-                                <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
-                                <next>
-                                  <block type="smartring_wait_ms">
-                                    <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
-                                    <next>
-                                      <block type="smartring_play_running_light_animation">
-                                        <field name="COLOR">cyan</field>
-                                        <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
-                                        <next>
-                                          <block type="smartring_wait_ms">
-                                            <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
-                                            <next>
-                                              <block type="smartring_play_shift_left_animation">
-                                                <field name="COLOR">purple</field>
-                                                <value name="TIMES"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-                                                <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
-                                                <next>
-                                                  <block type="smartring_wait_ms">
-                                                    <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
-                                                    <next>
-                                                      <block type="smartring_play_alternate_blink_animation">
-                                                        <field name="COLOR1">red</field>
-                                                        <field name="COLOR2">blue</field>
-                                                        <value name="TIMES"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
-                                                        <next>
-                                                          <block type="smartring_wait_ms">
-                                                            <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
-                                                            <next>
-                                                              <block type="smartring_play_breathing_animation">
-                                                                <field name="COLOR">purple</field>
-                                                                <value name="TIMES"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-                                                                <next>
-                                                                  <block type="smartring_wait_ms">
-                                                                    <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
-                                                                    <next>
-                                                                      <block type="smartring_play_rainbow_animation">
-                                                                        <value name="SPEED"><shadow type="math_number"><field name="NUM">60</field></shadow></value>
-                                                                        <next>
-                                                                          <block type="smartring_wait_ms">
-                                                                            <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
-                                                                            <next>
-                                                                              <block type="smartring_play_clear_animation">
-                                                                                <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
-                                                                              </block>
-                                                                            </next>
-                                                                          </block>
-                                                                        </next>
-                                                                      </block>
-                                                                    </next>
-                                                                  </block>
-                                                                </next>
-                                                              </block>
-                                                            </next>
-                                                          </block>
-                                                        </next>
-                                                      </block>
-                                                    </next>
-                                                  </block>
-                                                </next>
-                                              </block>
-                                            </next>
-                                          </block>
-                                        </next>
-                                      </block>
-                                    </next>
-                                  </block>
-                                </next>
-                              </block>
-                            </next>
-                          </block>
-                        </next>
-                      </block>
-                    </next>
-                  </block>
-                </next>
-              </block>
-            </next>
-          </block>
-        </next>
-      </block>
-
-      <block type="smartring_clear_led_buffer" x="40" y="430">
-        <next>
-          <block type="smartring_set_buffer_led_color">
-            <value name="INDEX"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-            <field name="COLOR">red</field>
-            <next>
-              <block type="smartring_set_buffer_led_channel">
-                <value name="INDEX"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
-                <value name="CHANNEL"><shadow type="smartring_rgb_channel"><field name="CHANNEL">g</field></shadow></value>
-                <value name="VALUE"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
-                <next>
-                  <block type="smartring_set_buffer_led_rgb">
-                    <value name="INDEX"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
-                    <value name="R"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
-                    <value name="G"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
-                    <value name="B"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
-                    <next>
-                      <block type="smartring_show_led_buffer" />
-                    </next>
-                  </block>
-                </next>
-              </block>
-            </next>
-          </block>
-        </next>
-      </block>
-    </xml>
-  `);Qt.domToWorkspace(e,Vh),Kh(),eg(`blocks`),$.textContent=`已載入 SR-A01 範例：程式中止、陣列位移動畫、進階視覺效果 DEMO 與暫存陣列 RGB 仿作。`}function ig(){return{className:_h.value.trim(),seatNumber:vh.value.trim(),name:yh.value.trim(),courseCode:bh.value.trim().toUpperCase(),mode:xh.value}}function ag(e){return String(e).trim().replace(/[\\/:*?"<>|]/g,`_`).replace(/\s+/g,`_`).replace(/_+/g,`_`).replace(/^_+|_+$/g,``)}function og(){let e=ig();return`${[e.courseCode||`SmartRing`,e.className,e.seatNumber,e.name].map(ag).filter(Boolean).join(`_`)||`SmartRing`}.blockly.xml`}function sg(){if(!Vh)return;let e=Qt.workspaceToDom(Vh),t=Qt.domToPrettyText(e),n=new Blob([t],{type:`text/xml;charset=utf-8`}),r=URL.createObjectURL(n),i=og(),a=document.createElement(`a`);a.href=r,a.download=i,document.body.appendChild(a),a.click(),document.body.removeChild(a),URL.revokeObjectURL(r),$.textContent=`已下載積木檔案：${i}`}function cg(){Vh&&(mh.value=``,mh.click())}function lg(e){if(!e||!Vh||!window.confirm(`載入積木檔會取代目前工作區內容，確定要繼續嗎？`))return;let t=new FileReader;t.onload=()=>{try{let n=String(t.result||``),r=qn.xml.textToDom(n);Vh.clear(),Qt.domToWorkspace(r,Vh),Kh(),eg(`blocks`),$.textContent=`已載入積木檔案：${e.name}`}catch(e){$.textContent=`載入積木檔案失敗：\n${e.message}`}},t.onerror=()=>{$.textContent=`讀取檔案失敗，請重新選擇檔案。`},t.readAsText(e,`utf-8`)}function ug(){Eh.textContent=`目前模式：${xh.value===`competition`?`競賽模式`:`學習模式`}`,xh.value===`competition`?qh(`已切換為競賽模式：未來測試結果將可上傳 Google Sheet。`):qh(`已切換為學習模式：目前只在本機顯示測試結果。`)}function dg(e){Th.innerHTML=`
+  `);Qt.domToWorkspace(e,Wh),Yh(),rg(`blocks`),$.textContent=`已載入範例：重複累加分數。`}function ag(){return{className:bh.value.trim(),seatNumber:xh.value.trim(),name:Sh.value.trim(),courseCode:Ch.value.trim().toUpperCase(),mode:wh.value}}function og(e){return String(e).trim().replace(/[\\/:*?"<>|]/g,`_`).replace(/\s+/g,`_`).replace(/_+/g,`_`).replace(/^_+|_+$/g,``)}function sg(){let e=ag();return`${[e.courseCode||`SmartRing`,e.className,e.seatNumber,e.name].map(og).filter(Boolean).join(`_`)||`SmartRing`}.blockly.xml`}function cg(){if(!Wh)return;let e=Qt.workspaceToDom(Wh),t=Qt.domToPrettyText(e),n=new Blob([t],{type:`text/xml;charset=utf-8`}),r=URL.createObjectURL(n),i=sg(),a=document.createElement(`a`);a.href=r,a.download=i,document.body.appendChild(a),a.click(),document.body.removeChild(a),URL.revokeObjectURL(r),$.textContent=`已下載積木檔案：${i}`}function lg(){Wh&&(_h.value=``,_h.click())}function ug(e){if(!e||!Wh||!window.confirm(`載入積木檔會取代目前工作區內容，確定要繼續嗎？`))return;let t=new FileReader;t.onload=()=>{try{let n=String(t.result||``),r=qn.xml.textToDom(n);Wh.clear(),Qt.domToWorkspace(r,Wh),Yh(),rg(`blocks`),$.textContent=`已載入積木檔案：${e.name}`}catch(e){$.textContent=`載入積木檔案失敗：\n${e.message}`}},t.onerror=()=>{$.textContent=`讀取檔案失敗，請重新選擇檔案。`},t.readAsText(e,`utf-8`)}function dg(e){if(!Wh||!e?.starterXml)return!1;try{Wh.clear();let t=qn.xml.textToDom(e.starterXml);return Qt.domToWorkspace(t,Wh),Yh(),rg(`blocks`),$.textContent=e.starterMessage||`已載入 ${e.id} 起始積木。`,!0}catch(t){return $.textContent=`載入 ${e.id} 起始積木失敗：\n${t.message}`,!1}}function fg(e,t){return t?`
+    <section class="modal-section">
+      <h3>${e}</h3>
+      <p>${t}</p>
+    </section>
+  `:``}function pg(){kh.textContent=`目前模式：${wh.value===`competition`?`競賽模式`:`學習模式`}`,wh.value===`competition`?Xh(`已切換為競賽模式：未來測試結果將可上傳 Google Sheet。`):Xh(`已切換為學習模式：目前只在本機顯示測試結果。`)}function mg(e){Oh.innerHTML=`
     <h2>${e.title}</h2>
     <p><strong>課程代碼：</strong>${e.id}</p>
     <p><strong>任務類型：</strong>${e.type}</p>
     <p><strong>適用程度：</strong>${e.level}</p>
     <p><strong>學習目標：</strong>${e.goal}</p>
     <p class="summary-note">完整任務說明請按右上角「查看完整任務」。</p>
-  `,Lh.textContent=e.title,Rh.innerHTML=`
+  `,Bh.textContent=e.title,Vh.innerHTML=`
     <section class="modal-section">
       <h3>課程基本資料</h3>
       <p><strong>課程代碼：</strong>${e.id}</p>
@@ -1501,6 +1575,11 @@ function ${t.FUNCTION_NAME_PLACEHOLDER_}(type, direction) {
       <h3>任務說明</h3>
       <p>${e.description}</p>
     </section>
+
+    ${fg(`DEMO 觀察`,e.demoObserve)}
+    ${fg(`仿作任務`,e.practiceTask)}
+    ${fg(`函式整理`,e.functionTask)}
+    ${fg(`延伸挑戰`,e.challenge)}
 
     <section class="modal-section">
       <h3>操作說明</h3>
@@ -1526,21 +1605,17 @@ function ${t.FUNCTION_NAME_PLACEHOLDER_}(type, direction) {
       <h3>教學提示</h3>
       <p>${e.hint}</p>
     </section>
-  `}function fg(){let e=ig().courseCode;if(!e){$.textContent=`請先輸入課程代碼，例如 SR-B01。`,bh.focus();return}let t=Wh[e];if(!t){Hh=null,Th.innerHTML=`
+  `}function hg(){let e=ag().courseCode;if(!e){$.textContent=`請先輸入課程代碼，例如 SR-B01。`,Ch.focus();return}let t=qh[e];if(!t){Gh=null,Oh.innerHTML=`
       <h2>找不到課程：${e}</h2>
-      <p>目前 MVP-B07 只內建示範課程：</p>
+      <p>目前內建課程：</p>
       <ul>
-        <li>SR-B01：SmartRing 基礎任務</li>
-        <li>SR-A01：SmartRing 陣列任務</li>
-        <li>JS-B01：Blockly 解題任務</li>
+        ${ih()}
       </ul>
-    `,Lh.textContent=`找不到課程`,Rh.innerHTML=`
+    `,Bh.textContent=`找不到課程`,Vh.innerHTML=`
       <p>找不到課程代碼：${e}</p>
-      <p>請先測試以下示範課程：</p>
+      <p>請先測試以下內建課程：</p>
       <ul>
-        <li>SR-B01</li>
-        <li>SR-A01</li>
-        <li>JS-B01</li>
+        ${ih()}
       </ul>
-    `,$.textContent=`找不到課程代碼：${e}`;return}Hh=t,dg(t),t.id===`SR-B01`&&ng(),t.id===`SR-A01`&&rg(),$.textContent=`已載入課程：${t.id}｜${t.title}`}async function pg(){let e=ig();if(!Hh){$.textContent=`請先輸入課程代碼並按下「載入課程」。`;return}await Zh();let t=e.mode===`competition`?`競賽模式`:`學習模式`;qh(``),qh(`---`),qh(`任務測試模式：${t}`),qh(`課程代碼：${Hh.id}`),qh(`MVP-B13 測試結果：已執行目前 Blockly 程式，請確認 SmartRing LED 顯示、動畫或中止控制是否符合任務。`),qh(`若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。`)}function mg(){let e=ig();if(e.mode!==`competition`){$.textContent=`目前是學習模式，不會上傳成績。請切換為競賽模式後再試。`;return}if(!e.className||!e.seatNumber||!e.name){$.textContent=`競賽模式上傳前，請先填寫班級、座號與姓名。`;return}if(!Hh){$.textContent=`請先載入課程後再上傳成績。`;return}$.textContent=[`MVP-B10：成績上傳介面測試`,`班級：${e.className}`,`座號：${e.seatNumber}`,`姓名：${e.name}`,`課程代碼：${Hh.id}`,`狀態：尚未接 Google Sheet，後續 MVP-J02 會建置正式上傳功能。`].join(`
-`)}function hg(){Ih.classList.add(`active`),Ih.setAttribute(`aria-hidden`,`false`)}function gg(){Ih.classList.remove(`active`),Ih.setAttribute(`aria-hidden`,`true`)}function _g(e,t){Dh.textContent=t||(e?`SmartRing 已連線`:`SmartRing 尚未連線`),Oh.textContent=e?`已連線`:`尚未連線`,Dh.classList.toggle(`connected`,e),Oh.classList.toggle(`connected`,e),ih.disabled=e,ah.disabled=!e,oh.disabled=!e,sh.disabled=!e}async function vg(){if(!th.isSupported()){$.textContent=`此瀏覽器不支援 WebSerial。請使用 Chrome 或 Edge，並確認網頁在 localhost 或 HTTPS 環境執行。`;return}try{$.textContent=`正在開啟 SmartRing 序列埠選擇視窗...`,await th.connect()}catch(e){$.textContent=`SmartRing 連線失敗：\n${e.message}`,_g(!1,`SmartRing：連線失敗`)}}async function yg(){try{await th.disconnect(),kh.textContent=`尚無資料`,Ah.textContent=`尚未收到 ESP8266 資料。`,jh.textContent=`尚未送出 LED 指令。`,$.textContent=`SmartRing 已斷開連線。`}catch(e){$.textContent=`SmartRing 斷線時發生錯誤：\n${e.message}`}}async function bg(){try{await th.setLedColor(1,`red`),xg(th.getLastCommand()),$.textContent=`已送出測試指令：設定第 1 顆 LED 為紅色。`}catch(e){$.textContent=`送出 LED 測試指令失敗：\n${e.message}`}}function xg(e){if(jh){if(!e){jh.textContent=`尚未送出 LED 指令。`;return}jh.textContent=JSON.stringify(e)}}async function Sg(){try{await th.clearLeds(),xg(th.getLastCommand()),$.textContent=`已送出測試指令：清除所有 LED。`}catch(e){$.textContent=`送出清除 LED 指令失敗：\n${e.message}`}}function Cg(){th.addEventListener(`status`,e=>{let{connected:t,message:n}=e.detail;_g(t,n),qh(n)}),th.addEventListener(`data`,e=>{let{ok:t,rawText:n,buttonText:r,message:i}=e.detail;kh.textContent=r||`尚無資料`,Ah.textContent=n||`尚未收到 ESP8266 資料。`,!t&&i&&qh(i)}),th.addEventListener(`command`,e=>{let{payload:t}=e.detail;xg(t)}),th.addEventListener(`error`,e=>{let{message:t}=e.detail;_g(!1,`SmartRing：連線錯誤`),qh(`SmartRing 錯誤：${t}`)}),th.addEventListener(`log`,e=>{let{message:t}=e.detail;console.log(`[SmartRing]`,t)})}function wg(){ih.addEventListener(`click`,vg),ah.addEventListener(`click`,yg),oh.addEventListener(`click`,bg),sh.addEventListener(`click`,Sg),ch.addEventListener(`click`,tg),lh.addEventListener(`click`,Zh),uh.addEventListener(`click`,Xh),dh.addEventListener(`click`,Qh),fh.addEventListener(`click`,sg),ph.addEventListener(`click`,cg),mh.addEventListener(`change`,e=>{let t=e.target.files?.[0];lg(t)}),hh.addEventListener(`click`,$h),gh.addEventListener(`click`,Jh),Sh.addEventListener(`click`,fg),Ch.addEventListener(`click`,pg),wh.addEventListener(`click`,mg),xh.addEventListener(`change`,ug),Mh.addEventListener(`click`,()=>eg(`blocks`)),Nh.addEventListener(`click`,()=>eg(`code`)),zh.addEventListener(`click`,hg),Bh.addEventListener(`click`,gg),Ih.addEventListener(`click`,e=>{e.target===Ih&&gg()}),window.addEventListener(`keydown`,e=>{e.key===`Escape`&&gg()}),window.addEventListener(`resize`,()=>{Wn(Vh)})}function Tg(){Eh.textContent=`目前模式：學習模式`,_g(!1,`SmartRing：尚未連線`),Oh.textContent=`尚未連線`,kh.textContent=`尚無資料`,Ah.textContent=`尚未收到 ESP8266 資料。`,xg(null),Yh(!1)}Gh(),wg(),Cg(),Tg();
+    `,$.textContent=`找不到課程代碼：${e}`;return}Gh=t,mg(t),dg(t)||($.textContent=`已載入課程：${t.id}｜${t.title}`)}async function gg(){let e=ag();if(!Gh){$.textContent=`請先輸入課程代碼並按下「載入課程」。`;return}await eg();let t=e.mode===`competition`?`競賽模式`:`學習模式`;Xh(``),Xh(`---`),Xh(`任務測試模式：${t}`),Xh(`課程代碼：${Gh.id}`),Xh(`MVP-B15 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。`),Xh(`若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。`)}function _g(){let e=ag();if(e.mode!==`competition`){$.textContent=`目前是學習模式，不會上傳成績。請切換為競賽模式後再試。`;return}if(!e.className||!e.seatNumber||!e.name){$.textContent=`競賽模式上傳前，請先填寫班級、座號與姓名。`;return}if(!Gh){$.textContent=`請先載入課程後再上傳成績。`;return}$.textContent=[`MVP-B10：成績上傳介面測試`,`班級：${e.className}`,`座號：${e.seatNumber}`,`姓名：${e.name}`,`課程代碼：${Gh.id}`,`狀態：尚未接 Google Sheet，後續 MVP-J02 會建置正式上傳功能。`].join(`
+`)}function vg(){zh.classList.add(`active`),zh.setAttribute(`aria-hidden`,`false`)}function yg(){zh.classList.remove(`active`),zh.setAttribute(`aria-hidden`,`true`)}function bg(e,t){Ah.textContent=t||(e?`SmartRing 已連線`:`SmartRing 尚未連線`),jh.textContent=e?`已連線`:`尚未連線`,Ah.classList.toggle(`connected`,e),jh.classList.toggle(`connected`,e),sh.disabled=e,ch.disabled=!e,lh.disabled=!e,uh.disabled=!e}async function xg(){if(!th.isSupported()){$.textContent=`此瀏覽器不支援 WebSerial。請使用 Chrome 或 Edge，並確認網頁在 localhost 或 HTTPS 環境執行。`;return}try{$.textContent=`正在開啟 SmartRing 序列埠選擇視窗...`,await th.connect()}catch(e){$.textContent=`SmartRing 連線失敗：\n${e.message}`,bg(!1,`SmartRing：連線失敗`)}}async function Sg(){try{await th.disconnect(),Mh.textContent=`尚無資料`,Nh.textContent=`尚未收到 ESP8266 資料。`,Ph.textContent=`尚未送出 LED 指令。`,$.textContent=`SmartRing 已斷開連線。`}catch(e){$.textContent=`SmartRing 斷線時發生錯誤：\n${e.message}`}}async function Cg(){try{await th.setLedColor(1,`red`),wg(th.getLastCommand()),$.textContent=`已送出測試指令：設定第 1 顆 LED 為紅色。`}catch(e){$.textContent=`送出 LED 測試指令失敗：\n${e.message}`}}function wg(e){if(Ph){if(!e){Ph.textContent=`尚未送出 LED 指令。`;return}Ph.textContent=JSON.stringify(e)}}async function Tg(){try{await th.clearLeds(),wg(th.getLastCommand()),$.textContent=`已送出測試指令：清除所有 LED。`}catch(e){$.textContent=`送出清除 LED 指令失敗：\n${e.message}`}}function Eg(){th.addEventListener(`status`,e=>{let{connected:t,message:n}=e.detail;bg(t,n),Xh(n)}),th.addEventListener(`data`,e=>{let{ok:t,rawText:n,buttonText:r,message:i}=e.detail;Mh.textContent=r||`尚無資料`,Nh.textContent=n||`尚未收到 ESP8266 資料。`,!t&&i&&Xh(i)}),th.addEventListener(`command`,e=>{let{payload:t}=e.detail;wg(t)}),th.addEventListener(`error`,e=>{let{message:t}=e.detail;bg(!1,`SmartRing：連線錯誤`),Xh(`SmartRing 錯誤：${t}`)}),th.addEventListener(`log`,e=>{let{message:t}=e.detail;console.log(`[SmartRing]`,t)})}function Dg(){sh.addEventListener(`click`,xg),ch.addEventListener(`click`,Sg),lh.addEventListener(`click`,Cg),uh.addEventListener(`click`,Tg),dh.addEventListener(`click`,ig),fh.addEventListener(`click`,eg),ph.addEventListener(`click`,$h),mh.addEventListener(`click`,tg),hh.addEventListener(`click`,cg),gh.addEventListener(`click`,lg),_h.addEventListener(`change`,e=>{let t=e.target.files?.[0];ug(t)}),vh.addEventListener(`click`,ng),yh.addEventListener(`click`,Zh),Th.addEventListener(`click`,hg),Eh.addEventListener(`click`,gg),Dh.addEventListener(`click`,_g),wh.addEventListener(`change`,pg),Fh.addEventListener(`click`,()=>rg(`blocks`)),Ih.addEventListener(`click`,()=>rg(`code`)),Hh.addEventListener(`click`,vg),Uh.addEventListener(`click`,yg),zh.addEventListener(`click`,e=>{e.target===zh&&yg()}),window.addEventListener(`keydown`,e=>{e.key===`Escape`&&yg()}),window.addEventListener(`resize`,()=>{Wn(Wh)})}function Og(){kh.textContent=`目前模式：學習模式`,bg(!1,`SmartRing：尚未連線`),jh.textContent=`尚未連線`,Mh.textContent=`尚無資料`,Nh.textContent=`尚未收到 ESP8266 資料。`,wg(null),Qh(!1)}Jh(),Dg(),Eg(),Og();
