@@ -496,8 +496,29 @@ function loadSmartRingArraySample() {
                                                           <block type="smartring_wait_ms">
                                                             <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
                                                             <next>
-                                                              <block type="smartring_play_clear_animation">
-                                                                <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
+                                                              <block type="smartring_play_breathing_animation">
+                                                                <field name="COLOR">purple</field>
+                                                                <value name="TIMES"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                                                                <next>
+                                                                  <block type="smartring_wait_ms">
+                                                                    <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
+                                                                    <next>
+                                                                      <block type="smartring_play_rainbow_animation">
+                                                                        <value name="SPEED"><shadow type="math_number"><field name="NUM">60</field></shadow></value>
+                                                                        <next>
+                                                                          <block type="smartring_wait_ms">
+                                                                            <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
+                                                                            <next>
+                                                                              <block type="smartring_play_clear_animation">
+                                                                                <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
+                                                                              </block>
+                                                                            </next>
+                                                                          </block>
+                                                                        </next>
+                                                                      </block>
+                                                                    </next>
+                                                                  </block>
+                                                                </next>
                                                               </block>
                                                             </next>
                                                           </block>
@@ -562,7 +583,7 @@ function loadSmartRingArraySample() {
 
   updateCodePreview();
   switchWorkspaceTab('blocks');
-  outputArea.textContent = '已載入 SR-A01 範例：程式中止、陣列位移動畫 DEMO 與暫存陣列 RGB 仿作。';
+  outputArea.textContent = '已載入 SR-A01 範例：程式中止、陣列位移動畫、進階視覺效果 DEMO 與暫存陣列 RGB 仿作。';
 }
 
 function getStudentProfile() {
@@ -588,7 +609,7 @@ function createWorkspaceFileName() {
   const profile = getStudentProfile();
 
   const parts = [
-    profile.courseCode || 'blockly-workspace',
+    profile.courseCode || 'SmartRing',
     profile.className,
     profile.seatNumber,
     profile.name,
@@ -596,7 +617,7 @@ function createWorkspaceFileName() {
     .map(createSafeFileName)
     .filter(Boolean);
 
-  return `${parts.join('_') || 'blockly-workspace'}.blockly.xml`;
+  return `${parts.join('_') || 'SmartRing'}.blockly.xml`;
 }
 
 function saveWorkspaceToFile() {

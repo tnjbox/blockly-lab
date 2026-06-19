@@ -659,6 +659,81 @@ class SmartRingRuntime extends EventTarget {
     this.emitLog(`播放交錯閃爍動畫 ${colorName1}/${colorName2}，次數 ${repeatTimes}`);
   }
 
+  createScaledColorFrame(colorName, level) {
+    const color = this.getLedColorPayload(colorName);
+    const brightness = clamp(Math.round(Number(level) || 0), 0, 30);
+    const factor = brightness / 30;
+    const scaled = {
+      r: Math.round(color.r * factor),
+      g: Math.round(color.g * factor),
+      b: Math.round(color.b * factor),
+    };
+
+    return Array.from({ length: LED_COUNT }, () => cloneColor(scaled));
+  }
+
+  wheelColor(position) {
+    const pos = ((Math.floor(Number(position) || 0) % 256) + 256) % 256;
+
+    if (pos < 85) {
+      return {
+        r: 255 - pos * 3,
+        g: pos * 3,
+        b: 0,
+      };
+    }
+
+    if (pos < 170) {
+      const shifted = pos - 85;
+      return {
+        r: 0,
+        g: 255 - shifted * 3,
+        b: shifted * 3,
+      };
+    }
+
+    const shifted = pos - 170;
+    return {
+      r: shifted * 3,
+      g: 0,
+      b: 255 - shifted * 3,
+    };
+  }
+
+  async playBreathingAnimation(colorName, times = 3) {
+    const repeatTimes = clamp(Math.floor(Number(times) || 3), 1, 20);
+    const delay = 45;
+    const levels = [0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3, 0];
+
+    for (let round = 0; round < repeatTimes; round += 1) {
+      for (const level of levels) {
+        await this.showAnimationBuffer(this.createScaledColorFrame(colorName, level));
+        await this.wait(delay);
+      }
+    }
+
+    await this.clearLeds();
+    this.emitLog(`播放呼吸燈動畫 ${colorName}，次數 ${repeatTimes}`);
+  }
+
+  async playRainbowAnimation(speed = 100) {
+    const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+    const frameCount = 24;
+
+    for (let frame = 0; frame < frameCount; frame += 1) {
+      const buffer = Array.from({ length: LED_COUNT }, (_, index) => {
+        const position = Math.floor(((index * 256) / LED_COUNT + frame * 12) % 256);
+        return this.wheelColor(position);
+      });
+
+      await this.showAnimationBuffer(buffer);
+      await this.wait(delay);
+    }
+
+    this.emitLog(`播放彩虹動畫，速度 ${delay} ms`);
+  }
+
+
   async showLedBuffer() {
     await this.sendCommand('showBuffer', {
       leds: this.getLedBuffer(),

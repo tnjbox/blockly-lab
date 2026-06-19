@@ -469,6 +469,41 @@ export const competitionToolbox = {
             },
           },
         },
+        {
+          kind: 'label',
+          text: '進階視覺效果 DEMO',
+        },
+        {
+          kind: 'block',
+          type: 'smartring_play_breathing_animation',
+          fields: {
+            COLOR: 'purple',
+          },
+          inputs: {
+            TIMES: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 1,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_play_rainbow_animation',
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 60,
+                },
+              },
+            },
+          },
+        },
       ],
     },
   ],

@@ -689,6 +689,52 @@ javascriptGenerator.forBlock.smartring_play_alternate_blink_animation = function
   return `await SmartRing.playAlternateBlinkAnimation("${color1}", "${color2}", ${timesCode});\n`;
 };
 
+Blockly.Blocks.smartring_play_breathing_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放呼吸燈動畫 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.appendValueInput('TIMES')
+      .setCheck('Number')
+      .appendField('次數');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放全環 LED 由暗到亮、再由亮到暗的呼吸燈動畫。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_breathing_animation = function (block, generator) {
+  const color = block.getFieldValue('COLOR');
+  const timesCode = generator.valueToCode(block, 'TIMES', Order.NONE) || '3';
+  return `await SmartRing.playBreathingAnimation("${color}", ${timesCode});\n`;
+};
+
+Blockly.Blocks.smartring_play_rainbow_animation = {
+  init() {
+    this.appendValueInput('SPEED')
+      .setCheck('Number')
+      .appendField('播放彩虹動畫 速度');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放彩虹色在 SmartRing 上流動的展示動畫。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_rainbow_animation = function (block, generator) {
+  const speedCode = generator.valueToCode(block, 'SPEED', Order.NONE) || '100';
+  return `await SmartRing.playRainbowAnimation(${speedCode});\n`;
+};
+
+
 Blockly.Blocks.smartring_set_buffer_pattern = {
   init() {
     this.appendDummyInput()
