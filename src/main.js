@@ -48,6 +48,8 @@ const btnTestTask = document.getElementById('btnTestTask');
 const btnSubmitScore = document.getElementById('btnSubmitScore');
 
 const taskInfo = document.getElementById('taskInfo');
+const sidePanel = document.querySelector('.side-panel');
+const taskPanelHeading = document.getElementById('taskPanelHeading');
 const modeStatus = document.getElementById('modeStatus');
 const smartRingStatus = document.getElementById('smartRingStatus');
 
@@ -701,6 +703,78 @@ function renderOptionalTaskSection(title, content) {
   `;
 }
 
+function stripPreTag(content) {
+  return String(content || '')
+    .replace(/^\s*<pre>/i, '')
+    .replace(/<\/pre>\s*$/i, '')
+    .trim();
+}
+
+function escapeHtml(content) {
+  return String(content || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderProblemTextSection(title, content) {
+  if (!content) return '';
+
+  return `
+    <section class="problem-section modal-section">
+      <h3>${title}</h3>
+      <p>${escapeHtml(content)}</p>
+    </section>
+  `;
+}
+
+function renderProblemPreSection(title, content) {
+  if (!content) return '';
+
+  return `
+    <section class="problem-section modal-section">
+      <h3>${title}</h3>
+      <pre class="problem-sample-block">${escapeHtml(stripPreTag(content))}</pre>
+    </section>
+  `;
+}
+
+function renderProblemTaskContent(task, courseGroup, { includeMeta = true } = {}) {
+  const problemStatement = task.problemStatement || task.description || '尚未建立題目內容。';
+  const inputDescription = task.inputDescription || '';
+  const outputDescription = task.outputDescription || '';
+  const sampleInput = task.sampleInput || '';
+  const sampleOutput = task.sampleOutput || '';
+  const problemNote = task.problemNote || task.hint || '';
+
+  return `
+    <article class="problem-task-content">
+      ${
+        includeMeta
+          ? `
+            <section class="problem-section modal-section">
+              <h3>題目資料</h3>
+              <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
+              <p><strong>題目代碼：</strong>${task.id}</p>
+              <p><strong>題目名稱：</strong>${task.title}</p>
+            </section>
+          `
+          : `
+            <div class="problem-code-badge">${task.id}</div>
+          `
+      }
+      ${renderProblemTextSection('題目說明', problemStatement)}
+      ${renderProblemTextSection('輸入說明', inputDescription)}
+      ${renderProblemTextSection('輸出說明', outputDescription)}
+      ${renderProblemPreSection('範例輸入', sampleInput)}
+      ${renderProblemPreSection('範例輸出', sampleOutput)}
+      ${renderProblemTextSection('補充說明', problemNote)}
+    </article>
+  `;
+}
+
 
 function updateModeStatus() {
   const modeText = isCompetitionMode() ? '競賽模式' : '學習模式';
@@ -716,33 +790,10 @@ function updateModeStatus() {
 }
 
 function renderProblemTaskModal(task, courseGroup) {
-  const problemStatement = task.problemStatement || task.description || '尚未建立題目內容。';
-  const inputDescription = task.inputDescription || '';
-  const outputDescription = task.outputDescription || '';
-  const sampleInput = task.sampleInput || '';
-  const sampleOutput = task.sampleOutput || '';
-  const problemNote = task.problemNote || task.hint || '';
-
   taskModalTitle.textContent = `${task.id}｜${task.title}`;
-  taskModalBody.innerHTML = `
-    <section class="modal-section">
-      <h3>題目資料</h3>
-      <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
-      <p><strong>題目代碼：</strong>${task.id}</p>
-      <p><strong>題目名稱：</strong>${task.title}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>題目說明</h3>
-      <p>${problemStatement}</p>
-    </section>
-
-    ${renderOptionalTaskSection('輸入說明', inputDescription)}
-    ${renderOptionalTaskSection('輸出說明', outputDescription)}
-    ${renderOptionalTaskSection('範例輸入', sampleInput)}
-    ${renderOptionalTaskSection('範例輸出', sampleOutput)}
-    ${renderOptionalTaskSection('補充說明', problemNote)}
-  `;
+  taskModalBody.innerHTML = renderProblemTaskContent(task, courseGroup, {
+    includeMeta: true,
+  });
 }
 
 function renderLearningTaskModal(task, courseGroup) {
@@ -807,21 +858,35 @@ function renderLearningTaskModal(task, courseGroup) {
 function renderTaskInfo(task, courseGroup) {
   const isProblemTask = isProgrammingProblemTask(task, courseGroup);
 
+  sidePanel?.classList.toggle('programming-problem', isProblemTask);
+
+  if (taskPanelHeading) {
+    taskPanelHeading.textContent = isProblemTask ? '競賽題目' : '課程任務摘要';
+  }
+
+  if (isProblemTask) {
+    taskInfo.innerHTML = `
+      <div class="problem-task-fixed-panel">
+        <h2>${task.title}</h2>
+        <p class="problem-fixed-note">此區會固定顯示目前題目，方便解題時閱讀、比對與複製範例資料。</p>
+        ${renderProblemTaskContent(task, courseGroup, { includeMeta: false })}
+      </div>
+    `;
+    renderProblemTaskModal(task, courseGroup);
+    return;
+  }
+
   taskInfo.innerHTML = `
     <h2>${task.title}</h2>
     <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
-    <p><strong>${isProblemTask ? '題目代碼' : '子任務代碼'}：</strong>${task.id}</p>
+    <p><strong>子任務代碼：</strong>${task.id}</p>
     <p><strong>任務類型：</strong>${task.type}</p>
     <p><strong>適用程度：</strong>${task.level}</p>
-    <p><strong>${isProblemTask ? '題目摘要' : '學習目標'}：</strong>${isProblemTask ? (task.problemStatement || task.description) : task.goal}</p>
-    <p class="summary-note">${isProblemTask ? '完整題目內容請按右上角「查看完整任務」。' : '完整任務說明請按右上角「查看完整任務」。'}</p>
+    <p><strong>學習目標：</strong>${task.goal}</p>
+    <p class="summary-note">完整任務說明請按右上角「查看完整任務」。</p>
   `;
 
-  if (isProblemTask) {
-    renderProblemTaskModal(task, courseGroup);
-  } else {
-    renderLearningTaskModal(task, courseGroup);
-  }
+  renderLearningTaskModal(task, courseGroup);
 }
 
 function renderTaskSelector(courseGroup, selectedTaskId) {
@@ -874,6 +939,11 @@ function loadCourse() {
     currentTask = null;
     resetCompetitionAssessmentResult();
     resetTaskSelector();
+    sidePanel?.classList.remove('programming-problem');
+
+    if (taskPanelHeading) {
+      taskPanelHeading.textContent = '課程任務摘要';
+    }
 
     taskInfo.innerHTML = `
       <h2>找不到課程組：${code}</h2>
@@ -903,6 +973,12 @@ function loadCourse() {
     currentTask = null;
     resetCompetitionAssessmentResult();
     resetTaskSelector();
+    sidePanel?.classList.remove('programming-problem');
+
+    if (taskPanelHeading) {
+      taskPanelHeading.textContent = '課程任務摘要';
+    }
+
     outputArea.textContent = `課程組 ${courseGroup.id} 尚未建立子任務。`;
     return;
   }

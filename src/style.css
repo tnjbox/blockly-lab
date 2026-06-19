@@ -316,9 +316,13 @@ button:disabled {
 
 .side-panel {
   display: grid;
-  grid-template-rows: 220px 250px minmax(260px, 1fr);
+  grid-template-rows: minmax(260px, 34vh) 240px minmax(240px, 1fr);
   gap: 16px;
   min-height: 0;
+}
+
+.side-panel.programming-problem {
+  grid-template-rows: minmax(440px, 52vh) 220px minmax(220px, 1fr);
 }
 
 .panel-title {
@@ -370,6 +374,76 @@ button:disabled {
   background: #eff6ff;
   border-left: 4px solid #2563eb;
   border-radius: 8px;
+}
+
+.problem-task-fixed-panel h2 {
+  margin-bottom: 6px;
+}
+
+.problem-fixed-note {
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #92400e;
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+}
+
+.problem-code-badge {
+  display: inline-block;
+  margin: 4px 0 10px;
+  padding: 4px 9px;
+  font-family:
+    "Cascadia Code",
+    Consolas,
+    "Courier New",
+    monospace;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e40af;
+  background: #dbeafe;
+  border-radius: 999px;
+}
+
+.problem-section {
+  padding: 10px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.problem-section:last-child {
+  border-bottom: 0;
+}
+
+.problem-section h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: #1e3a8a;
+}
+
+.problem-section p {
+  margin: 0;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.problem-sample-block {
+  width: 100%;
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  overflow: auto;
+  user-select: text;
+  white-space: pre-wrap;
+  font-family:
+    "Cascadia Code",
+    Consolas,
+    "Courier New",
+    monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
 }
 
 .smartring-test-actions {
