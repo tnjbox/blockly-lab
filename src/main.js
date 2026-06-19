@@ -77,6 +77,7 @@ let currentTask = null;
 let currentCourseMode = 'learning';
 let isUserProgramRunning = false;
 let hasCompetitionAssessmentResult = false;
+let lastAssessmentResult = null;
 let isSmartRingPanelCollapsed = false;
 
 
@@ -132,6 +133,7 @@ function updateSubmitScoreVisibility() {
 
 function resetCompetitionAssessmentResult() {
   hasCompetitionAssessmentResult = false;
+  lastAssessmentResult = null;
   updateSubmitScoreVisibility();
 }
 
@@ -210,46 +212,89 @@ function stopUserCode() {
   writeOutput('已送出中止程式請求，程式會在下一個 SmartRing 等待或硬體指令處停止。');
 }
 
-async function runUserCode() {
-  if (!workspace) return;
+function appendOutput(message) {
+  const currentText = outputArea.textContent;
 
-  if (isUserProgramRunning) {
-    writeOutput('程式仍在執行中，請先按「中止程式」。');
+  if (currentText === '尚未執行程式。' || currentText === '') {
+    outputArea.textContent = String(message);
     return;
   }
 
-  clearOutput();
+  outputArea.textContent += `\n${String(message)}`;
+}
+
+function createPromptReader(inputText = '') {
+  const normalizedInput = String(inputText ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalizedInput.length > 0 ? normalizedInput.split('\n') : [];
+  let index = 0;
+
+  return () => {
+    const value = index < lines.length ? lines[index] : '';
+    index += 1;
+    return value;
+  };
+}
+
+async function executeGeneratedCode({ inputText = null, writeToOutput = false } = {}) {
+  if (!workspace) {
+    return { ok: false, output: '', error: new Error('Blockly 工作區尚未初始化。') };
+  }
+
+  if (isUserProgramRunning) {
+    const error = new Error('程式仍在執行中，請先按「中止程式」。');
+    if (writeToOutput) appendOutput(error.message);
+    return { ok: false, output: '', error };
+  }
 
   const code = javascriptGenerator.workspaceToCode(workspace);
 
   if (!code.trim()) {
-    outputArea.textContent = '目前沒有可以執行的程式。';
-    return;
+    const error = new Error('目前沒有可以執行的程式。');
+    if (writeToOutput) outputArea.textContent = error.message;
+    return { ok: false, output: '', error };
   }
 
+  const capturedOutput = [];
   const originalAlert = window.alert;
+  const originalPrompt = window.prompt;
   const originalConsoleLog = console.log;
+  const promptReader = createPromptReader(inputText ?? '');
+  const shouldMockInput = inputText !== null && inputText !== undefined;
+
+  const capture = (message = '') => {
+    const text = String(message);
+    capturedOutput.push(text);
+    if (writeToOutput) {
+      appendOutput(text);
+    }
+  };
 
   smartRingRuntime.resetProgramStop();
   setProgramRunningUi(true);
 
   try {
     window.alert = (message) => {
-      writeOutput(message);
+      capture(message);
     };
 
+    if (shouldMockInput) {
+      window.prompt = () => promptReader();
+    }
+
     console.log = (...args) => {
-      writeOutput(args.join(' '));
+      capture(args.join(' '));
       originalConsoleLog(...args);
     };
 
     const safePrint = (message) => {
-      writeOutput(message);
+      capture(message);
     };
 
     const runner = new Function(
       'print',
       'SmartRing',
+      'readLine',
+      'prompt',
       `
       "use strict";
       return (async () => {
@@ -258,24 +303,47 @@ async function runUserCode() {
       `
     );
 
-    await runner(safePrint, smartRingRuntime);
+    await runner(safePrint, smartRingRuntime, promptReader, promptReader);
 
-    if (!outputArea.textContent.trim()) {
-      outputArea.textContent = '程式執行完成，沒有輸出內容。';
-    }
+    return {
+      ok: true,
+      output: capturedOutput.join('\n'),
+      error: null,
+    };
   } catch (error) {
-    if (error?.name === 'AbortError' || error?.message === '程式已中止。') {
-      outputArea.textContent = '程式已中止。';
-    } else {
-      outputArea.textContent = `程式執行發生錯誤：\n${error.message}`;
+    if (writeToOutput) {
+      if (error?.name === 'AbortError' || error?.message === '程式已中止。') {
+        outputArea.textContent = '程式已中止。';
+      } else {
+        outputArea.textContent = `程式執行發生錯誤：\n${error.message}`;
+      }
     }
+
+    return {
+      ok: false,
+      output: capturedOutput.join('\n'),
+      error,
+    };
   } finally {
     window.alert = originalAlert;
+    window.prompt = originalPrompt;
     console.log = originalConsoleLog;
     setProgramRunningUi(false);
     smartRingRuntime.resetProgramStop();
   }
 }
+
+async function runUserCode() {
+  if (!workspace) return;
+
+  clearOutput();
+  const result = await executeGeneratedCode({ writeToOutput: true });
+
+  if (result.ok && !result.output.trim()) {
+    outputArea.textContent = '程式執行完成，沒有輸出內容。';
+  }
+}
+
 
 function clearWorkspace() {
   if (!workspace) return;
@@ -1085,41 +1153,163 @@ function changeTask() {
   loadTask(task, currentCourseGroup);
 }
 
-async function testTask() {
-  const profile = getStudentProfile();
 
+function normalizeOutputForCompare(output = '') {
+  return String(output)
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .join('\n')
+    .trimEnd();
+}
+
+function getTaskTestCases(task = currentTask) {
+  if (!Array.isArray(task?.testCases)) return [];
+
+  return task.testCases.map((testCase, index) => ({
+    id: testCase.id || `case-${index + 1}`,
+    input: testCase.input ?? '',
+    expectedOutput: testCase.expectedOutput ?? testCase.output ?? '',
+  }));
+}
+
+function formatMultilineForOutput(value, emptyText = '無') {
+  const text = String(value ?? '');
+  return text.length > 0 ? text : emptyText;
+}
+
+function writeProgrammingAssessmentReport({ cases, passedCount, totalCount }) {
+  writeOutput('MVP-J03 本機測資結果：');
+  writeOutput(`通過 ${passedCount} / ${totalCount} 筆測資。`);
+
+  cases.forEach((item, index) => {
+    const statusText = item.passed ? '通過' : '未通過';
+    writeOutput('');
+    writeOutput(`案例 ${index + 1}：${statusText}`);
+    writeOutput('使用者輸入：');
+    writeOutput(formatMultilineForOutput(item.input));
+    writeOutput('預期輸出：');
+    writeOutput(formatMultilineForOutput(item.expectedOutput));
+    writeOutput('實際輸出：');
+    writeOutput(formatMultilineForOutput(item.actualOutput, '沒有輸出'));
+
+    if (item.errorMessage) {
+      writeOutput(`錯誤訊息：${item.errorMessage}`);
+    }
+  });
+}
+
+async function runProgrammingTestCases() {
+  const testCases = getTaskTestCases(currentTask);
+
+  if (testCases.length === 0) {
+    await runUserCode();
+    writeOutput('');
+    writeOutput('MVP-J03：此題尚未建立 testCases，因此只執行程式，不進行答案比對。');
+    return {
+      total: 0,
+      passed: 0,
+      allPassed: false,
+      cases: [],
+    };
+  }
+
+  clearOutput();
+  writeOutput(`正在執行 ${currentTask.id}｜${currentTask.title} 的本機測資...`);
+
+  const results = [];
+
+  for (const testCase of testCases) {
+    const result = await executeGeneratedCode({
+      inputText: testCase.input,
+      writeToOutput: false,
+    });
+
+    const actualOutput = result.output;
+    const expectedOutput = testCase.expectedOutput;
+    const passed =
+      result.ok &&
+      normalizeOutputForCompare(actualOutput) === normalizeOutputForCompare(expectedOutput);
+
+    results.push({
+      ...testCase,
+      actualOutput,
+      passed,
+      errorMessage: result.error ? result.error.message : '',
+    });
+  }
+
+  const passedCount = results.filter((item) => item.passed).length;
+  const totalCount = results.length;
+
+  clearOutput();
+  writeOutput('---');
+  writeOutput(`課程組代碼：${currentCourseGroup.id}`);
+  writeOutput(`題目代碼：${currentTask.id}`);
+  writeOutput(`題目名稱：${currentTask.problemTitle || currentTask.title}`);
+  writeOutput(`任務測試模式：${getModeText()}`);
+  writeProgrammingAssessmentReport({
+    cases: results,
+    passedCount,
+    totalCount,
+  });
+
+  return {
+    total: totalCount,
+    passed: passedCount,
+    allPassed: totalCount > 0 && passedCount === totalCount,
+    cases: results,
+  };
+}
+
+async function testTask() {
   if (!currentTask) {
     outputArea.textContent = '請先輸入課程組代碼並按下「載入課程」。';
     return;
   }
 
-  await runUserCode();
+  if (isProgrammingProblemTask()) {
+    const assessment = await runProgrammingTestCases();
+    lastAssessmentResult = assessment;
 
-  const modeText = isCompetitionMode() ? '競賽模式' : '學習模式';
-  const taskLabel = isProgrammingProblemTask() ? '題目代碼' : '子任務代碼';
+    if (isCompetitionMode()) {
+      hasCompetitionAssessmentResult = assessment.total > 0;
+      writeOutput('');
+      writeOutput(
+        assessment.allPassed
+          ? '競賽評分結果：所有本機測資通過，可以上傳成績。'
+          : '競賽評分結果：尚有測資未通過，仍可保留本次測試紀錄。'
+      );
+    } else {
+      hasCompetitionAssessmentResult = false;
+      writeOutput('');
+      writeOutput('學習模式：本機測資僅供練習，不會啟用「上傳成績」。');
+    }
+
+    updateSubmitScoreVisibility();
+    return;
+  }
+
+  await runUserCode();
 
   writeOutput('');
   writeOutput('---');
-  writeOutput(`任務測試模式：${modeText}`);
+  writeOutput(`任務測試模式：${getModeText()}`);
   writeOutput(`課程組代碼：${currentCourseGroup.id}`);
-  writeOutput(`${taskLabel}：${currentTask.id}`);
-
-  if (isProgrammingProblemTask()) {
-    writeOutput('MVP-J02 測試結果：已執行目前 Blockly 程式，請先比對輸出結果是否符合題目要求。');
-  } else {
-    writeOutput('MVP-J02 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
-    writeOutput('若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
-  }
+  writeOutput(`子任務代碼：${currentTask.id}`);
+  writeOutput('MVP-J03 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
+  writeOutput('若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
 
   if (isCompetitionMode()) {
     hasCompetitionAssessmentResult = true;
-    writeOutput('競賽評分結果：MVP-J02 已產生本機測試結果，會啟用「上傳成績」，可進行介面流程測試。');
   } else {
     hasCompetitionAssessmentResult = false;
   }
 
   updateSubmitScoreVisibility();
 }
+
 
 function submitScore() {
   const profile = getStudentProfile();
@@ -1154,7 +1344,9 @@ function submitScore() {
     `姓名：${profile.name}`,
     `課程組代碼：${currentCourseGroup.id}`,
     `子任務代碼：${currentTask.id}`,
-    '狀態：尚未接 Google Sheet，後續 MVP-J03 / J04 會建置正式測資與評分功能。',
+    `本機測資：${lastAssessmentResult ? `${lastAssessmentResult.passed}/${lastAssessmentResult.total}` : '尚無資料'}`,
+    `通過狀態：${lastAssessmentResult?.allPassed ? '全部通過' : '尚未全部通過或尚無測資'}`,
+    '狀態：尚未接 Google Sheet，後續 MVP-J04 會建置正式成績上傳功能。',
   ].join('\n');
 }
 
