@@ -233,6 +233,37 @@ button:disabled {
   text-transform: uppercase;
 }
 
+.mode-display-field {
+  align-self: stretch;
+}
+
+.mode-status-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 14px;
+  color: #1e40af;
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.mode-status-pill.contest-mode {
+  color: #92400e;
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+
+.mode-status-pill.learning-mode {
+  color: #1e40af;
+  background: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+
 .app-main {
   display: grid;
   grid-template-columns: minmax(700px, 1fr) 430px;
@@ -630,4 +661,110 @@ button:disabled {
 .modal-section p {
   margin: 6px 0;
   line-height: 1.65;
+}
+/* MVP-J02-1：程式解題標準題目版面 */
+.problem-title {
+  margin: 6px 0 12px;
+  font-size: 22px;
+  color: #1e3a8a;
+  text-align: center;
+}
+
+.problem-example-section {
+  border-bottom: 0;
+}
+
+.problem-example-table-wrap {
+  width: 100%;
+  margin-top: 8px;
+  overflow: auto;
+  border: 2px solid #1f2937;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.problem-example-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px;
+}
+
+.problem-example-table th,
+.problem-example-table td {
+  padding: 8px 10px;
+  vertical-align: top;
+  border: 2px solid #1f2937;
+}
+
+.problem-example-table th {
+  text-align: left;
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.problem-example-table th:nth-child(1),
+.problem-example-table td:nth-child(1),
+.problem-example-table th:nth-child(2),
+.problem-example-table td:nth-child(2) {
+  width: 29%;
+}
+
+.problem-table-pre {
+  margin: 0;
+  user-select: text;
+  white-space: pre-wrap;
+  overflow: auto;
+  font-family:
+    "Cascadia Code",
+    Consolas,
+    "Courier New",
+    monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #0f172a;
+  background: transparent;
+}
+
+/* MVP-J02-1：SmartRing 狀態折疊 */
+.panel-title-clickable {
+  padding: 0;
+}
+
+.panel-toggle-button {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.panel-toggle-button:hover,
+.panel-toggle-button:focus-visible {
+  background: #eef2ff;
+  outline: none;
+}
+
+.panel-toggle-text {
+  font-size: 13px;
+  color: #475569;
+}
+
+.smartring-panel.collapsed .panel-title {
+  border-bottom: 0;
+}
+
+.side-panel.smart-ring-collapsed {
+  grid-template-rows: minmax(260px, 42vh) 46px minmax(240px, 1fr);
+}
+
+.side-panel.programming-problem.smart-ring-collapsed {
+  grid-template-rows: minmax(440px, 60vh) 46px minmax(220px, 1fr);
 }

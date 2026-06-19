@@ -54,13 +54,10 @@
           </select>
         </label>
 
-        <label class="field-group">
+        <div class="field-group mode-display-field" aria-live="polite">
           <span>模式</span>
-          <select id="practiceMode">
-            <option value="learning">學習模式</option>
-            <option value="competition">競賽模式</option>
-          </select>
-        </label>
+          <strong id="courseModeDisplay" class="mode-status-pill learning-mode">尚未載入</strong>
+        </div>
 
         <button id="btnLoadCourse" type="button" class="secondary-button">載入課程</button>
         <button id="btnTestTask" type="button" class="success-button">測試任務</button>
@@ -96,18 +93,22 @@
               <h2>尚未載入課程</h2>
               <p>請輸入課程組代碼，例如 SRB00，按下「載入課程」。</p>
               <ul>
+                <li>課程模式由題庫設定，學生不能自行切換。</li>
                 <li>學習模式：顯示較多提示，不上傳成績。</li>
-                <li>競賽模式：未來會將評分結果上傳 Google Sheet。</li>
+                <li>競賽模式：測試產生評分結果後，才會啟用上傳成績。</li>
               </ul>
             </div>
           </section>
 
           <section class="smartring-panel">
-            <div class="panel-title">
-              <span>SmartRing 狀態</span>
+            <div class="panel-title panel-title-clickable">
+              <button id="btnToggleSmartRingPanel" type="button" class="panel-toggle-button" aria-expanded="true" aria-controls="smartRingInfo">
+                <span>SmartRing 狀態</span>
+                <span class="panel-toggle-text">收合 ▲</span>
+              </button>
             </div>
 
-            <div class="smartring-info">
+            <div id="smartRingInfo" class="smartring-info">
               <p><strong>連線狀態：</strong><span id="serialStatusValue">尚未連線</span></p>
               <p><strong>按鈕狀態：</strong><span id="buttonStateValue">尚無資料</span></p>
 
@@ -135,7 +136,7 @@
       </main>
 
       <footer class="app-footer">
-        <span id="systemVersion">MVP-J01-3｜程式解題右側固定題目面板版</span>
+        <span id="systemVersion">MVP-J02-1｜競賽題目標準版面與 SmartRing 狀態折疊版</span>
         <span id="modeStatus">目前模式：學習模式</span>
         <span id="smartRingStatus">SmartRing：尚未連線</span>
       </footer>

@@ -23,6 +23,8 @@ const animationXml = ({ blockType, color = 'cyan', speed = 100, times = null, me
 export const SRF00 = {
   id: 'SRF00',
   title: 'SmartRing 函式仿作任務',
+  mode: 'learning',
+  type: 'smartring',
   description: '從內建動畫 DEMO 回推程式流程，再整理成可重複使用的自訂函式。',
   level: '國中八年級 / 九年級',
   defaultTaskId: 'SRF00-01',

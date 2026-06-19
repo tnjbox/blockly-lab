@@ -68,6 +68,8 @@ const base = smartRingCourses['SR-B01'];
 export const SRB00 = {
   id: 'SRB00',
   title: 'SmartRing 基礎互動任務',
+  mode: 'learning',
+  type: 'smartring',
   description: '從連線、單顆 LED、全部 LED 到按鈕互動，建立 SmartRingController 的基本操作能力。',
   level: '國小高年級 / 國中初階',
   defaultTaskId: 'SRB00-01',

@@ -39,6 +39,8 @@ const statusXml = ({ status = 'progress', value = 6, max = 12, color = 'green', 
 export const SRA00 = {
   id: 'SRA00',
   title: 'SmartRing 陣列任務',
+  mode: 'learning',
+  type: 'smartring',
   description: '用 LED 暫存陣列理解索引、位置、數值與狀態顯示。',
   level: '國中八年級',
   defaultTaskId: 'SRA00-01',

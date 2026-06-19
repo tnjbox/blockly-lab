@@ -40,7 +40,7 @@ const studentClass = document.getElementById('studentClass');
 const studentNumber = document.getElementById('studentNumber');
 const studentName = document.getElementById('studentName');
 const courseCode = document.getElementById('courseCode');
-const practiceMode = document.getElementById('practiceMode');
+const courseModeDisplay = document.getElementById('courseModeDisplay');
 const taskSelector = document.getElementById('taskSelector');
 
 const btnLoadCourse = document.getElementById('btnLoadCourse');
@@ -52,6 +52,8 @@ const sidePanel = document.querySelector('.side-panel');
 const taskPanelHeading = document.getElementById('taskPanelHeading');
 const modeStatus = document.getElementById('modeStatus');
 const smartRingStatus = document.getElementById('smartRingStatus');
+const btnToggleSmartRingPanel = document.getElementById('btnToggleSmartRingPanel');
+const smartRingInfo = document.getElementById('smartRingInfo');
 
 const serialStatusValue = document.getElementById('serialStatusValue');
 const buttonStateValue = document.getElementById('buttonStateValue');
@@ -72,16 +74,43 @@ const btnCloseTaskModal = document.getElementById('btnCloseTaskModal');
 let workspace = null;
 let currentCourseGroup = null;
 let currentTask = null;
+let currentCourseMode = 'learning';
 let isUserProgramRunning = false;
 let hasCompetitionAssessmentResult = false;
+let isSmartRingPanelCollapsed = false;
 
+
+function normalizeCourseMode(mode) {
+  return mode === 'contest' || mode === 'competition' ? 'contest' : 'learning';
+}
+
+function getModeText(mode = currentCourseMode) {
+  return normalizeCourseMode(mode) === 'contest' ? '競賽模式' : '學習模式';
+}
 
 function isCompetitionMode() {
-  return practiceMode.value === 'competition';
+  return normalizeCourseMode(currentCourseMode) === 'contest';
+}
+
+function getCourseType(courseGroup = currentCourseGroup) {
+  return courseGroup?.type || (String(courseGroup?.id || '').startsWith('JS') ? 'programming' : 'smartring');
+}
+
+function updateCourseModeDisplay() {
+  const modeText = getModeText();
+
+  modeStatus.textContent = `目前模式：${modeText}`;
+
+  if (courseModeDisplay) {
+    courseModeDisplay.textContent = modeText;
+    courseModeDisplay.classList.toggle('contest-mode', isCompetitionMode());
+    courseModeDisplay.classList.toggle('learning-mode', !isCompetitionMode());
+  }
 }
 
 function isProgrammingProblemTask(task = currentTask, courseGroup = currentCourseGroup) {
   return (
+    getCourseType(courseGroup) === 'programming' ||
     String(courseGroup?.id || '').startsWith('JS') ||
     String(task?.type || '').includes('解題')
   );
@@ -578,7 +607,7 @@ function getStudentProfile() {
     name: studentName.value.trim(),
     courseCode: courseCode.value.trim().toUpperCase(),
     taskId: taskSelector.value,
-    mode: practiceMode.value,
+    mode: currentCourseMode,
   };
 }
 
@@ -730,70 +759,121 @@ function renderProblemTextSection(title, content) {
   `;
 }
 
-function renderProblemPreSection(title, content) {
-  if (!content) return '';
+function renderProblemExampleTable(examples = []) {
+  if (!Array.isArray(examples) || examples.length === 0) return '';
+
+  const rows = examples
+    .map((example) => {
+      const input = stripPreTag(example.input || '無輸入');
+      const output = stripPreTag(example.output || '');
+      const explanation = example.explanation || '';
+
+      return `
+        <tr>
+          <td><pre class="problem-table-pre">${escapeHtml(input)}</pre></td>
+          <td><pre class="problem-table-pre">${escapeHtml(output)}</pre></td>
+          <td>${escapeHtml(explanation)}</td>
+        </tr>
+      `;
+    })
+    .join('');
 
   return `
-    <section class="problem-section modal-section">
-      <h3>${title}</h3>
-      <pre class="problem-sample-block">${escapeHtml(stripPreTag(content))}</pre>
+    <section class="problem-section modal-section problem-example-section">
+      <h3>範例格式</h3>
+      <div class="problem-example-table-wrap">
+        <table class="problem-example-table">
+          <thead>
+            <tr>
+              <th>使用者輸入</th>
+              <th>輸出</th>
+              <th>範例說明</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
     </section>
   `;
 }
 
-function renderProblemTaskContent(task, courseGroup, { includeMeta = true } = {}) {
-  const problemStatement = task.problemStatement || task.description || '尚未建立題目內容。';
-  const inputDescription = task.inputDescription || '';
-  const outputDescription = task.outputDescription || '';
+function getProblemExamples(task) {
+  if (Array.isArray(task.examples) && task.examples.length > 0) {
+    return task.examples;
+  }
+
   const sampleInput = task.sampleInput || '';
   const sampleOutput = task.sampleOutput || '';
-  const problemNote = task.problemNote || task.hint || '';
+
+  if (!sampleInput && !sampleOutput) return [];
+
+  return [
+    {
+      input: sampleInput || '無輸入',
+      output: sampleOutput,
+      explanation: task.problemNote || task.description || '請比對使用者輸入與輸出結果。',
+    },
+  ];
+}
+
+function renderProblemTaskContent(task) {
+  const problemTitle = task.problemTitle || task.title || '未命名題目';
+  const statement = task.statement || task.problemStatement || task.description || '尚未建立題目內容。';
+  const inputDescription = task.inputDescription || '尚未建立輸入說明。';
+  const outputDescription = task.outputDescription || '尚未建立輸出說明。';
+  const examples = getProblemExamples(task);
 
   return `
     <article class="problem-task-content">
-      ${
-        includeMeta
-          ? `
-            <section class="problem-section modal-section">
-              <h3>題目資料</h3>
-              <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
-              <p><strong>題目代碼：</strong>${task.id}</p>
-              <p><strong>題目名稱：</strong>${task.title}</p>
-            </section>
-          `
-          : `
-            <div class="problem-code-badge">${task.id}</div>
-          `
-      }
-      ${renderProblemTextSection('題目說明', problemStatement)}
+      <h2 class="problem-title">${escapeHtml(problemTitle)}</h2>
+      ${renderProblemTextSection('題目說明', statement)}
       ${renderProblemTextSection('輸入說明', inputDescription)}
       ${renderProblemTextSection('輸出說明', outputDescription)}
-      ${renderProblemPreSection('範例輸入', sampleInput)}
-      ${renderProblemPreSection('範例輸出', sampleOutput)}
-      ${renderProblemTextSection('補充說明', problemNote)}
+      ${renderProblemExampleTable(examples)}
     </article>
   `;
 }
 
+function updateSmartRingPanelCollapsed() {
+  const panel = document.querySelector('.smartring-panel');
+  panel?.classList.toggle('collapsed', isSmartRingPanelCollapsed);
+  sidePanel?.classList.toggle('smart-ring-collapsed', isSmartRingPanelCollapsed);
 
-function updateModeStatus() {
-  const modeText = isCompetitionMode() ? '競賽模式' : '學習模式';
+  if (smartRingInfo) {
+    smartRingInfo.hidden = isSmartRingPanelCollapsed;
+  }
 
-  modeStatus.textContent = `目前模式：${modeText}`;
-  resetCompetitionAssessmentResult();
-
-  if (isCompetitionMode()) {
-    writeOutput('已切換為競賽模式：請先載入課程並按「測試任務」，產生評分結果後才會啟用「上傳成績」。');
-  } else {
-    writeOutput('已切換為學習模式：目前只在本機顯示測試結果，「上傳成績」會維持灰色停用。');
+  if (btnToggleSmartRingPanel) {
+    btnToggleSmartRingPanel.setAttribute('aria-expanded', String(!isSmartRingPanelCollapsed));
+    const toggleText = btnToggleSmartRingPanel.querySelector('.panel-toggle-text');
+    if (toggleText) {
+      toggleText.textContent = isSmartRingPanelCollapsed ? '展開 ▼' : '收合 ▲';
+    }
   }
 }
 
-function renderProblemTaskModal(task, courseGroup) {
-  taskModalTitle.textContent = `${task.id}｜${task.title}`;
-  taskModalBody.innerHTML = renderProblemTaskContent(task, courseGroup, {
-    includeMeta: true,
-  });
+function toggleSmartRingPanel() {
+  isSmartRingPanelCollapsed = !isSmartRingPanelCollapsed;
+  updateSmartRingPanelCollapsed();
+}
+
+
+function updateModeStatus({ announce = false } = {}) {
+  updateCourseModeDisplay();
+  resetCompetitionAssessmentResult();
+
+  if (!announce) return;
+
+  if (isCompetitionMode()) {
+    writeOutput('已載入競賽模式題庫：請按「測試任務」，產生評分結果後才會啟用「上傳成績」。');
+  } else {
+    writeOutput('已載入學習模式題庫：目前只在本機顯示測試結果，「上傳成績」會維持灰色停用。');
+  }
+}
+
+function renderProblemTaskModal(task) {
+  taskModalTitle.textContent = task.problemTitle || task.title || '競賽題目';
+  taskModalBody.innerHTML = renderProblemTaskContent(task);
 }
 
 function renderLearningTaskModal(task, courseGroup) {
@@ -804,6 +884,8 @@ function renderLearningTaskModal(task, courseGroup) {
       <p><strong>課程組代碼：</strong>${courseGroup.id}</p>
       <p><strong>課程組名稱：</strong>${courseGroup.title}</p>
       <p><strong>課程組說明：</strong>${courseGroup.description}</p>
+      <p><strong>課程模式：</strong>${getModeText(courseGroup.mode)}</p>
+      <p><strong>課程類型：</strong>${getCourseType(courseGroup)}</p>
     </section>
 
     <section class="modal-section">
@@ -867,18 +949,17 @@ function renderTaskInfo(task, courseGroup) {
   if (isProblemTask) {
     taskInfo.innerHTML = `
       <div class="problem-task-fixed-panel">
-        <h2>${task.title}</h2>
-        <p class="problem-fixed-note">此區會固定顯示目前題目，方便解題時閱讀、比對與複製範例資料。</p>
-        ${renderProblemTaskContent(task, courseGroup, { includeMeta: false })}
+        ${renderProblemTaskContent(task)}
       </div>
     `;
-    renderProblemTaskModal(task, courseGroup);
+    renderProblemTaskModal(task);
     return;
   }
 
   taskInfo.innerHTML = `
     <h2>${task.title}</h2>
     <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
+    <p><strong>課程模式：</strong>${getModeText(courseGroup.mode)}</p>
     <p><strong>子任務代碼：</strong>${task.id}</p>
     <p><strong>任務類型：</strong>${task.type}</p>
     <p><strong>適用程度：</strong>${task.level}</p>
@@ -937,6 +1018,8 @@ function loadCourse() {
   if (!courseGroup) {
     currentCourseGroup = null;
     currentTask = null;
+    currentCourseMode = 'learning';
+    updateModeStatus();
     resetCompetitionAssessmentResult();
     resetTaskSelector();
     sidePanel?.classList.remove('programming-problem');
@@ -967,6 +1050,9 @@ function loadCourse() {
   }
 
   currentCourseGroup = courseGroup;
+  currentCourseMode = normalizeCourseMode(courseGroup.mode);
+  updateModeStatus({ announce: true });
+
   const defaultTask = getDefaultTask(courseGroup);
 
   if (!defaultTask) {
@@ -1019,15 +1105,15 @@ async function testTask() {
   writeOutput(`${taskLabel}：${currentTask.id}`);
 
   if (isProgrammingProblemTask()) {
-    writeOutput('MVP-J01 測試結果：已執行目前 Blockly 程式，請先比對輸出結果是否符合題目要求。');
+    writeOutput('MVP-J02 測試結果：已執行目前 Blockly 程式，請先比對輸出結果是否符合題目要求。');
   } else {
-    writeOutput('MVP-J01 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
+    writeOutput('MVP-J02 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
     writeOutput('若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
   }
 
   if (isCompetitionMode()) {
     hasCompetitionAssessmentResult = true;
-    writeOutput('競賽評分結果：MVP-J01 已產生本機測試結果，會啟用「上傳成績」，可進行介面流程測試。');
+    writeOutput('競賽評分結果：MVP-J02 已產生本機測試結果，會啟用「上傳成績」，可進行介面流程測試。');
   } else {
     hasCompetitionAssessmentResult = false;
   }
@@ -1038,9 +1124,9 @@ async function testTask() {
 function submitScore() {
   const profile = getStudentProfile();
 
-  if (profile.mode !== 'competition') {
+  if (!isCompetitionMode()) {
     outputArea.textContent =
-      '目前是學習模式，不會上傳成績。請切換為競賽模式後再試。';
+      '目前題庫是學習模式，不會上傳成績。競賽模式需由題庫設定，學生不能自行切換。';
     return;
   }
 
@@ -1062,7 +1148,7 @@ function submitScore() {
   }
 
   outputArea.textContent = [
-    'MVP-J01：成績上傳介面測試',
+    'MVP-J02：成績上傳介面測試',
     `班級：${profile.className}`,
     `座號：${profile.seatNumber}`,
     `姓名：${profile.name}`,
@@ -1216,7 +1302,8 @@ function bindEvents() {
   taskSelector.addEventListener('change', changeTask);
   btnTestTask.addEventListener('click', testTask);
   btnSubmitScore.addEventListener('click', submitScore);
-  practiceMode.addEventListener('change', updateModeStatus);
+
+  btnToggleSmartRingPanel?.addEventListener('click', toggleSmartRingPanel);
 
   tabBlocks.addEventListener('click', () => switchWorkspaceTab('blocks'));
   tabCode.addEventListener('click', () => switchWorkspaceTab('code'));
@@ -1242,7 +1329,8 @@ function bindEvents() {
 }
 
 function initStatus() {
-  modeStatus.textContent = '目前模式：學習模式';
+  currentCourseMode = 'learning';
+  updateCourseModeDisplay();
   setSmartRingConnectedUi(false, 'SmartRing：尚未連線');
   serialStatusValue.textContent = '尚未連線';
   buttonStateValue.textContent = '尚無資料';
@@ -1250,6 +1338,8 @@ function initStatus() {
   renderLastCommand(null);
   setProgramRunningUi(false);
   resetTaskSelector();
+  isSmartRingPanelCollapsed = false;
+  updateSmartRingPanelCollapsed();
 }
 
 initBlockly();

@@ -22,11 +22,19 @@ export function getAvailableCourseGroupCodes() {
   return Object.keys(courseGroups);
 }
 
+export function getCourseModeLabel(mode) {
+  return mode === 'contest' || mode === 'competition' ? '競賽模式' : '學習模式';
+}
+
+export function getCourseTypeLabel(type) {
+  return type === 'programming' ? '程式解題' : 'SmartRing';
+}
+
 export function getAvailableCourseGroupListHtml() {
   return getAvailableCourseGroupCodes()
     .map((code) => {
       const group = courseGroups[code];
-      return `<li>${group.id}：${group.title}</li>`;
+      return `<li>${group.id}：${group.title}（${getCourseModeLabel(group.mode)} / ${getCourseTypeLabel(group.type)}）</li>`;
     })
     .join('');
 }
