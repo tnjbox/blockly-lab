@@ -79,25 +79,25 @@ const demoCourses = {
       '需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。',
     scoring:
       '學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。',
-    hint: 'MVP-B10 已可使用 LED 暫存陣列、圖樣、進度條、分數與生命值積木。',
+    hint: 'MVP-B11 已整理 SmartRing 積木群，新增 RGB 暫存陣列控制與 DEMO 示範積木。',
   },
   'SR-A01': {
     id: 'SR-A01',
-    title: 'SmartRing 陣列任務：LED 圖樣與進度顯示',
+    title: 'SmartRing 陣列任務：DEMO 觀察與暫存陣列仿作',
     type: 'SmartRing 陣列任務',
     level: '國中八年級',
-    goal: '透過 12 顆 LED 對應 12 格陣列，理解索引、圖樣、比例顯示與狀態更新。',
+    goal: '透過 SmartRing DEMO 觀察 LED 圖樣與狀態顯示，再使用暫存陣列與 RGB 參數寫出對應程式。',
     description:
-      '本任務讓學生使用 LED 暫存陣列建立圖樣、進度條、分數條與生命值顯示，理解陣列資料可以轉換成可視化輸出。',
+      '本任務先用 DEMO 積木示範圖樣與狀態顯示效果，再引導學生使用 LED 暫存陣列、RGB 通道與完整 RGB 參數重做相同效果。',
     operation:
-      '學生先使用「清除暫存陣列」「設定暫存陣列圖樣」「設定進度條 / 分數 / 生命值」等積木安排 LED 狀態，再使用「顯示暫存陣列到 SmartRing」一次更新硬體。',
+      '學生先執行「示範圖樣」與「示範狀態顯示」觀察效果，再使用「清除暫存陣列」「設定暫存陣列第 N 顆 LED」「顯示暫存陣列到 SmartRing」完成仿作。',
     blockLimit:
-      '建議使用 SmartRing LED 暫存陣列、LED 圖樣與狀態顯示積木，並搭配變數、迴圈與數學積木。',
+      '建議使用 SmartRing LED 暫存陣列、RGB 通道、完整 RGB 設定、變數、迴圈、數學與函式積木。DEMO 積木僅作觀察與任務示範。',
     smartRingRequirement:
       '需要使用 12 顆 LED 顯示陣列狀態。學生端 LED 編號維持 1～12。',
     scoring:
-      '未來評分會檢查 LED buffer 的圖樣、亮燈數量與比例顯示是否符合任務要求。',
-    hint: 'B10 適合銜接八年級陣列：資料格、索引、批次設定、比例換算與視覺化。',
+      '未來評分會檢查學生是否能不用 DEMO 積木，而以暫存陣列與函式完成指定圖樣或狀態顯示。',
+    hint: 'B11 的教學脈絡是：先看 DEMO，再分析 LED 變化，最後用暫存陣列與函式自己寫出來。',
   },
   'JS-B01': {
     id: 'JS-B01',
@@ -345,13 +345,27 @@ function loadSmartRingSample() {
           </block>
         </value>
         <statement name="DO0">
-          <block type="smartring_set_led_color">
+          <block type="smartring_set_led_rgb">
             <value name="INDEX">
               <shadow type="math_number">
                 <field name="NUM">1</field>
               </shadow>
             </value>
-            <field name="COLOR">red</field>
+            <value name="R">
+              <shadow type="math_number">
+                <field name="NUM">30</field>
+              </shadow>
+            </value>
+            <value name="G">
+              <shadow type="math_number">
+                <field name="NUM">0</field>
+              </shadow>
+            </value>
+            <value name="B">
+              <shadow type="math_number">
+                <field name="NUM">0</field>
+              </shadow>
+            </value>
             <next>
               <block type="smartring_wait_ms">
                 <value name="MS">
@@ -363,7 +377,7 @@ function loadSmartRingSample() {
                   <block type="text_print">
                     <value name="TEXT">
                       <block type="text">
-                        <field name="TEXT">BTN1/F 被按下，點亮第 1 顆 LED</field>
+                        <field name="TEXT">BTN1/F 被按下，用 RGB 點亮第 1 顆 LED</field>
                       </block>
                     </value>
                   </block>
@@ -391,13 +405,30 @@ function loadSmartRingArraySample() {
 
   const xmlText = `
     <xml xmlns="https://developers.google.com/blockly/xml">
-      <block type="smartring_clear_led_buffer" x="40" y="40">
+      <block type="smartring_demo_pattern" x="40" y="40">
+        <field name="PATTERN">centerFour</field>
+        <field name="COLOR">blue</field>
         <next>
-          <block type="smartring_set_buffer_pattern">
-            <field name="PATTERN">centerFour</field>
-            <field name="COLOR">blue</field>
+          <block type="smartring_wait_ms">
+            <value name="MS">
+              <shadow type="math_number">
+                <field name="NUM">500</field>
+              </shadow>
+            </value>
             <next>
-              <block type="smartring_show_led_buffer">
+              <block type="smartring_demo_status_display">
+                <field name="STATUS">progress</field>
+                <value name="VALUE">
+                  <shadow type="math_number">
+                    <field name="NUM">6</field>
+                  </shadow>
+                </value>
+                <value name="MAX">
+                  <shadow type="math_number">
+                    <field name="NUM">12</field>
+                  </shadow>
+                </value>
+                <field name="COLOR">green</field>
                 <next>
                   <block type="smartring_wait_ms">
                     <value name="MS">
@@ -406,35 +437,54 @@ function loadSmartRingArraySample() {
                       </shadow>
                     </value>
                     <next>
-                      <block type="smartring_set_buffer_progress">
-                        <value name="COUNT">
-                          <shadow type="math_number">
-                            <field name="NUM">6</field>
-                          </shadow>
-                        </value>
-                        <field name="COLOR">green</field>
+                      <block type="smartring_clear_led_buffer">
                         <next>
-                          <block type="smartring_show_led_buffer">
+                          <block type="smartring_set_buffer_led_color">
+                            <value name="INDEX">
+                              <shadow type="math_number">
+                                <field name="NUM">1</field>
+                              </shadow>
+                            </value>
+                            <field name="COLOR">red</field>
                             <next>
-                              <block type="smartring_wait_ms">
-                                <value name="MS">
+                              <block type="smartring_set_buffer_led_channel">
+                                <value name="INDEX">
                                   <shadow type="math_number">
-                                    <field name="NUM">500</field>
+                                    <field name="NUM">2</field>
+                                  </shadow>
+                                </value>
+                                <value name="CHANNEL">
+                                  <shadow type="smartring_rgb_channel">
+                                    <field name="CHANNEL">g</field>
+                                  </shadow>
+                                </value>
+                                <value name="VALUE">
+                                  <shadow type="math_number">
+                                    <field name="NUM">30</field>
                                   </shadow>
                                 </value>
                                 <next>
-                                  <block type="smartring_set_buffer_score">
-                                    <value name="SCORE">
+                                  <block type="smartring_set_buffer_led_rgb">
+                                    <value name="INDEX">
                                       <shadow type="math_number">
-                                        <field name="NUM">50</field>
+                                        <field name="NUM">3</field>
                                       </shadow>
                                     </value>
-                                    <value name="MAX_SCORE">
+                                    <value name="R">
                                       <shadow type="math_number">
-                                        <field name="NUM">100</field>
+                                        <field name="NUM">30</field>
                                       </shadow>
                                     </value>
-                                    <field name="COLOR">yellow</field>
+                                    <value name="G">
+                                      <shadow type="math_number">
+                                        <field name="NUM">30</field>
+                                      </shadow>
+                                    </value>
+                                    <value name="B">
+                                      <shadow type="math_number">
+                                        <field name="NUM">0</field>
+                                      </shadow>
+                                    </value>
                                     <next>
                                       <block type="smartring_show_led_buffer" />
                                     </next>
@@ -461,7 +511,7 @@ function loadSmartRingArraySample() {
 
   updateCodePreview();
   switchWorkspaceTab('blocks');
-  outputArea.textContent = '已載入 SR-A01 範例：LED 圖樣、進度條與分數顯示。';
+  outputArea.textContent = '已載入 SR-A01 範例：DEMO 觀察與暫存陣列 RGB 仿作。';
 }
 
 function getStudentProfile() {

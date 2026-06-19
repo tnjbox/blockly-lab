@@ -30,6 +30,28 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
+function normalizeRgbValue(value) {
+  return clamp(Math.round(Number(value) || 0), 0, 30);
+}
+
+function normalizeColorChannel(channel) {
+  const text = String(channel || '').trim().toLowerCase();
+
+  if (text === 'r' || text === 'red' || text === '紅' || text === '紅色') {
+    return 'r';
+  }
+
+  if (text === 'g' || text === 'green' || text === '綠' || text === '綠色') {
+    return 'g';
+  }
+
+  if (text === 'b' || text === 'blue' || text === '藍' || text === '藍色') {
+    return 'b';
+  }
+
+  throw new Error('顏色通道必須是 R、G 或 B。');
+}
+
 function normalizeDisplayCount(value) {
   return clamp(Math.floor(Number(value) || 0), 0, LED_COUNT);
 }
@@ -208,12 +230,67 @@ class SmartRingRuntime extends EventTarget {
     this.emitLog('清除所有 LED');
   }
 
+  async setLedRgb(ledNumber, red, green, blue) {
+    const ledIndex = this.normalizeLedNumber(ledNumber);
+    const color = {
+      r: normalizeRgbValue(red),
+      g: normalizeRgbValue(green),
+      b: normalizeRgbValue(blue),
+    };
+
+    await this.sendCommand('setLed', {
+      index: ledIndex,
+      color: 'custom',
+      r: color.r,
+      g: color.g,
+      b: color.b,
+    });
+
+    this.emitLog(`設定第 ${ledIndex} 顆 LED RGB 為 (${color.r}, ${color.g}, ${color.b})`);
+  }
+
+  async setAllLeds(colorName) {
+    const color = this.getLedColorPayload(colorName);
+
+    await this.sendCommand('setAllLeds', {
+      color: colorName,
+      r: color.r,
+      g: color.g,
+      b: color.b,
+    });
+
+    this.emitLog(`設定全部 LED 為 ${colorName}`);
+  }
+
   setBufferLedColor(ledNumber, colorName) {
     const ledIndex = this.normalizeLedNumber(ledNumber);
     const color = this.getLedColorPayload(colorName);
 
     this.ledBuffer[ledIndex - 1] = color;
     this.emitLog(`設定暫存陣列第 ${ledIndex} 顆 LED 為 ${colorName}`);
+  }
+
+  setBufferLedChannel(ledNumber, channel, value) {
+    const ledIndex = this.normalizeLedNumber(ledNumber);
+    const colorChannel = normalizeColorChannel(channel);
+    const colorValue = normalizeRgbValue(value);
+    const nextColor = cloneColor(this.ledBuffer[ledIndex - 1]);
+
+    nextColor[colorChannel] = colorValue;
+    this.ledBuffer[ledIndex - 1] = nextColor;
+    this.emitLog(`設定暫存陣列第 ${ledIndex} 顆 LED ${colorChannel.toUpperCase()} 為 ${colorValue}`);
+  }
+
+  setBufferLedRgb(ledNumber, red, green, blue) {
+    const ledIndex = this.normalizeLedNumber(ledNumber);
+    const color = {
+      r: normalizeRgbValue(red),
+      g: normalizeRgbValue(green),
+      b: normalizeRgbValue(blue),
+    };
+
+    this.ledBuffer[ledIndex - 1] = color;
+    this.emitLog(`設定暫存陣列第 ${ledIndex} 顆 LED RGB 為 (${color.r}, ${color.g}, ${color.b})`);
   }
 
   clearLedBuffer() {
@@ -347,6 +424,37 @@ class SmartRingRuntime extends EventTarget {
     }
 
     this.emitLog(`設定暫存陣列生命值顯示：${life}/${maxLife}，亮 ${ledCount} 顆`);
+  }
+
+  setStatusBufferLeds(statusType, value, maxValue, colorName) {
+    const ledCount = countFromRatio(value, maxValue);
+    const color = this.getLedColorPayload(colorName);
+    const statusLabelMap = {
+      score: '分數',
+      life: '生命',
+      progress: '進度條',
+    };
+    const statusLabel = statusLabelMap[statusType] || '狀態';
+
+    this.clearLedBuffer();
+
+    for (let index = 0; index < ledCount; index += 1) {
+      this.ledBuffer[index] = cloneColor(color);
+    }
+
+    this.emitLog(`設定暫存陣列${statusLabel}顯示：${value}/${maxValue}，亮 ${ledCount} 顆`);
+  }
+
+  async demoPattern(patternName, colorName) {
+    this.setBufferPattern(patternName, colorName);
+    await this.showLedBuffer();
+    this.emitLog(`示範圖樣 ${patternName}`);
+  }
+
+  async demoStatusDisplay(statusType, value, maxValue, colorName) {
+    this.setStatusBufferLeds(statusType, value, maxValue, colorName);
+    await this.showLedBuffer();
+    this.emitLog(`示範狀態顯示 ${statusType}`);
   }
 
   async showLedBuffer() {

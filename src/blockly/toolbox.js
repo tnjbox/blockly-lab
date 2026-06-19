@@ -152,23 +152,12 @@ export const competitionToolbox = {
       name: 'SmartRing',
       colour: '#0f766e',
       contents: [
+        {
+          kind: 'label',
+          text: '連線與狀態 / 偵測 / 基礎控制',
+        },
         { kind: 'block', type: 'smartring_is_connected' },
         { kind: 'block', type: 'smartring_button_pressed' },
-        {
-          kind: 'block',
-          type: 'smartring_set_led_color',
-          inputs: {
-            INDEX: {
-              shadow: {
-                type: 'math_number',
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-          },
-        },
-        { kind: 'block', type: 'smartring_clear_leds' },
         {
           kind: 'block',
           type: 'smartring_wait_ms',
@@ -184,12 +173,53 @@ export const competitionToolbox = {
           },
         },
         {
+          kind: 'block',
+          type: 'smartring_set_led_rgb',
+          inputs: {
+            INDEX: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 1,
+                },
+              },
+            },
+            R: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 30,
+                },
+              },
+            },
+            G: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+            B: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+          },
+        },
+        { kind: 'block', type: 'smartring_set_all_leds' },
+        { kind: 'block', type: 'smartring_clear_leds' },
+        {
           kind: 'sep',
         },
         {
           kind: 'label',
           text: 'LED 暫存陣列',
         },
+        { kind: 'block', type: 'smartring_clear_led_buffer' },
         {
           kind: 'block',
           type: 'smartring_set_buffer_led_color',
@@ -204,65 +234,88 @@ export const competitionToolbox = {
             },
           },
         },
-        { kind: 'block', type: 'smartring_clear_led_buffer' },
+        {
+          kind: 'block',
+          type: 'smartring_set_buffer_led_channel',
+          inputs: {
+            INDEX: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 1,
+                },
+              },
+            },
+            CHANNEL: {
+              shadow: {
+                type: 'smartring_rgb_channel',
+                fields: {
+                  CHANNEL: 'r',
+                },
+              },
+            },
+            VALUE: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 30,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_set_buffer_led_rgb',
+          inputs: {
+            INDEX: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 1,
+                },
+              },
+            },
+            R: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 30,
+                },
+              },
+            },
+            G: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+            B: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+          },
+        },
         { kind: 'block', type: 'smartring_show_led_buffer' },
-        {
-          kind: 'block',
-          type: 'smartring_shift_led_buffer_left',
-          inputs: {
-            STEPS: {
-              shadow: {
-                type: 'math_number',
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-          },
-        },
-        {
-          kind: 'block',
-          type: 'smartring_shift_led_buffer_right',
-          inputs: {
-            STEPS: {
-              shadow: {
-                type: 'math_number',
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-          },
-        },
-        { kind: 'block', type: 'smartring_set_odd_buffer_leds' },
-        { kind: 'block', type: 'smartring_set_even_buffer_leds' },
         {
           kind: 'sep',
         },
         {
           kind: 'label',
-          text: 'LED 圖樣與狀態顯示',
+          text: 'LED 圖樣、狀態顯示與動畫示範',
         },
-        { kind: 'block', type: 'smartring_set_buffer_pattern' },
+        { kind: 'block', type: 'smartring_demo_pattern' },
         {
           kind: 'block',
-          type: 'smartring_set_buffer_progress',
+          type: 'smartring_demo_status_display',
           inputs: {
-            COUNT: {
-              shadow: {
-                type: 'math_number',
-                fields: {
-                  NUM: 6,
-                },
-              },
-            },
-          },
-        },
-        {
-          kind: 'block',
-          type: 'smartring_set_buffer_score',
-          inputs: {
-            SCORE: {
+            VALUE: {
               shadow: {
                 type: 'math_number',
                 fields: {
@@ -270,33 +323,11 @@ export const competitionToolbox = {
                 },
               },
             },
-            MAX_SCORE: {
+            MAX: {
               shadow: {
                 type: 'math_number',
                 fields: {
                   NUM: 100,
-                },
-              },
-            },
-          },
-        },
-        {
-          kind: 'block',
-          type: 'smartring_set_buffer_life',
-          inputs: {
-            LIFE: {
-              shadow: {
-                type: 'math_number',
-                fields: {
-                  NUM: 3,
-                },
-              },
-            },
-            MAX_LIFE: {
-              shadow: {
-                type: 'math_number',
-                fields: {
-                  NUM: 5,
                 },
               },
             },
