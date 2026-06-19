@@ -7,7 +7,12 @@ import * as ZhHant from 'blockly/msg/zh-hant';
 import { competitionToolbox } from './blockly/toolbox.js';
 import { registerSmartRingBlocks } from './blockly/smartring-blocks.js';
 import { smartRingRuntime } from './smartring/runtime.js';
-import { smartRingCourses, getAvailableCourseListHtml } from './courses/smartring-tasks.js';
+import {
+  getAvailableCourseGroupListHtml,
+  getCourseGroup,
+  getDefaultTask,
+  getTaskById,
+} from './courses/index.js';
 
 Blockly.setLocale(ZhHant);
 registerSmartRingBlocks();
@@ -36,6 +41,7 @@ const studentNumber = document.getElementById('studentNumber');
 const studentName = document.getElementById('studentName');
 const courseCode = document.getElementById('courseCode');
 const practiceMode = document.getElementById('practiceMode');
+const taskSelector = document.getElementById('taskSelector');
 
 const btnLoadCourse = document.getElementById('btnLoadCourse');
 const btnTestTask = document.getElementById('btnTestTask');
@@ -62,10 +68,41 @@ const btnOpenTaskModal = document.getElementById('btnOpenTaskModal');
 const btnCloseTaskModal = document.getElementById('btnCloseTaskModal');
 
 let workspace = null;
-let currentCourse = null;
+let currentCourseGroup = null;
+let currentTask = null;
 let isUserProgramRunning = false;
+let hasCompetitionAssessmentResult = false;
 
-const demoCourses = smartRingCourses;
+
+function isCompetitionMode() {
+  return practiceMode.value === 'competition';
+}
+
+function isProgrammingProblemTask(task = currentTask, courseGroup = currentCourseGroup) {
+  return (
+    String(courseGroup?.id || '').startsWith('JS') ||
+    String(task?.type || '').includes('解題')
+  );
+}
+
+function updateSubmitScoreVisibility() {
+  if (!btnSubmitScore) return;
+
+  const shouldEnable = Boolean(
+    isCompetitionMode() &&
+      currentCourseGroup &&
+      currentTask &&
+      hasCompetitionAssessmentResult
+  );
+
+  btnSubmitScore.hidden = false;
+  btnSubmitScore.disabled = !shouldEnable;
+}
+
+function resetCompetitionAssessmentResult() {
+  hasCompetitionAssessmentResult = false;
+  updateSubmitScoreVisibility();
+}
 
 function initBlockly() {
   workspace = Blockly.inject(blocklyDiv, {
@@ -538,6 +575,7 @@ function getStudentProfile() {
     seatNumber: studentNumber.value.trim(),
     name: studentName.value.trim(),
     courseCode: courseCode.value.trim().toUpperCase(),
+    taskId: taskSelector.value,
     mode: practiceMode.value,
   };
 }
@@ -555,7 +593,7 @@ function createWorkspaceFileName() {
   const profile = getStudentProfile();
 
   const parts = [
-    profile.courseCode || 'SmartRing',
+    profile.taskId || profile.courseCode || 'SmartRing',
     profile.className,
     profile.seatNumber,
     profile.name,
@@ -665,77 +703,158 @@ function renderOptionalTaskSection(title, content) {
 
 
 function updateModeStatus() {
-  const modeText =
-    practiceMode.value === 'competition' ? '競賽模式' : '學習模式';
+  const modeText = isCompetitionMode() ? '競賽模式' : '學習模式';
 
   modeStatus.textContent = `目前模式：${modeText}`;
+  resetCompetitionAssessmentResult();
 
-  if (practiceMode.value === 'competition') {
-    writeOutput('已切換為競賽模式：未來測試結果將可上傳 Google Sheet。');
+  if (isCompetitionMode()) {
+    writeOutput('已切換為競賽模式：請先載入課程並按「測試任務」，產生評分結果後才會啟用「上傳成績」。');
   } else {
-    writeOutput('已切換為學習模式：目前只在本機顯示測試結果。');
+    writeOutput('已切換為學習模式：目前只在本機顯示測試結果，「上傳成績」會維持灰色停用。');
   }
 }
 
-function renderCourseInfo(course) {
-  taskInfo.innerHTML = `
-    <h2>${course.title}</h2>
-    <p><strong>課程代碼：</strong>${course.id}</p>
-    <p><strong>任務類型：</strong>${course.type}</p>
-    <p><strong>適用程度：</strong>${course.level}</p>
-    <p><strong>學習目標：</strong>${course.goal}</p>
-    <p class="summary-note">完整任務說明請按右上角「查看完整任務」。</p>
-  `;
+function renderProblemTaskModal(task, courseGroup) {
+  const problemStatement = task.problemStatement || task.description || '尚未建立題目內容。';
+  const inputDescription = task.inputDescription || '';
+  const outputDescription = task.outputDescription || '';
+  const sampleInput = task.sampleInput || '';
+  const sampleOutput = task.sampleOutput || '';
+  const problemNote = task.problemNote || task.hint || '';
 
-  taskModalTitle.textContent = course.title;
+  taskModalTitle.textContent = `${task.id}｜${task.title}`;
   taskModalBody.innerHTML = `
     <section class="modal-section">
-      <h3>課程基本資料</h3>
-      <p><strong>課程代碼：</strong>${course.id}</p>
-      <p><strong>任務類型：</strong>${course.type}</p>
-      <p><strong>適用程度：</strong>${course.level}</p>
+      <h3>題目資料</h3>
+      <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
+      <p><strong>題目代碼：</strong>${task.id}</p>
+      <p><strong>題目名稱：</strong>${task.title}</p>
+    </section>
+
+    <section class="modal-section">
+      <h3>題目說明</h3>
+      <p>${problemStatement}</p>
+    </section>
+
+    ${renderOptionalTaskSection('輸入說明', inputDescription)}
+    ${renderOptionalTaskSection('輸出說明', outputDescription)}
+    ${renderOptionalTaskSection('範例輸入', sampleInput)}
+    ${renderOptionalTaskSection('範例輸出', sampleOutput)}
+    ${renderOptionalTaskSection('補充說明', problemNote)}
+  `;
+}
+
+function renderLearningTaskModal(task, courseGroup) {
+  taskModalTitle.textContent = `${task.id}｜${task.title}`;
+  taskModalBody.innerHTML = `
+    <section class="modal-section">
+      <h3>課程組資料</h3>
+      <p><strong>課程組代碼：</strong>${courseGroup.id}</p>
+      <p><strong>課程組名稱：</strong>${courseGroup.title}</p>
+      <p><strong>課程組說明：</strong>${courseGroup.description}</p>
+    </section>
+
+    <section class="modal-section">
+      <h3>子任務基本資料</h3>
+      <p><strong>子任務代碼：</strong>${task.id}</p>
+      <p><strong>任務類型：</strong>${task.type}</p>
+      <p><strong>適用程度：</strong>${task.level}</p>
     </section>
 
     <section class="modal-section">
       <h3>學習目標</h3>
-      <p>${course.goal}</p>
+      <p>${task.goal}</p>
     </section>
 
     <section class="modal-section">
       <h3>任務說明</h3>
-      <p>${course.description}</p>
+      <p>${task.description}</p>
     </section>
 
-    ${renderOptionalTaskSection('DEMO 觀察', course.demoObserve)}
-    ${renderOptionalTaskSection('仿作任務', course.practiceTask)}
-    ${renderOptionalTaskSection('函式整理', course.functionTask)}
-    ${renderOptionalTaskSection('延伸挑戰', course.challenge)}
+    ${renderOptionalTaskSection('DEMO 觀察', task.demoObserve)}
+    ${renderOptionalTaskSection('仿作任務', task.practiceTask)}
+    ${renderOptionalTaskSection('函式整理', task.functionTask)}
+    ${renderOptionalTaskSection('延伸挑戰', task.challenge)}
 
     <section class="modal-section">
       <h3>操作說明</h3>
-      <p>${course.operation}</p>
+      <p>${task.operation}</p>
     </section>
 
     <section class="modal-section">
       <h3>積木限制 / 建議</h3>
-      <p>${course.blockLimit}</p>
+      <p>${task.blockLimit}</p>
     </section>
 
     <section class="modal-section">
       <h3>SmartRing 要求</h3>
-      <p>${course.smartRingRequirement}</p>
+      <p>${task.smartRingRequirement}</p>
     </section>
 
     <section class="modal-section">
       <h3>評分方式</h3>
-      <p>${course.scoring}</p>
+      <p>${task.scoring}</p>
     </section>
 
     <section class="modal-section">
       <h3>教學提示</h3>
-      <p>${course.hint}</p>
+      <p>${task.hint}</p>
     </section>
   `;
+}
+
+function renderTaskInfo(task, courseGroup) {
+  const isProblemTask = isProgrammingProblemTask(task, courseGroup);
+
+  taskInfo.innerHTML = `
+    <h2>${task.title}</h2>
+    <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
+    <p><strong>${isProblemTask ? '題目代碼' : '子任務代碼'}：</strong>${task.id}</p>
+    <p><strong>任務類型：</strong>${task.type}</p>
+    <p><strong>適用程度：</strong>${task.level}</p>
+    <p><strong>${isProblemTask ? '題目摘要' : '學習目標'}：</strong>${isProblemTask ? (task.problemStatement || task.description) : task.goal}</p>
+    <p class="summary-note">${isProblemTask ? '完整題目內容請按右上角「查看完整任務」。' : '完整任務說明請按右上角「查看完整任務」。'}</p>
+  `;
+
+  if (isProblemTask) {
+    renderProblemTaskModal(task, courseGroup);
+  } else {
+    renderLearningTaskModal(task, courseGroup);
+  }
+}
+
+function renderTaskSelector(courseGroup, selectedTaskId) {
+  taskSelector.innerHTML = courseGroup.tasks
+    .map((task) => {
+      const selected = task.id === selectedTaskId ? ' selected' : '';
+      return `<option value="${task.id}"${selected}>${task.id}｜${task.title}</option>`;
+    })
+    .join('');
+
+  taskSelector.disabled = false;
+}
+
+function resetTaskSelector() {
+  taskSelector.innerHTML = '<option value="">請先載入課程組</option>';
+  taskSelector.disabled = true;
+}
+
+function loadTask(task, courseGroup, { shouldLoadStarter = true } = {}) {
+  if (!task || !courseGroup) return;
+
+  resetCompetitionAssessmentResult();
+  currentTask = task;
+  renderTaskSelector(courseGroup, task.id);
+  renderTaskInfo(task, courseGroup);
+
+  if (shouldLoadStarter) {
+    const hasStarter = loadCourseStarter(task);
+
+    if (!hasStarter) {
+      outputArea.textContent = `已載入子任務：${task.id}｜${task.title}`;
+    }
+  }
 }
 
 function loadCourse() {
@@ -743,65 +862,101 @@ function loadCourse() {
   const code = profile.courseCode;
 
   if (!code) {
-    outputArea.textContent = '請先輸入課程代碼，例如 SR-B01。';
+    outputArea.textContent = '請先輸入課程組代碼，例如 SRB00、SRA00、SRF00、JSB00。';
     courseCode.focus();
     return;
   }
 
-  const course = demoCourses[code];
+  const courseGroup = getCourseGroup(code);
 
-  if (!course) {
-    currentCourse = null;
+  if (!courseGroup) {
+    currentCourseGroup = null;
+    currentTask = null;
+    resetCompetitionAssessmentResult();
+    resetTaskSelector();
+
     taskInfo.innerHTML = `
-      <h2>找不到課程：${code}</h2>
-      <p>目前內建課程：</p>
+      <h2>找不到課程組：${code}</h2>
+      <p>目前內建課程組：</p>
       <ul>
-        ${getAvailableCourseListHtml()}
+        ${getAvailableCourseGroupListHtml()}
       </ul>
     `;
 
-    taskModalTitle.textContent = '找不到課程';
+    taskModalTitle.textContent = '找不到課程組';
     taskModalBody.innerHTML = `
-      <p>找不到課程代碼：${code}</p>
-      <p>請先測試以下內建課程：</p>
+      <p>找不到課程組代碼：${code}</p>
+      <p>請先測試以下內建課程組：</p>
       <ul>
-        ${getAvailableCourseListHtml()}
+        ${getAvailableCourseGroupListHtml()}
       </ul>
     `;
 
-    outputArea.textContent = `找不到課程代碼：${code}`;
+    outputArea.textContent = `找不到課程組代碼：${code}`;
     return;
   }
 
-  currentCourse = course;
-  renderCourseInfo(course);
+  currentCourseGroup = courseGroup;
+  const defaultTask = getDefaultTask(courseGroup);
 
-  const hasStarter = loadCourseStarter(course);
-
-  if (!hasStarter) {
-    outputArea.textContent = `已載入課程：${course.id}｜${course.title}`;
+  if (!defaultTask) {
+    currentTask = null;
+    resetCompetitionAssessmentResult();
+    resetTaskSelector();
+    outputArea.textContent = `課程組 ${courseGroup.id} 尚未建立子任務。`;
+    return;
   }
+
+  loadTask(defaultTask, courseGroup);
+}
+
+function changeTask() {
+  if (!currentCourseGroup) return;
+
+  const task = getTaskById(currentCourseGroup, taskSelector.value);
+
+  if (!task) {
+    outputArea.textContent = `找不到子任務：${taskSelector.value}`;
+    return;
+  }
+
+  loadTask(task, currentCourseGroup);
 }
 
 async function testTask() {
   const profile = getStudentProfile();
 
-  if (!currentCourse) {
-    outputArea.textContent = '請先輸入課程代碼並按下「載入課程」。';
+  if (!currentTask) {
+    outputArea.textContent = '請先輸入課程組代碼並按下「載入課程」。';
     return;
   }
 
   await runUserCode();
 
-  const modeText =
-    profile.mode === 'competition' ? '競賽模式' : '學習模式';
+  const modeText = isCompetitionMode() ? '競賽模式' : '學習模式';
+  const taskLabel = isProgrammingProblemTask() ? '題目代碼' : '子任務代碼';
 
   writeOutput('');
   writeOutput('---');
   writeOutput(`任務測試模式：${modeText}`);
-  writeOutput(`課程代碼：${currentCourse.id}`);
-  writeOutput('MVP-B15 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
-  writeOutput('若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
+  writeOutput(`課程組代碼：${currentCourseGroup.id}`);
+  writeOutput(`${taskLabel}：${currentTask.id}`);
+
+  if (isProgrammingProblemTask()) {
+    writeOutput('MVP-J01 測試結果：已執行目前 Blockly 程式，請先比對輸出結果是否符合題目要求。');
+  } else {
+    writeOutput('MVP-J01 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
+    writeOutput('若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
+  }
+
+  if (isCompetitionMode()) {
+    hasCompetitionAssessmentResult = true;
+    writeOutput('競賽評分結果：MVP-J01 已產生本機測試結果，會啟用「上傳成績」，可進行介面流程測試。');
+  } else {
+    hasCompetitionAssessmentResult = false;
+  }
+
+  updateSubmitScoreVisibility();
 }
 
 function submitScore() {
@@ -819,18 +974,25 @@ function submitScore() {
     return;
   }
 
-  if (!currentCourse) {
-    outputArea.textContent = '請先載入課程後再上傳成績。';
+  if (!currentTask) {
+    outputArea.textContent = '請先載入課程組與子任務後再上傳成績。';
+    return;
+  }
+
+  if (!hasCompetitionAssessmentResult) {
+    outputArea.textContent = '請先按「測試任務」並產生評分結果後，再上傳成績。';
+    updateSubmitScoreVisibility();
     return;
   }
 
   outputArea.textContent = [
-    'MVP-B10：成績上傳介面測試',
+    'MVP-J01：成績上傳介面測試',
     `班級：${profile.className}`,
     `座號：${profile.seatNumber}`,
     `姓名：${profile.name}`,
-    `課程代碼：${currentCourse.id}`,
-    '狀態：尚未接 Google Sheet，後續 MVP-J02 會建置正式上傳功能。',
+    `課程組代碼：${currentCourseGroup.id}`,
+    `子任務代碼：${currentTask.id}`,
+    '狀態：尚未接 Google Sheet，後續 MVP-J03 / J04 會建置正式測資與評分功能。',
   ].join('\n');
 }
 
@@ -975,6 +1137,7 @@ function bindEvents() {
   btnClearOutput.addEventListener('click', clearOutput);
 
   btnLoadCourse.addEventListener('click', loadCourse);
+  taskSelector.addEventListener('change', changeTask);
   btnTestTask.addEventListener('click', testTask);
   btnSubmitScore.addEventListener('click', submitScore);
   practiceMode.addEventListener('change', updateModeStatus);
@@ -1010,6 +1173,7 @@ function initStatus() {
   rawStateValue.textContent = '尚未收到 ESP8266 資料。';
   renderLastCommand(null);
   setProgramRunningUi(false);
+  resetTaskSelector();
 }
 
 initBlockly();

@@ -87,6 +87,17 @@ button:disabled {
   background: #b45309;
 }
 
+
+#btnSubmitScore {
+  white-space: nowrap;
+}
+
+#btnSubmitScore:disabled {
+  color: #f8fafc;
+  background: #94a3b8;
+  opacity: 1;
+}
+
 .small-button {
   padding: 6px 10px;
   font-size: 13px;
@@ -163,11 +174,12 @@ button:disabled {
 .course-bar {
   display: grid;
   grid-template-columns:
-    minmax(140px, 160px)
-    minmax(115px, 130px)
+    minmax(120px, 140px)
+    minmax(95px, 115px)
+    minmax(150px, 190px)
+    minmax(200px, 240px)
     minmax(170px, 210px)
-    minmax(280px, 1fr)
-    minmax(180px, 210px)
+    minmax(110px, 130px)
     auto
     auto
     auto;
