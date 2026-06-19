@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Younger Dream Workshop</title>
-    <script type="module" crossorigin src="/blockly-lab/assets/index-qgRnvc-w.js"></script>
-    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-B2HXqqOk.css">
+    <script type="module" crossorigin src="/blockly-lab/assets/index-DmRdo02Y.js"></script>
+    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-DBQV6sCC.css">
   </head>
   <body>
     <div id="app">
@@ -87,18 +87,16 @@
 
         <aside class="side-panel">
           <section class="task-panel">
-            <div class="panel-title">
-              <span id="taskPanelHeading">課程任務摘要</span>
-              <button id="btnOpenTaskModal" type="button" class="small-button">查看完整任務</button>
+            <div class="panel-title panel-title-clickable task-panel-title">
+              <button id="btnToggleTaskPanel" type="button" class="panel-toggle-button" aria-expanded="true" aria-controls="taskInfo">
+                <span id="taskPanelHeading">課程任務摘要</span>
+                <span class="panel-toggle-text">收合 ▲</span>
+              </button>
+              <button id="btnOpenTaskModal" type="button" class="small-button task-modal-button">查看完整任務</button>
             </div>
             <div id="taskInfo" class="info-box">
-              <h2>尚未載入課程</h2>
-              <p>請輸入課程組代碼，例如 SRB00，按下「載入課程」。</p>
-              <ul>
-                <li>課程模式由題庫設定，學生不能自行切換。</li>
-                <li>學習模式：顯示較多提示，不上傳成績。</li>
-                <li>競賽模式：測試產生評分結果後，才會啟用上傳成績。</li>
-              </ul>
+              <h2>公開基礎課程代碼</h2>
+              <p>請輸入公開課程代碼，或輸入老師另外派發的課程代碼。</p>
             </div>
           </section>
 
@@ -138,7 +136,7 @@
       </main>
 
       <footer class="app-footer">
-        <span id="systemVersion">MVP-J03-1｜系統評分按鈕與原生 Blockly 輸入測資穩定版</span>
+        <span id="systemVersion">MVP-J03-3｜右側面板折疊、空白載入與公開課程代碼版</span>
         <span id="modeStatus">目前模式：學習模式</span>
         <span id="smartRingStatus">SmartRing：尚未連線</span>
       </footer>
