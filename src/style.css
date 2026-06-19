@@ -768,3 +768,61 @@ button:disabled {
 .side-panel.programming-problem.smart-ring-collapsed {
   grid-template-rows: minmax(440px, 60vh) 46px minmax(220px, 1fr);
 }
+
+/* MVP-J03-3：右側任務 / 題目面板折疊 */
+.task-panel-title {
+  position: relative;
+  gap: 8px;
+}
+
+.task-panel-title .panel-toggle-button {
+  padding-right: 132px;
+}
+
+.task-modal-button {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  z-index: 1;
+}
+
+.task-panel.collapsed .panel-title {
+  border-bottom: 0;
+}
+
+.side-panel.task-panel-collapsed {
+  grid-template-rows: 46px 240px minmax(240px, 1fr);
+}
+
+.side-panel.programming-problem.task-panel-collapsed {
+  grid-template-rows: 46px 220px minmax(220px, 1fr);
+}
+
+.side-panel.smart-ring-collapsed.task-panel-collapsed {
+  grid-template-rows: 46px 46px minmax(240px, 1fr);
+}
+
+.public-course-list {
+  margin: 10px 0 14px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.public-course-list li {
+  margin: 6px 0;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.public-course-list code {
+  display: inline-block;
+  min-width: 64px;
+  margin-right: 6px;
+  padding: 2px 6px;
+  font-weight: 800;
+  color: #1e40af;
+  background: #dbeafe;
+  border-radius: 6px;
+}

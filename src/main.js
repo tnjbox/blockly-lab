@@ -8,7 +8,7 @@ import { competitionToolbox } from './blockly/toolbox.js';
 import { registerSmartRingBlocks } from './blockly/smartring-blocks.js';
 import { smartRingRuntime } from './smartring/runtime.js';
 import {
-  getAvailableCourseGroupListHtml,
+  getPublicCourseGroupListHtml,
   getCourseGroup,
   getDefaultTask,
   getTaskById,
@@ -50,6 +50,8 @@ const btnSubmitScore = document.getElementById('btnSubmitScore');
 const taskInfo = document.getElementById('taskInfo');
 const sidePanel = document.querySelector('.side-panel');
 const taskPanelHeading = document.getElementById('taskPanelHeading');
+const taskPanel = document.querySelector('.task-panel');
+const btnToggleTaskPanel = document.getElementById('btnToggleTaskPanel');
 const modeStatus = document.getElementById('modeStatus');
 const smartRingStatus = document.getElementById('smartRingStatus');
 const btnToggleSmartRingPanel = document.getElementById('btnToggleSmartRingPanel');
@@ -79,6 +81,7 @@ let isUserProgramRunning = false;
 let hasCompetitionAssessmentResult = false;
 let lastAssessmentResult = null;
 let isSmartRingPanelCollapsed = false;
+let isTaskPanelCollapsed = false;
 
 
 function normalizeCourseMode(mode) {
@@ -150,6 +153,14 @@ function updateTaskActionButtons() {
     } else {
       btnTestTask.title = '使用題目內建測資進行系統評分。';
     }
+  }
+
+  if (btnLoadSample) {
+    const canLoadStarter = Boolean(currentTask?.starterXml && !isUserProgramRunning);
+    btnLoadSample.disabled = !canLoadStarter;
+    btnLoadSample.title = currentTask?.starterXml
+      ? '載入目前題目的範例積木，會覆蓋工作區。'
+      : '請先載入有範例積木的課程任務。';
   }
 
   updateSubmitScoreVisibility();
@@ -417,65 +428,23 @@ function switchWorkspaceTab(targetTab) {
 function loadSample() {
   if (!workspace) return;
 
-  workspace.clear();
+  if (!currentTask) {
+    outputArea.textContent = '請先載入課程與子任務，再按「載入範例」。';
+    return;
+  }
 
-  const xmlText = `
-    <xml xmlns="https://developers.google.com/blockly/xml">
-      <block type="variables_set" x="40" y="40">
-        <field name="VAR" id="score">score</field>
-        <value name="VALUE">
-          <block type="math_number">
-            <field name="NUM">0</field>
-          </block>
-        </value>
-        <next>
-          <block type="controls_repeat_ext">
-            <value name="TIMES">
-              <shadow type="math_number">
-                <field name="NUM">5</field>
-              </shadow>
-            </value>
-            <statement name="DO">
-              <block type="math_change">
-                <field name="VAR" id="score">score</field>
-                <value name="DELTA">
-                  <shadow type="math_number">
-                    <field name="NUM">1</field>
-                  </shadow>
-                </value>
-                <next>
-                  <block type="text_print">
-                    <value name="TEXT">
-                      <block type="text_join">
-                        <mutation items="2"></mutation>
-                        <value name="ADD0">
-                          <block type="text">
-                            <field name="TEXT">目前分數：</field>
-                          </block>
-                        </value>
-                        <value name="ADD1">
-                          <block type="variables_get">
-                            <field name="VAR" id="score">score</field>
-                          </block>
-                        </value>
-                      </block>
-                    </value>
-                  </block>
-                </next>
-              </block>
-            </statement>
-          </block>
-        </next>
-      </block>
-    </xml>
-  `;
+  if (!currentTask.starterXml) {
+    outputArea.textContent = `${currentTask.id}｜${currentTask.title} 尚未提供範例積木。`;
+    return;
+  }
 
-  const xmlDom = Blockly.utils.xml.textToDom(xmlText);
-  Blockly.Xml.domToWorkspace(xmlDom, workspace);
+  const confirmed = window.confirm(
+    '載入範例會清除目前工作區積木，確定要載入目前題目的範例嗎？'
+  );
 
-  updateCodePreview();
-  switchWorkspaceTab('blocks');
-  outputArea.textContent = '已載入範例：重複累加分數。';
+  if (!confirmed) return;
+
+  loadCourseStarter(currentTask);
 }
 
 function loadSmartRingSample() {
@@ -953,6 +922,29 @@ function toggleSmartRingPanel() {
 }
 
 
+function updateTaskPanelCollapsed() {
+  taskPanel?.classList.toggle('collapsed', isTaskPanelCollapsed);
+  sidePanel?.classList.toggle('task-panel-collapsed', isTaskPanelCollapsed);
+
+  if (taskInfo) {
+    taskInfo.hidden = isTaskPanelCollapsed;
+  }
+
+  if (btnToggleTaskPanel) {
+    btnToggleTaskPanel.setAttribute('aria-expanded', String(!isTaskPanelCollapsed));
+    const toggleText = btnToggleTaskPanel.querySelector('.panel-toggle-text');
+    if (toggleText) {
+      toggleText.textContent = isTaskPanelCollapsed ? '展開 ▼' : '收合 ▲';
+    }
+  }
+}
+
+function toggleTaskPanel() {
+  isTaskPanelCollapsed = !isTaskPanelCollapsed;
+  updateTaskPanelCollapsed();
+}
+
+
 function updateModeStatus({ announce = false } = {}) {
   updateCourseModeDisplay();
   resetCompetitionAssessmentResult();
@@ -1032,6 +1024,24 @@ function renderLearningTaskModal(task, courseGroup) {
   `;
 }
 
+function renderPublicCourseCodes() {
+  sidePanel?.classList.remove('programming-problem');
+
+  if (taskPanelHeading) {
+    taskPanelHeading.textContent = '公開課程代碼';
+  }
+
+  taskInfo.innerHTML = `
+    <h2>公開基礎課程代碼</h2>
+    <p>請輸入下列公開課程代碼，或輸入老師另外派發的課程代碼。</p>
+    ${getPublicCourseGroupListHtml()}
+    <p class="summary-note">提醒：後續新增的非公開題庫不會顯示在這裡，必須由老師派發課程代碼後才能載入。</p>
+  `;
+
+  taskModalTitle.textContent = '公開課程代碼';
+  taskModalBody.innerHTML = taskInfo.innerHTML;
+}
+
 function renderTaskInfo(task, courseGroup) {
   const isProblemTask = isProgrammingProblemTask(task, courseGroup);
 
@@ -1081,7 +1091,7 @@ function resetTaskSelector() {
   taskSelector.disabled = true;
 }
 
-function loadTask(task, courseGroup, { shouldLoadStarter = true } = {}) {
+function loadTask(task, courseGroup, { shouldLoadStarter = false } = {}) {
   if (!task || !courseGroup) return;
 
   resetCompetitionAssessmentResult();
@@ -1096,7 +1106,10 @@ function loadTask(task, courseGroup, { shouldLoadStarter = true } = {}) {
     if (!hasStarter) {
       outputArea.textContent = `已載入子任務：${task.id}｜${task.title}`;
     }
+    return;
   }
+
+  outputArea.textContent = `已載入子任務：${task.id}｜${task.title}。工作區積木未變更，如需範例請按「載入範例」。`;
 }
 
 function loadCourse() {
@@ -1104,7 +1117,7 @@ function loadCourse() {
   const code = profile.courseCode;
 
   if (!code) {
-    outputArea.textContent = '請先輸入課程組代碼，例如 SRB00、SRA00、SRF00、JSB00。';
+    outputArea.textContent = '請先輸入課程組代碼，例如 SRB00、SRA00、SRF00、JSB00、JSA00、CPB00。';
     courseCode.focus();
     return;
   }
@@ -1127,19 +1140,15 @@ function loadCourse() {
 
     taskInfo.innerHTML = `
       <h2>找不到課程組：${code}</h2>
-      <p>目前內建課程組：</p>
-      <ul>
-        ${getAvailableCourseGroupListHtml()}
-      </ul>
+      <p>請確認課程代碼是否輸入正確，或先使用以下公開基礎課程。</p>
+      ${getPublicCourseGroupListHtml()}
     `;
 
     taskModalTitle.textContent = '找不到課程組';
     taskModalBody.innerHTML = `
       <p>找不到課程組代碼：${code}</p>
-      <p>請先測試以下內建課程組：</p>
-      <ul>
-        ${getAvailableCourseGroupListHtml()}
-      </ul>
+      <p>請先確認課程代碼，或測試以下公開基礎課程：</p>
+      ${getPublicCourseGroupListHtml()}
     `;
 
     outputArea.textContent = `找不到課程組代碼：${code}`;
@@ -1513,6 +1522,7 @@ function bindEvents() {
   btnSubmitScore.addEventListener('click', submitScore);
 
   btnToggleSmartRingPanel?.addEventListener('click', toggleSmartRingPanel);
+  btnToggleTaskPanel?.addEventListener('click', toggleTaskPanel);
 
   tabBlocks.addEventListener('click', () => switchWorkspaceTab('blocks'));
   tabCode.addEventListener('click', () => switchWorkspaceTab('code'));
@@ -1548,8 +1558,11 @@ function initStatus() {
   setProgramRunningUi(false);
   resetTaskSelector();
   updateTaskActionButtons();
+  isTaskPanelCollapsed = false;
+  updateTaskPanelCollapsed();
   isSmartRingPanelCollapsed = false;
   updateSmartRingPanelCollapsed();
+  renderPublicCourseCodes();
 }
 
 initBlockly();
