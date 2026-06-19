@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Younger Dream Workshop</title>
-    <script type="module" crossorigin src="/blockly-lab/assets/index-BJy6z_NK.js"></script>
-    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-AoCVr76I.css">
+    <script type="module" crossorigin src="/blockly-lab/assets/index-CUyEgY35.js"></script>
+    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-BPQyvLvM.css">
   </head>
   <body>
     <div id="app">
@@ -46,7 +46,14 @@
 
         <label class="field-group course-code-field">
           <span>課程代碼</span>
-          <input id="courseCode" type="text" placeholder="例如：SR-B01" />
+          <input id="courseCode" type="text" placeholder="例如：SRB00" />
+        </label>
+
+        <label class="field-group task-select-field">
+          <span>子任務</span>
+          <select id="taskSelector" disabled>
+            <option value="">請先載入課程組</option>
+          </select>
         </label>
 
         <label class="field-group">
@@ -59,7 +66,7 @@
 
         <button id="btnLoadCourse" type="button" class="secondary-button">載入課程</button>
         <button id="btnTestTask" type="button" class="success-button">測試任務</button>
-        <button id="btnSubmitScore" type="button" class="warning-button">上傳成績</button>
+        <button id="btnSubmitScore" type="button" class="warning-button" disabled>上傳成績</button>
       </section>
 
       <main class="app-main">
@@ -89,7 +96,7 @@
             </div>
             <div id="taskInfo" class="info-box">
               <h2>尚未載入課程</h2>
-              <p>請輸入課程代碼，例如 SR-B01，按下「載入課程」。</p>
+              <p>請輸入課程組代碼，例如 SRB00，按下「載入課程」。</p>
               <ul>
                 <li>學習模式：顯示較多提示，不上傳成績。</li>
                 <li>競賽模式：未來會將評分結果上傳 Google Sheet。</li>
@@ -130,7 +137,7 @@
       </main>
 
       <footer class="app-footer">
-        <span id="systemVersion">MVP-B13｜程式中止控制與陣列位移動畫 DEMO 版</span>
+        <span id="systemVersion">MVP-J01-2｜成績上傳按鈕位置與啟用狀態修正版</span>
         <span id="modeStatus">目前模式：學習模式</span>
         <span id="smartRingStatus">SmartRing：尚未連線</span>
       </footer>
@@ -147,6 +154,6 @@
         </div>
       </div>
     </div>
-
+
   </body>
 </html>
