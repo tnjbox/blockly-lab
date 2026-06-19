@@ -791,3 +791,70 @@ npm run dev
 - SmartRing 工具箱中可看到「播放呼吸燈動畫」
 - SmartRing 工具箱中可看到「播放彩虹動畫」
 - 未輸入學生資料與課程代碼時，儲存積木預設檔名為 `SmartRing.blockly.xml`
+
+
+---
+
+## MVP-B15｜SmartRing 任務教材與函式仿作版
+
+### 狀態
+
+已建立。
+
+### 本版目標
+
+將 SmartRing Blockly 從「積木功能展示」推進到「課程任務教材」，建立 DEMO 觀察、暫存陣列仿作、函式整理與延伸挑戰的任務流程。
+
+### 已完成項目
+
+- 新增 `src/courses/smartring-tasks.js`
+- 將課程任務資料從 `main.js` 抽出，集中管理
+- 新增 SmartRing 任務教材欄位：
+  - DEMO 觀察
+  - 仿作任務
+  - 函式整理
+  - 延伸挑戰
+- 更新完整任務視窗顯示格式
+- 新增與整理課程代碼：
+  - `SR-B01`：SmartRing 基礎任務：按鈕控制燈光
+  - `SR-A01`：SmartRing 陣列任務：LED 圖樣陣列仿作
+  - `SR-A02`：SmartRing 陣列任務：狀態顯示與進度條仿作
+  - `SR-F01`：SmartRing 函式任務：填滿動畫函式仿作
+  - `SR-F02`：SmartRing 函式任務：跑馬燈函式仿作
+  - `SR-F03`：SmartRing 函式任務：按鈕觸發動畫
+  - `JS-B01`：Blockly 解題任務：重複累加
+- 課程代碼載入後會自動載入對應起始積木
+- SR-F03 保留 while true 互動偵測範例，搭配 B13 的「中止程式」按鈕使用
+
+### 教學定位
+
+MVP-B15 的課程流程為：
+
+1. 觀察 DEMO
+2. 拆解 LED 變化規律
+3. 使用 LED 暫存陣列仿作
+4. 整理成自訂函式
+5. 完成延伸挑戰
+
+### 測試方式
+
+```powershell
+cd C:\YOSEP\blockly-lab
+npm run dev
+```
+
+測試課程代碼：
+
+```text
+SR-B01
+SR-A01
+SR-A02
+SR-F01
+SR-F02
+SR-F03
+JS-B01
+```
+
+### 下一版建議
+
+MVP-B16 可開始進入任務教材頁面精緻化，例如加入任務提示分層、任務完成檢核表，或將起始積木與任務資料進一步模組化。

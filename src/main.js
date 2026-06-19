@@ -7,6 +7,7 @@ import * as ZhHant from 'blockly/msg/zh-hant';
 import { competitionToolbox } from './blockly/toolbox.js';
 import { registerSmartRingBlocks } from './blockly/smartring-blocks.js';
 import { smartRingRuntime } from './smartring/runtime.js';
+import { smartRingCourses, getAvailableCourseListHtml } from './courses/smartring-tasks.js';
 
 Blockly.setLocale(ZhHant);
 registerSmartRingBlocks();
@@ -64,62 +65,7 @@ let workspace = null;
 let currentCourse = null;
 let isUserProgramRunning = false;
 
-const demoCourses = {
-  'SR-B01': {
-    id: 'SR-B01',
-    title: 'SmartRing 基礎任務：按鈕控制燈光',
-    type: 'SmartRing 互動任務',
-    level: '國小高年級 / 國中初階',
-    goal: '透過按鈕與 LED 燈光互動，理解條件判斷與輸出控制。',
-    description:
-      '本任務要求學生連接 SmartRingController，按下指定按鈕後，讓指定 LED 顯示指定顏色。',
-    operation:
-      '學生需要先連線 SmartRingController，再使用「SmartRing 按鈕被按下？」與「設定 SmartRing LED 顏色」積木完成互動任務。',
-    blockLimit:
-      '建議使用邏輯、迴圈、變數、SmartRing 按鈕與 SmartRing 燈光積木。',
-    smartRingRequirement:
-      '需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。',
-    scoring:
-      '學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。',
-    hint: 'MVP-B13 已加入中止程式與陣列位移動畫 DEMO 積木，學生可先觀察動畫，再用暫存陣列與函式仿作。',
-  },
-  'SR-A01': {
-    id: 'SR-A01',
-    title: 'SmartRing 陣列任務：程式中止、陣列位移動畫 DEMO 與暫存陣列仿作',
-    type: 'SmartRing 陣列任務',
-    level: '國中八年級',
-    goal: '透過 SmartRing DEMO 觀察 LED 圖樣、狀態顯示與基礎動畫、陣列位移動畫與程式中止控制，再使用暫存陣列與 RGB 參數寫出對應程式。',
-    description:
-      '本任務先用 DEMO 積木示範圖樣、狀態顯示與基礎動畫、陣列位移與交錯閃爍效果，再引導學生使用 LED 暫存陣列、RGB 通道、完整 RGB 參數與函式重做相同效果。',
-    operation:
-      '學生先執行「示範圖樣」「示範狀態顯示」與基礎動畫 DEMO 觀察效果，再使用「清除暫存陣列」「設定暫存陣列第 N 顆 LED」「顯示暫存陣列到 SmartRing」完成仿作。',
-    blockLimit:
-      '建議使用 SmartRing LED 暫存陣列、RGB 通道、完整 RGB 設定、變數、迴圈、數學、等待與函式積木。DEMO 積木僅作觀察與任務示範。',
-    smartRingRequirement:
-      '需要使用 12 顆 LED 顯示陣列狀態。學生端 LED 編號維持 1～12。',
-    scoring:
-      '未來評分會檢查學生是否能不用 DEMO 積木，而以暫存陣列、迴圈、等待與函式完成指定圖樣、狀態顯示或基礎動畫。',
-    hint: 'B13 的教學脈絡是：先看 DEMO，再分析 LED 變化，最後用暫存陣列、迴圈、等待與函式自己寫出來。',
-  },
-  'JS-B01': {
-    id: 'JS-B01',
-    title: 'Blockly 解題任務：重複累加',
-    type: '程式解題任務',
-    level: '國中初階',
-    goal: '使用變數與迴圈完成累加，並輸出結果。',
-    description:
-      '未來本任務會載入測資與標準答案，學生按下測試後由系統自動評分。',
-    operation:
-      '學生使用變數紀錄目前總和，透過迴圈重複累加，最後輸出結果。',
-    blockLimit:
-      '建議使用變數、迴圈、數學與文字輸出積木。',
-    smartRingRequirement:
-      '本題不需要連接 SmartRingController。',
-    scoring:
-      '未來評分會比對程式輸出與標準答案，計算通過測資數。',
-    hint: '目前可先使用「載入範例」觀察變數、迴圈與輸出。',
-  },
-};
+const demoCourses = smartRingCourses;
 
 function initBlockly() {
   workspace = Blockly.inject(blocklyDiv, {
@@ -680,6 +626,44 @@ function loadWorkspaceFromFile(file) {
   reader.readAsText(file, 'utf-8');
 }
 
+function loadCourseStarter(course) {
+  if (!workspace || !course?.starterXml) {
+    return false;
+  }
+
+  try {
+    workspace.clear();
+
+    const xmlDom = Blockly.utils.xml.textToDom(course.starterXml);
+    Blockly.Xml.domToWorkspace(xmlDom, workspace);
+
+    updateCodePreview();
+    switchWorkspaceTab('blocks');
+
+    outputArea.textContent =
+      course.starterMessage || `已載入 ${course.id} 起始積木。`;
+
+    return true;
+  } catch (error) {
+    outputArea.textContent = `載入 ${course.id} 起始積木失敗：\n${error.message}`;
+    return false;
+  }
+}
+
+function renderOptionalTaskSection(title, content) {
+  if (!content) {
+    return '';
+  }
+
+  return `
+    <section class="modal-section">
+      <h3>${title}</h3>
+      <p>${content}</p>
+    </section>
+  `;
+}
+
+
 function updateModeStatus() {
   const modeText =
     practiceMode.value === 'competition' ? '競賽模式' : '學習模式';
@@ -721,6 +705,11 @@ function renderCourseInfo(course) {
       <h3>任務說明</h3>
       <p>${course.description}</p>
     </section>
+
+    ${renderOptionalTaskSection('DEMO 觀察', course.demoObserve)}
+    ${renderOptionalTaskSection('仿作任務', course.practiceTask)}
+    ${renderOptionalTaskSection('函式整理', course.functionTask)}
+    ${renderOptionalTaskSection('延伸挑戰', course.challenge)}
 
     <section class="modal-section">
       <h3>操作說明</h3>
@@ -765,22 +754,18 @@ function loadCourse() {
     currentCourse = null;
     taskInfo.innerHTML = `
       <h2>找不到課程：${code}</h2>
-      <p>目前 MVP-B07 只內建示範課程：</p>
+      <p>目前內建課程：</p>
       <ul>
-        <li>SR-B01：SmartRing 基礎任務</li>
-        <li>SR-A01：SmartRing 陣列任務</li>
-        <li>JS-B01：Blockly 解題任務</li>
+        ${getAvailableCourseListHtml()}
       </ul>
     `;
 
     taskModalTitle.textContent = '找不到課程';
     taskModalBody.innerHTML = `
       <p>找不到課程代碼：${code}</p>
-      <p>請先測試以下示範課程：</p>
+      <p>請先測試以下內建課程：</p>
       <ul>
-        <li>SR-B01</li>
-        <li>SR-A01</li>
-        <li>JS-B01</li>
+        ${getAvailableCourseListHtml()}
       </ul>
     `;
 
@@ -791,15 +776,11 @@ function loadCourse() {
   currentCourse = course;
   renderCourseInfo(course);
 
-  if (course.id === 'SR-B01') {
-    loadSmartRingSample();
-  }
+  const hasStarter = loadCourseStarter(course);
 
-  if (course.id === 'SR-A01') {
-    loadSmartRingArraySample();
+  if (!hasStarter) {
+    outputArea.textContent = `已載入課程：${course.id}｜${course.title}`;
   }
-
-  outputArea.textContent = `已載入課程：${course.id}｜${course.title}`;
 }
 
 async function testTask() {
@@ -819,8 +800,8 @@ async function testTask() {
   writeOutput('---');
   writeOutput(`任務測試模式：${modeText}`);
   writeOutput(`課程代碼：${currentCourse.id}`);
-  writeOutput('MVP-B13 測試結果：已執行目前 Blockly 程式，請確認 SmartRing LED 顯示、動畫或中止控制是否符合任務。');
-  writeOutput('若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
+  writeOutput('MVP-B15 測試結果：已執行目前 Blockly 程式，請依任務要求確認 DEMO 觀察、暫存陣列仿作或函式整理是否符合目標。');
+  writeOutput('若程式無法停止，請確認迴圈中有 SmartRing.wait；若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
 }
 
 function submitScore() {
