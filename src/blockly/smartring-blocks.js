@@ -47,6 +47,7 @@ const SMART_RING_STATUS_TYPES = [
 Blockly.Blocks.smartring_is_connected = {
   init() {
     this.appendDummyInput().appendField('SmartRing 已連線？');
+    this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
     this.setColour('#0f766e');
     this.setTooltip('判斷 SmartRingController 是否已透過 WebSerial 連線。');
@@ -65,6 +66,7 @@ Blockly.Blocks.smartring_button_pressed = {
       .appendField(new Blockly.FieldDropdown(SMART_RING_BUTTONS), 'BUTTON')
       .appendField('被按下？');
 
+    this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
     this.setColour('#0f766e');
     this.setTooltip('判斷指定的 SmartRing 按鈕是否被按下。');
@@ -85,6 +87,7 @@ Blockly.Blocks.smartring_wait_ms = {
 
     this.appendDummyInput().appendField('毫秒');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0f766e');
@@ -109,6 +112,7 @@ Blockly.Blocks.smartring_set_led_color = {
       .appendField('顆 LED 顏色為')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0f766e');
@@ -141,6 +145,7 @@ Blockly.Blocks.smartring_set_led_rgb = {
       .setCheck('Number')
       .appendField('藍色為');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0f766e');
@@ -163,6 +168,7 @@ Blockly.Blocks.smartring_set_all_leds = {
       .appendField('設定 SmartRing 全部 LED 顏色為')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0f766e');
@@ -180,6 +186,7 @@ Blockly.Blocks.smartring_clear_leds = {
   init() {
     this.appendDummyInput().appendField('清除 SmartRing 所有 LED');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0f766e');
@@ -196,6 +203,7 @@ Blockly.Blocks.smartring_rgb_channel = {
   init() {
     this.appendDummyInput()
       .appendField(new Blockly.FieldDropdown(SMART_RING_CHANNELS), 'CHANNEL');
+    this.setInputsInline(true);
     this.setOutput(true, 'String');
     this.setColour('#14b8a6');
     this.setTooltip('選擇 RGB 色彩通道。這個輸入也可以改接文字或變數。');
@@ -212,6 +220,7 @@ Blockly.Blocks.smartring_clear_led_buffer = {
   init() {
     this.appendDummyInput().appendField('清除暫存陣列');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -234,6 +243,7 @@ Blockly.Blocks.smartring_set_buffer_led_color = {
       .appendField('顆 LED 顏色為')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -261,6 +271,7 @@ Blockly.Blocks.smartring_set_buffer_led_channel = {
       .setCheck('Number')
       .appendField('為');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -294,6 +305,7 @@ Blockly.Blocks.smartring_set_buffer_led_rgb = {
       .setCheck('Number')
       .appendField('藍色為');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -314,6 +326,7 @@ Blockly.Blocks.smartring_show_led_buffer = {
   init() {
     this.appendDummyInput().appendField('顯示暫存陣列到 SmartRing');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -331,6 +344,7 @@ Blockly.Blocks.smartring_shift_led_buffer_left = {
   init() {
     this.appendValueInput('STEPS').setCheck('Number').appendField('暫存陣列向左移動');
     this.appendDummyInput().appendField('格');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -348,6 +362,7 @@ Blockly.Blocks.smartring_shift_led_buffer_right = {
   init() {
     this.appendValueInput('STEPS').setCheck('Number').appendField('暫存陣列向右移動');
     this.appendDummyInput().appendField('格');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -366,6 +381,7 @@ Blockly.Blocks.smartring_set_odd_buffer_leds = {
     this.appendDummyInput()
       .appendField('設定暫存陣列奇數燈顏色為')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -384,6 +400,7 @@ Blockly.Blocks.smartring_set_even_buffer_leds = {
     this.appendDummyInput()
       .appendField('設定暫存陣列偶數燈顏色為')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#14b8a6');
@@ -405,6 +422,7 @@ Blockly.Blocks.smartring_demo_pattern = {
       .appendField('顏色')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');
@@ -437,6 +455,7 @@ Blockly.Blocks.smartring_demo_status_display = {
       .appendField('顏色')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
 
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');
@@ -461,6 +480,7 @@ Blockly.Blocks.smartring_set_buffer_pattern = {
       .appendField(new Blockly.FieldDropdown(SMART_RING_PATTERNS), 'PATTERN')
       .appendField('顏色')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');
@@ -481,6 +501,7 @@ Blockly.Blocks.smartring_set_buffer_progress = {
     this.appendDummyInput()
       .appendField('顆 顏色')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');
@@ -502,6 +523,7 @@ Blockly.Blocks.smartring_set_buffer_score = {
     this.appendDummyInput()
       .appendField('顏色')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');
@@ -524,6 +546,7 @@ Blockly.Blocks.smartring_set_buffer_life = {
     this.appendDummyInput()
       .appendField('顏色')
       .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');

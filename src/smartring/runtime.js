@@ -31,7 +31,9 @@ function clamp(value, min, max) {
 }
 
 function normalizeRgbValue(value) {
-  return clamp(Math.round(Number(value) || 0), 0, 30);
+  const studentValue = clamp(Math.round(Number(value) || 0), 0, 30);
+
+  return Math.round((studentValue / 30) * 255);
 }
 
 function normalizeColorChannel(channel) {
