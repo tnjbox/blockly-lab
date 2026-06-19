@@ -21,6 +21,10 @@ const blocklyDiv = document.getElementById('blocklyDiv');
 const codePreview = document.getElementById('codePreview');
 const outputArea = document.getElementById('outputArea');
 
+// Google Apps Script Web App URL for score upload.
+// Paste the deployed Web App URL here after setting up google-apps-script/Code.gs.
+const SCORE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbw58wHIWa9TUK4uuVMR2UwqDQCqEEdp7GOY913Y969JTKNM4kfhtjTPHhnFWcvWhpec/exec';
+
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
 const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
 const btnTestLedRed = document.getElementById('btnTestLedRed');
@@ -1227,15 +1231,6 @@ function renderAssessmentCellPre(value, emptyText = '無') {
 
 function renderAssessmentResultHtml(assessment) {
   const total = Number(assessment?.total || 0);
-  const passed = Number(assessment?.passed || 0);
-  const score = getAssessmentScore(passed, total);
-  const allPassed = total > 0 && passed === total;
-  const modeText = getModeText();
-  const statusText = allPassed ? '全部通過' : total > 0 ? '尚未全部通過' : '尚無測資';
-  const statusClass = allPassed ? 'passed' : 'failed';
-  const uploadNote = isCompetitionMode()
-    ? '競賽模式：系統評分完成後，可準備上傳本次成績。'
-    : '學習模式：本機測資僅供練習，不會啟用上傳成績。';
 
   const rows = (assessment?.cases || [])
     .map((item, index) => {
@@ -1279,28 +1274,6 @@ function renderAssessmentResultHtml(assessment) {
   return `
     <article class="assessment-report">
       <h2>系統評分結果</h2>
-      <div class="assessment-summary-grid">
-        <div class="assessment-summary-card">
-          <span>題目</span>
-          <strong>${escapeHtml(currentTask?.problemTitle || currentTask?.title || '尚未載入')}</strong>
-          <small>${escapeHtml(currentCourseGroup?.id || '')}｜${escapeHtml(currentTask?.id || '')}</small>
-        </div>
-        <div class="assessment-summary-card">
-          <span>模式</span>
-          <strong>${escapeHtml(modeText)}</strong>
-          <small>${isCompetitionMode() ? '可準備上傳成績' : '練習用，不上傳'}</small>
-        </div>
-        <div class="assessment-summary-card">
-          <span>通過筆數</span>
-          <strong>${passed} / ${total}</strong>
-          <small>通過率 ${score}%</small>
-        </div>
-        <div class="assessment-summary-card ${statusClass}">
-          <span>判定</span>
-          <strong>${statusText}</strong>
-          <small>${uploadNote}</small>
-        </div>
-      </div>
       ${tableHtml}
     </article>
   `;
@@ -1401,7 +1374,7 @@ async function testTask() {
 
 function buildScoreUploadPayload(profile) {
   return {
-    version: 'MVP-J04',
+    version: 'MVP-J04-1',
     submittedAt: new Date().toISOString(),
     className: profile.className,
     seatNumber: profile.seatNumber,
@@ -1412,13 +1385,49 @@ function buildScoreUploadPayload(profile) {
     taskTitle: currentTask?.problemTitle || currentTask?.title || '',
     mode: normalizeCourseMode(currentCourseMode),
     score: lastAssessmentResult?.score ?? 0,
+    passRate: lastAssessmentResult?.score ?? 0,
     passed: lastAssessmentResult?.passed ?? 0,
     total: lastAssessmentResult?.total ?? 0,
     allPassed: Boolean(lastAssessmentResult?.allPassed),
   };
 }
 
-function renderScoreUploadPreview(payload) {
+function isScoreUploadConfigured() {
+  const url = String(SCORE_UPLOAD_URL || '').trim();
+  return Boolean(url && !url.includes('請貼上') && !url.includes('YOUR_'));
+}
+
+async function uploadScorePayload(payload) {
+  const url = String(SCORE_UPLOAD_URL || '').trim();
+
+  if (!isScoreUploadConfigured()) {
+    throw new Error('尚未設定 Google Apps Script Web App URL。請先部署 Apps Script，並將 Web App URL 填入 src/main.js 的 SCORE_UPLOAD_URL。');
+  }
+
+  await fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return {
+    ok: true,
+    message: '已送出成績上傳請求。因 Google Apps Script 採 no-cors 送出，請到 Google Sheet 確認是否寫入成功。',
+  };
+}
+
+function renderScoreUploadResult(payload, { status = 'preview', message = '' } = {}) {
+  const statusTitle = {
+    preview: '成績上傳資料預覽',
+    sending: '成績上傳中',
+    success: '成績上傳請求已送出',
+    error: '成績上傳失敗',
+  }[status] || '成績上傳資料';
+
+  const statusClass = status === 'success' ? 'passed' : status === 'error' ? 'failed' : '';
   const rows = [
     ['班級', payload.className],
     ['座號', payload.seatNumber],
@@ -1428,7 +1437,6 @@ function renderScoreUploadPreview(payload) {
     ['分數', `${payload.score}`],
     ['本機測資', `${payload.passed} / ${payload.total}`],
     ['通過狀態', payload.allPassed ? '全部通過' : '尚未全部通過'],
-    ['上傳狀態', '預備完成，尚未接 Google Sheet。'],
   ]
     .map(([label, value]) => `
       <tr>
@@ -1438,20 +1446,24 @@ function renderScoreUploadPreview(payload) {
     `)
     .join('');
 
+  const noteHtml = message
+    ? `<p class="assessment-note ${statusClass}">${escapeHtml(message)}</p>`
+    : '';
+
   return `
     <article class="score-upload-preview">
-      <h2>成績上傳資料預覽</h2>
-      <p class="assessment-note">MVP-J04 先建立上傳資料格式，尚未實際寫入 Google Sheet。</p>
+      <h2>${statusTitle}</h2>
+      ${noteHtml}
       <table class="score-upload-table">
         <tbody>${rows}</tbody>
       </table>
-      <h3>預備送出資料</h3>
+      <h3>送出資料</h3>
       <pre class="score-payload-pre">${escapeHtml(JSON.stringify(payload, null, 2))}</pre>
     </article>
   `;
 }
 
-function submitScore() {
+async function submitScore() {
   const profile = getStudentProfile();
 
   if (!isCompetitionMode()) {
@@ -1478,7 +1490,27 @@ function submitScore() {
   }
 
   const payload = buildScoreUploadPayload(profile);
-  outputArea.innerHTML = renderScoreUploadPreview(payload);
+
+  btnSubmitScore.disabled = true;
+  outputArea.innerHTML = renderScoreUploadResult(payload, {
+    status: 'sending',
+    message: '正在送出成績資料，請稍候。',
+  });
+
+  try {
+    const result = await uploadScorePayload(payload);
+    outputArea.innerHTML = renderScoreUploadResult(payload, {
+      status: 'success',
+      message: result.message,
+    });
+  } catch (error) {
+    outputArea.innerHTML = renderScoreUploadResult(payload, {
+      status: 'error',
+      message: error.message || '成績上傳時發生未知錯誤。',
+    });
+  } finally {
+    updateSubmitScoreVisibility();
+  }
 }
 
 function openTaskModal() {

@@ -1025,3 +1025,15 @@ button:disabled {
   border: 1px solid #cbd5e1;
   border-radius: 10px;
 }
+
+.assessment-note.passed {
+  color: #065f46;
+  background: #ecfdf5;
+  border-left-color: #10b981;
+}
+
+.assessment-note.failed {
+  color: #991b1b;
+  background: #fef2f2;
+  border-left-color: #ef4444;
+}
