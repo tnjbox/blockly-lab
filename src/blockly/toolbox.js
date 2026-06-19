@@ -333,6 +333,62 @@ export const competitionToolbox = {
             },
           },
         },
+        {
+          kind: 'block',
+          type: 'smartring_play_blink_animation',
+          inputs: {
+            TIMES: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 3,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_play_fill_animation',
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 100,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_play_clear_animation',
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 100,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'block',
+          type: 'smartring_play_running_light_animation',
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: 'math_number',
+                fields: {
+                  NUM: 100,
+                },
+              },
+            },
+          },
+        },
       ],
     },
   ],

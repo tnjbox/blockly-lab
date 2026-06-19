@@ -459,6 +459,77 @@ class SmartRingRuntime extends EventTarget {
     this.emitLog(`示範狀態顯示 ${statusType}`);
   }
 
+
+  async playBlinkAnimation(colorName, times = 3) {
+    const repeatTimes = clamp(Math.floor(Number(times) || 0), 1, 20);
+    const delay = 250;
+
+    for (let count = 0; count < repeatTimes; count += 1) {
+      await this.setAllLeds(colorName);
+      await this.wait(delay);
+      await this.clearLeds();
+      await this.wait(delay);
+    }
+
+    this.emitLog(`播放閃爍動畫 ${colorName}，次數 ${repeatTimes}`);
+  }
+
+  async playFillAnimation(colorName, speed = 100) {
+    const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+    const color = this.getLedColorPayload(colorName);
+
+    await this.clearLeds();
+
+    for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
+      await this.sendCommand('setLed', {
+        index: ledNumber,
+        color: colorName,
+        r: color.r,
+        g: color.g,
+        b: color.b,
+      });
+      await this.wait(delay);
+    }
+
+    this.emitLog(`播放填滿動畫 ${colorName}，速度 ${delay} ms`);
+  }
+
+  async playClearAnimation(speed = 100) {
+    const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+
+    for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
+      await this.sendCommand('setLed', {
+        index: ledNumber,
+        color: 'off',
+        r: 0,
+        g: 0,
+        b: 0,
+      });
+      await this.wait(delay);
+    }
+
+    this.emitLog(`播放清除動畫，速度 ${delay} ms`);
+  }
+
+  async playRunningLightAnimation(colorName, speed = 100) {
+    const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+    const color = this.getLedColorPayload(colorName);
+
+    for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
+      await this.clearLeds();
+      await this.sendCommand('setLed', {
+        index: ledNumber,
+        color: colorName,
+        r: color.r,
+        g: color.g,
+        b: color.b,
+      });
+      await this.wait(delay);
+    }
+
+    this.emitLog(`播放跑馬燈動畫 ${colorName}，速度 ${delay} ms`);
+  }
+
   async showLedBuffer() {
     await this.sendCommand('showBuffer', {
       leds: this.getLedBuffer(),

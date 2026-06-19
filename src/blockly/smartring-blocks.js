@@ -473,6 +473,103 @@ javascriptGenerator.forBlock.smartring_demo_status_display = function (block, ge
 };
 
 // 保留 B10 舊版圖樣與狀態顯示積木，避免舊作品載入失敗；B11 工具箱改用 DEMO 積木。
+
+
+Blockly.Blocks.smartring_play_blink_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放閃爍動畫 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.appendValueInput('TIMES')
+      .setCheck('Number')
+      .appendField('次數');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放全亮與全滅交替的閃爍動畫。學生可觀察後用重複、等待與清除重做。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_blink_animation = function (block, generator) {
+  const color = block.getFieldValue('COLOR');
+  const timesCode = generator.valueToCode(block, 'TIMES', Order.NONE) || '3';
+  return `await SmartRing.playBlinkAnimation("${color}", ${timesCode});\n`;
+};
+
+Blockly.Blocks.smartring_play_fill_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放填滿動畫 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.appendValueInput('SPEED')
+      .setCheck('Number')
+      .appendField('速度');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放 LED 1 到 LED 12 逐顆亮起的填滿動畫。速度單位為毫秒。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_fill_animation = function (block, generator) {
+  const color = block.getFieldValue('COLOR');
+  const speedCode = generator.valueToCode(block, 'SPEED', Order.NONE) || '100';
+  return `await SmartRing.playFillAnimation("${color}", ${speedCode});\n`;
+};
+
+Blockly.Blocks.smartring_play_clear_animation = {
+  init() {
+    this.appendValueInput('SPEED')
+      .setCheck('Number')
+      .appendField('播放清除動畫 速度');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放 LED 1 到 LED 12 逐顆熄滅的清除動畫。速度單位為毫秒。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_clear_animation = function (block, generator) {
+  const speedCode = generator.valueToCode(block, 'SPEED', Order.NONE) || '100';
+  return `await SmartRing.playClearAnimation(${speedCode});\n`;
+};
+
+Blockly.Blocks.smartring_play_running_light_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放跑馬燈動畫 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.appendValueInput('SPEED')
+      .setCheck('Number')
+      .appendField('速度');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放單顆 LED 從 1 到 12 依序移動的跑馬燈動畫。速度單位為毫秒。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_running_light_animation = function (block, generator) {
+  const color = block.getFieldValue('COLOR');
+  const speedCode = generator.valueToCode(block, 'SPEED', Order.NONE) || '100';
+  return `await SmartRing.playRunningLightAnimation("${color}", ${speedCode});\n`;
+};
+
 Blockly.Blocks.smartring_set_buffer_pattern = {
   init() {
     this.appendDummyInput()
