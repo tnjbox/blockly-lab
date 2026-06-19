@@ -3,6 +3,12 @@ import { createJsonLine, formatButtonState, parseSmartRingLine } from './protoco
 
 const LED_COUNT = 12;
 
+function createProgramStopError() {
+  const error = new Error('程式已中止。');
+  error.name = 'AbortError';
+  return error;
+}
+
 const LED_COLOR_TABLE = {
   red: { r: 255, g: 0, b: 0 },
   green: { r: 0, g: 255, b: 0 },
@@ -98,6 +104,7 @@ class SmartRingRuntime extends EventTarget {
     this.lastState = null;
     this.lastCommand = null;
     this.ledBuffer = createEmptyLedBuffer();
+    this.programStopRequested = false;
   }
 
   isSupported() {
@@ -114,6 +121,30 @@ class SmartRingRuntime extends EventTarget {
 
   getLastCommand() {
     return this.lastCommand;
+  }
+
+  resetProgramStop() {
+    this.programStopRequested = false;
+  }
+
+  stopProgram() {
+    if (this.programStopRequested) {
+      return;
+    }
+
+    this.programStopRequested = true;
+    this.emitLog('收到中止程式請求。');
+    this.dispatchEvent(new CustomEvent('programstop'));
+  }
+
+  isProgramStopRequested() {
+    return this.programStopRequested;
+  }
+
+  throwIfProgramStopped() {
+    if (this.programStopRequested) {
+      throw createProgramStopError();
+    }
   }
 
   getButtons() {
@@ -172,6 +203,8 @@ class SmartRingRuntime extends EventTarget {
   }
 
   async sendJson(payload) {
+    this.throwIfProgramStopped();
+
     if (!this.serial || !this.connected) {
       throw new Error('SmartRing 尚未連線，無法送出指令。');
     }
@@ -180,9 +213,12 @@ class SmartRingRuntime extends EventTarget {
     this.emitCommand(payload);
 
     await this.serial.writeLine(createJsonLine(payload));
+    this.throwIfProgramStopped();
   }
 
   async sendCommand(commandName, payload = {}) {
+    this.throwIfProgramStopped();
+
     const commandPayload = {
       cmd: commandName,
       ...payload,
@@ -530,6 +566,99 @@ class SmartRingRuntime extends EventTarget {
     this.emitLog(`播放跑馬燈動畫 ${colorName}，速度 ${delay} ms`);
   }
 
+
+  async showAnimationBuffer(buffer) {
+    this.throwIfProgramStopped();
+
+    await this.sendCommand('showBuffer', {
+      leds: buffer.map((color) => cloneColor(color)),
+    });
+  }
+
+  async showSingleLedFrame(ledNumber, colorName) {
+    const ledIndex = this.normalizeLedNumber(ledNumber);
+    const color = this.getLedColorPayload(colorName);
+    const frame = createEmptyLedBuffer();
+
+    frame[ledIndex - 1] = cloneColor(color);
+    await this.showAnimationBuffer(frame);
+  }
+
+  async playShiftLeftAnimation(colorName, times = 1, speed = 100) {
+    const repeatTimes = clamp(Math.floor(Number(times) || 1), 1, 20);
+    const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+
+    for (let round = 0; round < repeatTimes; round += 1) {
+      for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
+        await this.showSingleLedFrame(ledNumber, colorName);
+        await this.wait(delay);
+      }
+    }
+
+    await this.clearLeds();
+    this.emitLog(`播放左移動畫 ${colorName}，次數 ${repeatTimes}，速度 ${delay} ms`);
+  }
+
+  async playShiftRightAnimation(colorName, times = 1, speed = 100) {
+    const repeatTimes = clamp(Math.floor(Number(times) || 1), 1, 20);
+    const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+
+    for (let round = 0; round < repeatTimes; round += 1) {
+      for (let ledNumber = LED_COUNT; ledNumber >= 1; ledNumber -= 1) {
+        await this.showSingleLedFrame(ledNumber, colorName);
+        await this.wait(delay);
+      }
+    }
+
+    await this.clearLeds();
+    this.emitLog(`播放右移動畫 ${colorName}，次數 ${repeatTimes}，速度 ${delay} ms`);
+  }
+
+  async playBounceAnimation(colorName, times = 1, speed = 100) {
+    const repeatTimes = clamp(Math.floor(Number(times) || 1), 1, 20);
+    const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+    const positions = [
+      ...Array.from({ length: LED_COUNT }, (_, index) => index + 1),
+      ...Array.from({ length: LED_COUNT - 2 }, (_, index) => LED_COUNT - 1 - index),
+    ];
+
+    for (let round = 0; round < repeatTimes; round += 1) {
+      for (const ledNumber of positions) {
+        await this.showSingleLedFrame(ledNumber, colorName);
+        await this.wait(delay);
+      }
+    }
+
+    await this.clearLeds();
+    this.emitLog(`播放來回移動動畫 ${colorName}，次數 ${repeatTimes}，速度 ${delay} ms`);
+  }
+
+  async playAlternateBlinkAnimation(colorName1, colorName2, times = 3) {
+    const repeatTimes = clamp(Math.floor(Number(times) || 3), 1, 20);
+    const delay = 250;
+    const color1 = this.getLedColorPayload(colorName1);
+    const color2 = this.getLedColorPayload(colorName2);
+
+    for (let round = 0; round < repeatTimes; round += 1) {
+      const frameA = createEmptyLedBuffer();
+      const frameB = createEmptyLedBuffer();
+
+      for (let index = 0; index < LED_COUNT; index += 1) {
+        const isOddLed = (index + 1) % 2 === 1;
+        frameA[index] = cloneColor(isOddLed ? color1 : color2);
+        frameB[index] = cloneColor(isOddLed ? color2 : color1);
+      }
+
+      await this.showAnimationBuffer(frameA);
+      await this.wait(delay);
+      await this.showAnimationBuffer(frameB);
+      await this.wait(delay);
+    }
+
+    await this.clearLeds();
+    this.emitLog(`播放交錯閃爍動畫 ${colorName1}/${colorName2}，次數 ${repeatTimes}`);
+  }
+
   async showLedBuffer() {
     await this.sendCommand('showBuffer', {
       leds: this.getLedBuffer(),
@@ -541,9 +670,37 @@ class SmartRingRuntime extends EventTarget {
   async wait(ms) {
     const delay = Math.max(0, Number(ms) || 0);
 
-    await new Promise((resolve) => {
-      window.setTimeout(resolve, delay);
+    this.throwIfProgramStopped();
+
+    if (delay === 0) {
+      return;
+    }
+
+    await new Promise((resolve, reject) => {
+      let timerId = null;
+
+      const cleanup = () => {
+        if (timerId !== null) {
+          window.clearTimeout(timerId);
+        }
+
+        this.removeEventListener('programstop', handleStop);
+      };
+
+      const handleStop = () => {
+        cleanup();
+        reject(createProgramStopError());
+      };
+
+      timerId = window.setTimeout(() => {
+        cleanup();
+        resolve();
+      }, delay);
+
+      this.addEventListener('programstop', handleStop, { once: true });
     });
+
+    this.throwIfProgramStopped();
   }
 
   handleIncomingLine(line) {

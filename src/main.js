@@ -22,6 +22,7 @@ const btnTestLedClear = document.getElementById('btnTestLedClear');
 
 const btnLoadSample = document.getElementById('btnLoadSample');
 const btnRun = document.getElementById('btnRun');
+const btnStop = document.getElementById('btnStop');
 const btnClear = document.getElementById('btnClear');
 const btnSaveBlocks = document.getElementById('btnSaveBlocks');
 const btnLoadBlocks = document.getElementById('btnLoadBlocks');
@@ -61,6 +62,7 @@ const btnCloseTaskModal = document.getElementById('btnCloseTaskModal');
 
 let workspace = null;
 let currentCourse = null;
+let isUserProgramRunning = false;
 
 const demoCourses = {
   'SR-B01': {
@@ -79,16 +81,16 @@ const demoCourses = {
       '需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。',
     scoring:
       '學習模式會顯示提示；競賽模式未來會檢查按鈕反應與 LED 狀態是否符合要求。',
-    hint: 'MVP-B12 已加入基礎動畫 DEMO 積木，學生可先觀察動畫，再用暫存陣列與函式仿作。',
+    hint: 'MVP-B13 已加入中止程式與陣列位移動畫 DEMO 積木，學生可先觀察動畫，再用暫存陣列與函式仿作。',
   },
   'SR-A01': {
     id: 'SR-A01',
-    title: 'SmartRing 陣列任務：基礎動畫 DEMO 與暫存陣列仿作',
+    title: 'SmartRing 陣列任務：程式中止、陣列位移動畫 DEMO 與暫存陣列仿作',
     type: 'SmartRing 陣列任務',
     level: '國中八年級',
-    goal: '透過 SmartRing DEMO 觀察 LED 圖樣、狀態顯示與基礎動畫，再使用暫存陣列與 RGB 參數寫出對應程式。',
+    goal: '透過 SmartRing DEMO 觀察 LED 圖樣、狀態顯示與基礎動畫、陣列位移動畫與程式中止控制，再使用暫存陣列與 RGB 參數寫出對應程式。',
     description:
-      '本任務先用 DEMO 積木示範圖樣、狀態顯示與基礎動畫效果，再引導學生使用 LED 暫存陣列、RGB 通道、完整 RGB 參數與函式重做相同效果。',
+      '本任務先用 DEMO 積木示範圖樣、狀態顯示與基礎動畫、陣列位移與交錯閃爍效果，再引導學生使用 LED 暫存陣列、RGB 通道、完整 RGB 參數與函式重做相同效果。',
     operation:
       '學生先執行「示範圖樣」「示範狀態顯示」與基礎動畫 DEMO 觀察效果，再使用「清除暫存陣列」「設定暫存陣列第 N 顆 LED」「顯示暫存陣列到 SmartRing」完成仿作。',
     blockLimit:
@@ -97,7 +99,7 @@ const demoCourses = {
       '需要使用 12 顆 LED 顯示陣列狀態。學生端 LED 編號維持 1～12。',
     scoring:
       '未來評分會檢查學生是否能不用 DEMO 積木，而以暫存陣列、迴圈、等待與函式完成指定圖樣、狀態顯示或基礎動畫。',
-    hint: 'B12 的教學脈絡是：先看 DEMO，再分析 LED 變化，最後用暫存陣列、迴圈、等待與函式自己寫出來。',
+    hint: 'B13 的教學脈絡是：先看 DEMO，再分析 LED 變化，最後用暫存陣列、迴圈、等待與函式自己寫出來。',
   },
   'JS-B01': {
     id: 'JS-B01',
@@ -172,8 +174,35 @@ function clearOutput() {
   outputArea.textContent = '';
 }
 
+function setProgramRunningUi(isRunning) {
+  isUserProgramRunning = isRunning;
+
+  if (btnRun) {
+    btnRun.disabled = isRunning;
+  }
+
+  if (btnStop) {
+    btnStop.disabled = !isRunning;
+  }
+}
+
+function stopUserCode() {
+  if (!isUserProgramRunning) {
+    outputArea.textContent = '目前沒有正在執行的程式。';
+    return;
+  }
+
+  smartRingRuntime.stopProgram();
+  writeOutput('已送出中止程式請求，程式會在下一個 SmartRing 等待或硬體指令處停止。');
+}
+
 async function runUserCode() {
   if (!workspace) return;
+
+  if (isUserProgramRunning) {
+    writeOutput('程式仍在執行中，請先按「中止程式」。');
+    return;
+  }
 
   clearOutput();
 
@@ -186,6 +215,9 @@ async function runUserCode() {
 
   const originalAlert = window.alert;
   const originalConsoleLog = console.log;
+
+  smartRingRuntime.resetProgramStop();
+  setProgramRunningUi(true);
 
   try {
     window.alert = (message) => {
@@ -218,10 +250,16 @@ async function runUserCode() {
       outputArea.textContent = '程式執行完成，沒有輸出內容。';
     }
   } catch (error) {
-    outputArea.textContent = `程式執行發生錯誤：\n${error.message}`;
+    if (error?.name === 'AbortError' || error?.message === '程式已中止。') {
+      outputArea.textContent = '程式已中止。';
+    } else {
+      outputArea.textContent = `程式執行發生錯誤：\n${error.message}`;
+    }
   } finally {
     window.alert = originalAlert;
     console.log = originalConsoleLog;
+    setProgramRunningUi(false);
+    smartRingRuntime.resetProgramStop();
   }
 }
 
@@ -442,28 +480,24 @@ function loadSmartRingArraySample() {
                                           <block type="smartring_wait_ms">
                                             <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
                                             <next>
-                                              <block type="smartring_play_clear_animation">
+                                              <block type="smartring_play_shift_left_animation">
+                                                <field name="COLOR">purple</field>
+                                                <value name="TIMES"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
                                                 <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
                                                 <next>
-                                                  <block type="smartring_clear_led_buffer">
+                                                  <block type="smartring_wait_ms">
+                                                    <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
                                                     <next>
-                                                      <block type="smartring_set_buffer_led_color">
-                                                        <value name="INDEX"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-                                                        <field name="COLOR">red</field>
+                                                      <block type="smartring_play_alternate_blink_animation">
+                                                        <field name="COLOR1">red</field>
+                                                        <field name="COLOR2">blue</field>
+                                                        <value name="TIMES"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
                                                         <next>
-                                                          <block type="smartring_set_buffer_led_channel">
-                                                            <value name="INDEX"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
-                                                            <value name="CHANNEL"><shadow type="smartring_rgb_channel"><field name="CHANNEL">g</field></shadow></value>
-                                                            <value name="VALUE"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+                                                          <block type="smartring_wait_ms">
+                                                            <value name="MS"><shadow type="math_number"><field name="NUM">300</field></shadow></value>
                                                             <next>
-                                                              <block type="smartring_set_buffer_led_rgb">
-                                                                <value name="INDEX"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
-                                                                <value name="R"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
-                                                                <value name="G"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
-                                                                <value name="B"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
-                                                                <next>
-                                                                  <block type="smartring_show_led_buffer" />
-                                                                </next>
+                                                              <block type="smartring_play_clear_animation">
+                                                                <value name="SPEED"><shadow type="math_number"><field name="NUM">80</field></shadow></value>
                                                               </block>
                                                             </next>
                                                           </block>
@@ -493,6 +527,33 @@ function loadSmartRingArraySample() {
           </block>
         </next>
       </block>
+
+      <block type="smartring_clear_led_buffer" x="40" y="430">
+        <next>
+          <block type="smartring_set_buffer_led_color">
+            <value name="INDEX"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <field name="COLOR">red</field>
+            <next>
+              <block type="smartring_set_buffer_led_channel">
+                <value name="INDEX"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
+                <value name="CHANNEL"><shadow type="smartring_rgb_channel"><field name="CHANNEL">g</field></shadow></value>
+                <value name="VALUE"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+                <next>
+                  <block type="smartring_set_buffer_led_rgb">
+                    <value name="INDEX"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
+                    <value name="R"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+                    <value name="G"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+                    <value name="B"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+                    <next>
+                      <block type="smartring_show_led_buffer" />
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
     </xml>
   `;
 
@@ -501,7 +562,7 @@ function loadSmartRingArraySample() {
 
   updateCodePreview();
   switchWorkspaceTab('blocks');
-  outputArea.textContent = '已載入 SR-A01 範例：基礎動畫 DEMO 觀察與暫存陣列 RGB 仿作。';
+  outputArea.textContent = '已載入 SR-A01 範例：程式中止、陣列位移動畫 DEMO 與暫存陣列 RGB 仿作。';
 }
 
 function getStudentProfile() {
@@ -737,7 +798,7 @@ async function testTask() {
   writeOutput('---');
   writeOutput(`任務測試模式：${modeText}`);
   writeOutput(`課程代碼：${currentCourse.id}`);
-  writeOutput('MVP-B12 測試結果：已執行目前 Blockly 程式，請確認 SmartRing LED 顯示或動畫是否符合任務。');
+  writeOutput('MVP-B13 測試結果：已執行目前 Blockly 程式，請確認 SmartRing LED 顯示、動畫或中止控制是否符合任務。');
   writeOutput('若暫存陣列沒有顯示，請檢查韌體 showBuffer 是否接收 leds 陣列欄位。');
 }
 
@@ -898,6 +959,7 @@ function bindEvents() {
 
   btnLoadSample.addEventListener('click', loadSample);
   btnRun.addEventListener('click', runUserCode);
+  btnStop.addEventListener('click', stopUserCode);
   btnClear.addEventListener('click', clearWorkspace);
   btnSaveBlocks.addEventListener('click', saveWorkspaceToFile);
   btnLoadBlocks.addEventListener('click', requestLoadWorkspaceFromFile);
@@ -945,6 +1007,7 @@ function initStatus() {
   buttonStateValue.textContent = '尚無資料';
   rawStateValue.textContent = '尚未收到 ESP8266 資料。';
   renderLastCommand(null);
+  setProgramRunningUi(false);
 }
 
 initBlockly();

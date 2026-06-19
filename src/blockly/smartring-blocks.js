@@ -570,6 +570,125 @@ javascriptGenerator.forBlock.smartring_play_running_light_animation = function (
   return `await SmartRing.playRunningLightAnimation("${color}", ${speedCode});\n`;
 };
 
+
+Blockly.Blocks.smartring_play_shift_left_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放左移動畫 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.appendValueInput('TIMES')
+      .setCheck('Number')
+      .appendField('次數');
+
+    this.appendValueInput('SPEED')
+      .setCheck('Number')
+      .appendField('速度');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放單顆 LED 從 LED 1 移動到 LED 12 的左移動畫。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_shift_left_animation = function (block, generator) {
+  const color = block.getFieldValue('COLOR');
+  const timesCode = generator.valueToCode(block, 'TIMES', Order.NONE) || '1';
+  const speedCode = generator.valueToCode(block, 'SPEED', Order.NONE) || '100';
+  return `await SmartRing.playShiftLeftAnimation("${color}", ${timesCode}, ${speedCode});\n`;
+};
+
+Blockly.Blocks.smartring_play_shift_right_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放右移動畫 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.appendValueInput('TIMES')
+      .setCheck('Number')
+      .appendField('次數');
+
+    this.appendValueInput('SPEED')
+      .setCheck('Number')
+      .appendField('速度');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放單顆 LED 從 LED 12 移動到 LED 1 的右移動畫。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_shift_right_animation = function (block, generator) {
+  const color = block.getFieldValue('COLOR');
+  const timesCode = generator.valueToCode(block, 'TIMES', Order.NONE) || '1';
+  const speedCode = generator.valueToCode(block, 'SPEED', Order.NONE) || '100';
+  return `await SmartRing.playShiftRightAnimation("${color}", ${timesCode}, ${speedCode});\n`;
+};
+
+Blockly.Blocks.smartring_play_bounce_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放來回移動動畫 顏色')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR');
+
+    this.appendValueInput('TIMES')
+      .setCheck('Number')
+      .appendField('次數');
+
+    this.appendValueInput('SPEED')
+      .setCheck('Number')
+      .appendField('速度');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放單顆 LED 在 LED 1 和 LED 12 之間來回移動的動畫。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_bounce_animation = function (block, generator) {
+  const color = block.getFieldValue('COLOR');
+  const timesCode = generator.valueToCode(block, 'TIMES', Order.NONE) || '1';
+  const speedCode = generator.valueToCode(block, 'SPEED', Order.NONE) || '100';
+  return `await SmartRing.playBounceAnimation("${color}", ${timesCode}, ${speedCode});\n`;
+};
+
+Blockly.Blocks.smartring_play_alternate_blink_animation = {
+  init() {
+    this.appendDummyInput()
+      .appendField('播放交錯閃爍動畫 顏色1')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR1')
+      .appendField('顏色2')
+      .appendField(new Blockly.FieldDropdown(SMART_RING_COLORS), 'COLOR2');
+
+    this.appendValueInput('TIMES')
+      .setCheck('Number')
+      .appendField('次數');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour('#0ea5e9');
+    this.setTooltip('直接播放奇數燈與偶數燈顏色交錯閃爍的動畫。');
+    this.setHelpUrl('');
+  },
+};
+
+javascriptGenerator.forBlock.smartring_play_alternate_blink_animation = function (block, generator) {
+  const color1 = block.getFieldValue('COLOR1');
+  const color2 = block.getFieldValue('COLOR2');
+  const timesCode = generator.valueToCode(block, 'TIMES', Order.NONE) || '3';
+  return `await SmartRing.playAlternateBlinkAnimation("${color1}", "${color2}", ${timesCode});\n`;
+};
+
 Blockly.Blocks.smartring_set_buffer_pattern = {
   init() {
     this.appendDummyInput()
