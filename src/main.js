@@ -23,7 +23,7 @@ const outputArea = document.getElementById('outputArea');
 
 // Google Apps Script Web App URL for score upload.
 // Paste the deployed Web App URL here after setting up google-apps-script/Code.gs.
-const SCORE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbw58wHIWa9TUK4uuVMR2UwqDQCqEEdp7GOY913Y969JTKNM4kfhtjTPHhnFWcvWhpec/exec';
+const SCORE_UPLOAD_URL = '';
 
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
 const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
@@ -131,7 +131,7 @@ function updateSubmitScoreVisibility() {
   if (!btnSubmitScore) return;
 
   const shouldEnable = Boolean(
-    isCompetitionMode() &&
+    isProgrammingProblemTask(currentTask, currentCourseGroup) &&
       currentCourseGroup &&
       currentTask &&
       hasCompetitionAssessmentResult &&
@@ -820,12 +820,13 @@ function escapeHtml(content) {
 }
 
 function renderProblemTextSection(title, content) {
-  if (!content) return '';
+  const text = String(content || '').trim();
+  if (!text) return '';
 
   return `
     <section class="problem-section modal-section">
       <h3>${title}</h3>
-      <p>${escapeHtml(content)}</p>
+      <p>${escapeHtml(text)}</p>
     </section>
   `;
 }
@@ -833,17 +834,20 @@ function renderProblemTextSection(title, content) {
 function renderProblemExampleTable(examples = []) {
   if (!Array.isArray(examples) || examples.length === 0) return '';
 
+  const renderMultilineHtml = (value) =>
+    escapeHtml(stripPreTag(value || '')).replace(/\n/g, '<br>');
+
   const rows = examples
     .map((example) => {
-      const input = stripPreTag(example.input || '無輸入');
-      const output = stripPreTag(example.output || '');
+      const input = example.input || '無輸入';
+      const output = example.output || '';
       const explanation = example.explanation || '';
 
       return `
         <tr>
-          <td><pre class="problem-table-pre">${escapeHtml(input)}</pre></td>
-          <td><pre class="problem-table-pre">${escapeHtml(output)}</pre></td>
-          <td>${escapeHtml(explanation)}</td>
+          <td><pre class="problem-table-pre">${escapeHtml(stripPreTag(input))}</pre></td>
+          <td><pre class="problem-table-pre">${escapeHtml(stripPreTag(output))}</pre></td>
+          <td class="problem-example-explanation">${renderMultilineHtml(explanation)}</td>
         </tr>
       `;
     })
@@ -890,8 +894,8 @@ function getProblemExamples(task) {
 function renderProblemTaskContent(task) {
   const problemTitle = task.problemTitle || task.title || '未命名題目';
   const statement = task.statement || task.problemStatement || task.description || '尚未建立題目內容。';
-  const inputDescription = task.inputDescription || '尚未建立輸入說明。';
-  const outputDescription = task.outputDescription || '尚未建立輸出說明。';
+  const inputDescription = task.inputDescription || task.input || '';
+  const outputDescription = task.outputDescription || task.output || '';
   const examples = getProblemExamples(task);
 
   return `
@@ -980,10 +984,10 @@ function updateModeStatus({ announce = false } = {}) {
 
   if (!announce) return;
 
-  if (isCompetitionMode()) {
-    writeOutput('已載入競賽模式題庫：請按「系統評分」，產生評分結果後才會啟用「上傳成績」。');
+  if (isProgrammingProblemTask(currentTask, currentCourseGroup)) {
+    writeOutput(`已載入${getModeText()}題庫：請按「系統評分」，產生評分結果後可上傳成績。`);
   } else {
-    writeOutput('已載入學習模式題庫：可以使用「系統評分」練習測資比對，「上傳成績」會維持灰色停用。');
+    writeOutput('已載入 SmartRing 課程：請使用「執行程式」觀察硬體互動結果，此類課程不進行成績上傳。');
   }
 }
 
@@ -1390,11 +1394,7 @@ async function testTask() {
     const assessment = await runProgrammingTestCases();
     lastAssessmentResult = assessment;
 
-    if (isCompetitionMode()) {
-      hasCompetitionAssessmentResult = assessment.total > 0;
-    } else {
-      hasCompetitionAssessmentResult = false;
-    }
+    hasCompetitionAssessmentResult = assessment.total > 0;
 
     updateSubmitScoreVisibility();
     return;
@@ -1498,15 +1498,14 @@ function renderScoreUploadResult(payload, { status = 'preview', message = '' } =
 async function submitScore() {
   const profile = getStudentProfile();
 
-  if (!isCompetitionMode()) {
-    outputArea.textContent =
-      '目前題庫是學習模式，不會上傳成績。競賽模式需由題庫設定，學生不能自行切換。';
+  if (!isProgrammingProblemTask(currentTask, currentCourseGroup)) {
+    outputArea.textContent = '目前課程不是程式解題任務，不支援成績上傳。';
     return;
   }
 
   if (!profile.className || !profile.seatNumber || !profile.name) {
     outputArea.textContent =
-      '競賽模式上傳前，請先填寫班級、座號與姓名。';
+      '上傳成績前，請先填寫班級、座號與姓名。';
     return;
   }
 
