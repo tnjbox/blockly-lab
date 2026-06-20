@@ -1778,7 +1778,399 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
 18 21 24 27`,expectedOutput:`90`,score:10},{input:`6
 6 12 18 24 30 36`,expectedOutput:`126`,score:10},{input:`5
 5 10 15 20 25`,expectedOutput:`75`,score:10},{input:`1
-9`,expectedOutput:`9`,score:10}],starterXml:``}]},ch={"SR-B01":{id:`SR-B01`,title:`SmartRing 基礎任務：按鈕控制燈光`,type:`SmartRing 互動任務`,level:`國小高年級 / 國中初階`,goal:`透過按鈕與 LED 燈光互動，理解條件判斷、輸入偵測與輸出控制。`,description:`本任務要求學生連接 SmartRingController，按下指定按鈕後，讓指定 LED 顯示指定 RGB 顏色。`,demoObserve:`觀察 SmartRing 按鈕被按下時，單顆 LED 如何被即時控制。`,practiceTask:`修改按鈕、LED 編號與 RGB 數值，完成不同按鈕對應不同顏色的互動效果。`,functionTask:`進階挑戰：整理成自己的 lightLed(index, r, g, b) 函式。`,challenge:`加入 while true 持續偵測按鈕，並使用「中止程式」按鈕停止互動程式。`,operation:`學生需要先連線 SmartRingController，再使用「SmartRing 按鈕被按下？」與「設定 SmartRing 第 N 顆 LED RGB」積木完成互動任務。`,blockLimit:`建議使用邏輯、迴圈、SmartRing 按鈕、等待與 SmartRing 基礎 LED 控制積木。`,smartRingRequirement:`需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。`,scoring:`學習模式以觀察是否能正確觸發 LED 為主；競賽模式未來可檢查按鈕反應與 LED 狀態。`,hint:`若使用無限迴圈偵測按鈕，請保留等待 1 毫秒，並使用「中止程式」停止。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+9`,expectedOutput:`9`,score:10}],starterXml:``}]},ch=s({JSB02:()=>lh}),lh={code:`JSB02`,title:`基礎練習2`,type:`programming`,mode:`contest`,tasks:[{id:`A-08-0`,title:`查找最大值`,description:`老師進行成績統計，老師輸入每位同學的成績，請你寫一個程式找出最高分。
+
+輸入第一行是整數 N，代表有 N 筆成績
+
+第二行輸入 N 個數字，數字間以空白間隔
+
+程式輸出最大值。
+這樣的練習可以幫助你處理一串資料，並找出其中的最大值。`,examples:[{input:`3
+9 6 8`,output:`9`,explanation:`第一行輸入3，表示有3個數字要輸入
+
+第二行輸入9 6 8三個數字序列
+
+程式運算輸出最大值9`},{input:`6
+99 12 129 16 8`,output:`129`,explanation:`第一行輸入6，表示有6個數字要輸入
+
+第二行輸入99 12 129 16 8 3六個數字序列
+
+程式運算輸出最大值129`}],testCases:[{input:`3
+9 6 8
+第四個輸入：
+預期答案：9`,expectedOutput:`9`,score:10},{input:`6
+99 12 129 16 8 3
+第四個輸入：
+預期答案：129`,expectedOutput:`129`,score:10},{input:`5
+89 15 47 0 56
+第四個輸入：
+預期答案：89`,expectedOutput:`89`,score:10},{input:`1
+25
+第四個輸入：
+預期答案：25`,expectedOutput:`25`,score:10}],starterXml:``},{id:`A-08-1`,title:`查找最大值、最小值`,description:`老師進行成績統計，老師輸入每位同學的成績，請你寫一個程式找出最高分及最低分。
+
+輸入第一行是整數 N，代表有 N 筆成績
+
+第二行輸入 N 個數字，數字間以空白間隔
+
+程式輸出最大值及最小值。
+這樣的練習可以幫助你處理一串資料，並同時找出其中的最大值、最小值。`,examples:[{input:`3
+9 6 8`,output:`9
+6`,explanation:`第一行輸入3，表示有3個數字要輸入
+
+第二行輸入9 6 8三個數字序列
+
+程式運算輸出最大值9，最小值6`},{input:`6
+99 12 129 16 8 3`,output:`129
+3`,explanation:`第一行輸入6，表示有6個數字要輸入
+
+第二行輸入99 12 129 16 8 3六個數字序列
+
+程式運算輸出最大值129，最小值3`}],testCases:[{input:`3
+9 6 8
+第四個輸入：
+預期答案：9 6`,expectedOutput:`9 6`,score:10},{input:`6
+99 12 129 16 8 3
+第四個輸入：
+預期答案：129 3`,expectedOutput:`129 3`,score:10},{input:`5
+89 15 47 0 56
+第四個輸入：
+預期答案：89 0`,expectedOutput:`89 0`,score:10},{input:`1
+25
+第四個輸入：
+預期答案：25 25`,expectedOutput:`25 25`,score:10}],starterXml:``},{id:`A-09-0`,title:`判斷質數`,description:`質數是大於 1 且只能被 1 和自己整除的數字。
+請寫一個程式，輸入一個整數 N，判斷它是否為質數。
+
+若是質數輸出 Yes，否則輸出 No。
+
+這題訓練你使用條件與迴圈判斷。`,examples:[{input:`1`,output:`No`,explanation:`第一行輸入1
+
+電腦運算判斷1不是質數
+
+程式運算輸出No`},{input:`2`,output:`Yes`,explanation:`第一行輸入2
+
+電腦運算判斷2是質數
+
+程式運算輸出Yes`},{input:`7`,output:`Yes`,explanation:`第一行輸入7
+
+電腦運算判斷7是質數
+
+程式運算輸出Yes`},{input:`6`,output:`No`,explanation:`第一行輸入6
+
+電腦運算判斷6可被2整除，不是質數
+
+程式運算輸出No`}],testCases:[{input:`1
+第三個輸入：
+第四個輸入：
+預期答案：No`,expectedOutput:`No`,score:10},{input:`2
+第三個輸入：
+第四個輸入：
+預期答案：Yes`,expectedOutput:`Yes`,score:10},{input:`1007
+第三個輸入：
+第四個輸入：
+預期答案：No`,expectedOutput:`No`,score:10},{input:`997
+第三個輸入：
+第四個輸入：
+預期答案：Yes`,expectedOutput:`Yes`,score:10}],starterXml:``},{id:`A-09-1`,title:`找因數`,description:`因數是指一個整數能被另一整數「整除」時，這個「除數」就是「被除數」的因數。
+
+0不是任何整數的因數。1是所有整數的因數。
+
+請寫一個程式，輸入一個整數 N，請找出N所有的因數。
+
+所有因數以空白符號間格
+
+這題訓練你使用條件與迴圈判斷。`,examples:[{input:`12`,output:`1 2 3 4 6 12`,explanation:`第一行輸入12
+
+程式輸出12所有因數1 2 3 4 6 12`},{input:`39`,output:`1 3 13 39`,explanation:`第一行輸入39
+
+程式輸出39所有因數1 3 13 39`}],testCases:[{input:`56
+第三個輸入：
+第四個輸入：
+預期答案：1 2 4 7 8 14 28 56`,expectedOutput:`1 2 4 7 8 14 28 56`,score:10},{input:`37
+第三個輸入：
+第四個輸入：
+預期答案：1 37`,expectedOutput:`1 37`,score:10},{input:`78
+第三個輸入：
+第四個輸入：
+預期答案：1 2 3 6 13 26 39 78`,expectedOutput:`1 2 3 6 13 26 39 78`,score:10},{input:`88
+第三個輸入：
+第四個輸入：
+預期答案：1 2 4 8 11 22 44 88`,expectedOutput:`1 2 4 8 11 22 44 88`,score:10}],starterXml:``},{id:`A-10-0`,title:`多科成績計算`,description:`小明參加了數學、英文、自然...等多科的段考，老師希望能快速算出總分與平均分數，並判斷是否及格。
+
+請設計程式，輸入多科的成績，計算總分與平均。
+
+第一行輸入共有幾科
+
+第二行依序輸入各科成績，科成績之間以空白間隔
+
+計算總分，平均成績以四捨五入取整數
+
+如果平均分數大於等於 60，就輸出「及格」，否則輸出「不及格」。
+
+這題可以訓練你如何處理多筆資料的加總、平均計算，並搭配條件判斷。`,examples:[{input:`3
+80 70 90`,output:`240
+80
+及格`,explanation:`第一行輸入3，表示後面會有3個數字輸入
+
+第二行輸入80 70 90，經過計算後
+
+總分180、平均80、及格`},{input:`6
+50 41 60 55 70 65`,output:`341
+57
+不及格`,explanation:`第一行輸入6，表示後面會有3個數字輸入
+
+第二行輸入50 41 60 55 70 65，經過計算後
+
+程式輸出總分341、平均57、不及格`}],testCases:[{input:`3
+20 60 90
+第四個輸入：
+預期答案：170 57 不及格`,expectedOutput:`170 57 不及格`,score:10},{input:`6
+50 41 60 55 70 65
+第四個輸入：
+預期答案：341 57 不及格`,expectedOutput:`341 57 不及格`,score:10},{input:`5
+80 70 75 85 90
+第四個輸入：
+預期答案：400 80 及格`,expectedOutput:`400 80 及格`,score:10},{input:`1
+55
+第四個輸入：
+預期答案：55 55 不及格`,expectedOutput:`55 55 不及格`,score:10}],starterXml:``},{id:`A-10-1`,title:`加權成績計算`,description:`大明綜合高中辦理考試，不同科系考試科目數量、每周上課時數不一定相同
+
+成績計算時，以每一科成績乘以該科上課時數為加權成績，將所有科目的加權成績加總，並除以全部科目總時數，即為學生加權平均成績
+
+請設計一個程式，輸入各科的成績、各科加權時數，程式運算後輸出加權總分、加權平均、等弟。
+
+第一行輸入N，代表該科共有N科考試成績
+
+第二行依序輸入N筆各科成績，各科成績之間以空白間隔
+
+第三行依序輸入N筆各科對應加權時數，各科加權時數之間以空白間隔
+
+計算全部加權總分，加權平均成績以四捨五入取整數
+
+如果平均分數大於等於 80，就是「A」等第，小於80大於等於70則是「B」等第，小於70大於等於60則是「C」等第，否則是「D」等第。
+
+程式輸出加權總分、加權平均、等弟。
+
+這題可以訓練你如何處理多筆資料的加總、平均計算，並搭配條件判斷。`,examples:[{input:`3
+80 70 90
+1 2 1`,output:`310
+78
+B`,explanation:`第一行輸入3，表示後面會有3科成績輸入
+
+第二行輸入各科原始成績80 70 90
+
+第三行輸入各科加權時數1 2 1
+
+程式運算輸出加權總分310、平均78、等第B`},{input:`6
+50 41 60 55 70 65`,output:`668
+56
+D`,explanation:`第一行輸入6，表示後面會有6科成績輸入
+
+第二行輸入各科原始成績50 41 60 55 70 65
+
+第三行輸入各科加權時數1 3 3 2 2 1
+
+程式運算輸出加權總分668、平均56、等第D`}],testCases:[{input:`1
+80
+3
+預期答案：240 80 A`,expectedOutput:`240 80 A`,score:10},{input:`6
+50 41 60 55 70 65
+1 3 3 2 2 1
+預期答案：668 56 D`,expectedOutput:`668 56 D`,score:10},{input:`5
+80 70 75 85 90
+1 1 3 2 1
+預期答案：635 79 B`,expectedOutput:`635 79 B`,score:10},{input:`3
+55 90 99
+2 3 3
+預期答案：677 85 A`,expectedOutput:`677 85 A`,score:10}],starterXml:``},{id:`A-11-0`,title:`計算字元出現次數`,description:`請設計程式，輸入一個字串，並輸入一個英文字母輸出該字母在字串中出現的次數。
+
+這樣的練習可以訓練你操作字串與統計。`,examples:[{input:`banana
+a`,output:`3`,explanation:`第一行輸入banana
+
+第二行輸入字元a
+
+程式運算比對a出現3次
+
+程式輸出3`},{input:`student
+t`,output:`2`,explanation:`第一行輸入student
+
+第二行輸入字元t
+
+程式運算比對t出現2次
+
+程式輸出2`}],testCases:[{input:`Goodmoning
+o
+第四個輸入：
+預期答案：3`,expectedOutput:`3`,score:10},{input:`ChaiYiCity
+i
+第四個輸入：
+預期答案：3`,expectedOutput:`3`,score:10},{input:`announcement
+n
+第四個輸入：
+預期答案：4`,expectedOutput:`4`,score:10},{input:`experimen
+e
+第四個輸入：
+預期答案：3`,expectedOutput:`3`,score:10}],starterXml:``},{id:`A-11-1`,title:`計算字元出現最多的次數`,description:`請設計程式，輸入一字串由小寫英文字母組合，長度1~50間的字串
+
+程式會統計該字串的字母中，出現最多的次數。
+
+這樣的練習可以訓練你循環計數迴圈與字串統計。`,examples:[{input:`banana`,output:`3`,explanation:`第一行輸入banana
+
+程式運算比對，出現最多為a，共出現3次
+
+程式輸出3`},{input:`student`,output:`2`,explanation:`第一行輸入student
+
+程式運算比對，出現最多為t，共出現2次
+
+程式輸出2`},{input:`spider`,output:`1`,explanation:`第一行輸入spider
+
+程式運算比對，全部字母都只出現1次
+
+程式輸出1`}],testCases:[{input:`goodmoning
+第三個輸入：
+第四個輸入：
+預期答案：3`,expectedOutput:`3`,score:10},{input:`ChaiYiCity
+第三個輸入：
+第四個輸入：
+預期答案：3`,expectedOutput:`3`,score:10},{input:`announment
+第三個輸入：
+第四個輸入：
+預期答案：4`,expectedOutput:`4`,score:10},{input:`experimen
+第三個輸入：
+第四個輸入：
+預期答案：3`,expectedOutput:`3`,score:10},{input:`junior
+第三個輸入：
+第四個輸入：
+預期答案：1`,expectedOutput:`1`,score:10}],starterXml:``},{id:`A-12-0`,title:`簡易密碼轉換`,description:`小明設計了一種簡單的密碼環密碼規則：將每個字母向後移二個字母（z 變 b）。
+
+密碼環：abcdefghijklmnopqrstuvwxyz
+
+請寫一個程式，輸入一個英文單字，輸出轉換後的字串。
+
+這樣的練習訓練你字元處理與條件轉換。`,examples:[{input:`banana`,output:`dcpcpc`,explanation:`第一行輸入banana
+
+程式運算，將字串往後移2個位置加密
+
+程式輸出dcpcpc`},{input:`student`,output:`uvwfgpv`,explanation:`第一行輸入student
+
+程式運算，將字串往後移2個位置加密
+
+程式輸出uvwfgpv`}],testCases:[{input:`goodmoning
+第三個輸入：
+第四個輸入：
+預期答案：iqqfoqpkpi`,expectedOutput:`iqqfoqpkpi`,score:10},{input:`chaiyicity
+第三個輸入：
+第四個輸入：
+預期答案：ejckakekva`,expectedOutput:`ejckakekva`,score:10},{input:`announcement
+第三個輸入：
+第四個輸入：
+預期答案：cppqwpegogpv`,expectedOutput:`cppqwpegogpv`,score:10},{input:`experimen
+第三個輸入：
+第四個輸入：
+預期答案：gzrgtkogp`,expectedOutput:`gzrgtkogp`,score:10}],starterXml:``},{id:`A-12-1`,title:`動態密碼轉換`,description:`小明設計了一種英文字元密碼環編碼規則：
+
+密碼環為『abcdefghijklmnopqrstuvwxyz0123456789』
+
+第一行輸入數字N(N介於0~36)，N為編碼位移值
+
+編碼時，待編碼字串每個字元都按照密碼環『往前』移動N個位置
+
+如果轉換後密碼超過密碼環最後一個字元9，則從回前面a繼續接回密碼環
+
+請寫一個程式，輸入一個英文單字，程式輸出依照編碼規則轉換後的密碼字串。
+
+這樣的練習訓練你字元處理與條件轉換。`,examples:[{input:`2
+banana`,output:`98l8l8`,explanation:`第一行輸入2，表示編碼時要往後前2個位置
+
+第二行輸入banana表示待編碼字串為banana
+
+程式運算，將字串往後移2個位置加密
+
+程式輸出98l8l8`},{input:`10
+student`,output:`ijk34dj`,explanation:`第一行輸入10，表示編碼時要往後前10個位置
+
+第二行輸入student表示待編碼字串為student
+
+程式運算，將字串往後移10個位置加密
+
+程式輸出ijk34dj`}],testCases:[{input:`12
+goodmoning
+第四個輸入：
+預期答案：4cc1acb6b4`,expectedOutput:`4cc1acb6b4`,score:10},{input:`29
+chaiyicity
+第四個輸入：
+預期答案：johp5pjp05`,expectedOutput:`johp5pjp05`,score:10},{input:`9
+announcement
+第四個輸入：
+預期答案：1eefle35d5ek`,expectedOutput:`1eefle35d5ek`,score:10},{input:`0
+experimen
+第四個輸入：
+預期答案：experimen`,expectedOutput:`experimen`,score:10}],starterXml:``},{id:`A-13-0`,title:`二數的最大公因數`,description:`小明上學時，不太會找最大公因數，請寫個程式幫他找一下
+輸入二個整數，請計算這二個數字的最大公因數
+
+輸入格式：輸入2行
+第一行輸入第1個整數N
+第二行輸入地2個整數M
+程式運算找出二數的最大公因數並輸出`,examples:[{input:`9
+6`,output:`3`,explanation:`第一行輸入9，
+
+第二行輸入6，
+
+程式輸出6、9二個數的最大公因數3`},{input:`30
+72`,output:`6`,explanation:`第一行輸入30，
+
+第二行輸入72
+
+程式輸出30，72二個數的最大公因數6`}],testCases:[{input:`12
+6
+第四個輸入：
+預期答案：6`,expectedOutput:`6`,score:10},{input:`34
+52
+第四個輸入：
+預期答案：2`,expectedOutput:`2`,score:10},{input:`24
+18
+第四個輸入：
+預期答案：6`,expectedOutput:`6`,score:10},{input:`1
+8
+第四個輸入：
+預期答案：1`,expectedOutput:`1`,score:10}],starterXml:``},{id:`A-13-1`,title:`最大公因數`,description:`小明上學時，不太會找最大公因數，請寫個程式幫他找一下
+輸入一組整數，請計算這些數字的最大公因數
+
+輸入格式：輸入2行
+第一行輸入1個整數N，代表接下來要計算最大公因數的個數
+第二行輸入N個整數，用空格隔開，代表要計算最大公因數的N個整數`,examples:[{input:`2
+6 9`,output:`3`,explanation:`第一行輸入2，表示接下來要輸入2個數
+
+第二行輸入6 9，表示要找出6、9的最大公因數
+
+程式輸出最大公因數3`},{input:`3
+4 6 12`,output:`2`,explanation:`第一行輸入3，表示接下來要輸入3個數
+
+第二行輸入4 6 12，表示要找出4、6、12的最大公因數
+
+程式輸出最大公因數2`},{input:`2
+1 99`,output:`1`,explanation:`第一行輸入2，表示接下來要輸入2個數
+
+第二行輸入1 99，表示要找出1，99的最大公因數
+
+程式輸出最大公因數1`},{input:`1
+8`,output:`8`,explanation:`第一行輸入1，表示接下來要輸入1個數
+
+第二行輸入8，表示要找出8的最大公因數
+
+自己的最大公因數是自己，程式輸出最大公因數8`}],testCases:[{input:`3
+12 24 30
+第四個輸入：
+預期答案：6`,expectedOutput:`6`,score:10},{input:`6
+2 5 24 15 36 54
+第四個輸入：
+預期答案：1`,expectedOutput:`1`,score:10},{input:`3
+51 9 24
+第四個輸入：
+預期答案：3`,expectedOutput:`3`,score:10},{input:`1
+8
+第四個輸入：
+預期答案：8`,expectedOutput:`8`,score:10}],starterXml:``}]},uh={"SR-B01":{id:`SR-B01`,title:`SmartRing 基礎任務：按鈕控制燈光`,type:`SmartRing 互動任務`,level:`國小高年級 / 國中初階`,goal:`透過按鈕與 LED 燈光互動，理解條件判斷、輸入偵測與輸出控制。`,description:`本任務要求學生連接 SmartRingController，按下指定按鈕後，讓指定 LED 顯示指定 RGB 顏色。`,demoObserve:`觀察 SmartRing 按鈕被按下時，單顆 LED 如何被即時控制。`,practiceTask:`修改按鈕、LED 編號與 RGB 數值，完成不同按鈕對應不同顏色的互動效果。`,functionTask:`進階挑戰：整理成自己的 lightLed(index, r, g, b) 函式。`,challenge:`加入 while true 持續偵測按鈕，並使用「中止程式」按鈕停止互動程式。`,operation:`學生需要先連線 SmartRingController，再使用「SmartRing 按鈕被按下？」與「設定 SmartRing 第 N 顆 LED RGB」積木完成互動任務。`,blockLimit:`建議使用邏輯、迴圈、SmartRing 按鈕、等待與 SmartRing 基礎 LED 控制積木。`,smartRingRequirement:`需要使用 ESP8266 SmartRingController。按鈕輸入會控制 LED 輸出。`,scoring:`學習模式以觀察是否能正確觸發 LED 為主；競賽模式未來可檢查按鈕反應與 LED 狀態。`,hint:`若使用無限迴圈偵測按鈕，請保留等待 1 毫秒，並使用「中止程式」停止。`,starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
 
   <block type="controls_if" x="40" y="40">
     <value name="IF0">
@@ -2034,7 +2426,7 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
     </next>
   </block>
 
-</xml>`,starterMessage:`已載入 JS-B01：重複累加範例。`}},lh=s({SRA00:()=>ph}),uh=(e,t)=>({...e,...t}),dh=({pattern:e=`centerFour`,color:t=`blue`,message:n=`LED 圖樣陣列仿作`}={})=>`
+</xml>`,starterMessage:`已載入 JS-B01：重複累加範例。`}},dh=s({SRA00:()=>hh}),fh=(e,t)=>({...e,...t}),ph=({pattern:e=`centerFour`,color:t=`blue`,message:n=`LED 圖樣陣列仿作`}={})=>`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="smartring_demo_pattern" x="40" y="40">
     <field name="PATTERN">${e}</field>
@@ -2050,7 +2442,7 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       </block>
     </next>
   </block>
-</xml>`,fh=({status:e=`progress`,value:t=6,max:n=12,color:r=`green`,message:i=`狀態顯示仿作`}={})=>`
+</xml>`,mh=({status:e=`progress`,value:t=6,max:n=12,color:r=`green`,message:i=`狀態顯示仿作`}={})=>`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="smartring_demo_status_display" x="40" y="40">
     <field name="STATUS">${e}</field>
@@ -2061,7 +2453,7 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       <block type="text_print"><value name="TEXT"><block type="text"><field name="TEXT">${i}</field></block></value></block>
     </next>
   </block>
-</xml>`,ph={id:`SRA00`,title:`SmartRing 陣列任務`,mode:`learning`,type:`smartring`,description:`用 LED 暫存陣列理解索引、位置、數值與狀態顯示。`,level:`國中八年級`,defaultTaskId:`SRA00-01`,tasks:[uh(ch[`SR-A01`],{id:`SRA00-01`,title:`LED 圖樣陣列仿作`,starterMessage:`已載入 SRA00-01：LED 圖樣陣列仿作。`}),uh(ch[`SR-A01`],{id:`SRA00-02`,title:`中間四顆圖樣`,goal:`使用暫存陣列設定 LED 5～8，理解連續索引代表連續位置。`,description:`觀察中間四顆 DEMO，再用暫存陣列指定 LED 5、6、7、8。`,practiceTask:`不用 DEMO 積木，改用四個「設定暫存陣列第 N 顆 LED 顏色」。`,challenge:`改做中間六顆，或讓中間四顆使用不同顏色。`,starterXml:dh({pattern:`centerFour`,color:`blue`,message:`中間四顆圖樣`}),starterMessage:`已載入 SRA00-02：中間四顆圖樣。`}),uh(ch[`SR-A01`],{id:`SRA00-03`,title:`奇數燈與偶數燈`,goal:`理解索引規律，觀察奇數與偶數位置的 LED 圖樣。`,description:`使用暫存陣列做出奇數燈或偶數燈亮起的規律圖樣。`,demoObserve:`觀察交錯位置的 LED 亮起。`,practiceTask:`用迴圈或手動指定 LED 1、3、5、7、9、11。`,functionTask:`整理成 showOddLeds(color) 與 showEvenLeds(color) 函式。`,challenge:`讓奇數燈與偶數燈交替閃爍。`,starterXml:dh({pattern:`odd`,color:`yellow`,message:`奇數燈與偶數燈`}),starterMessage:`已載入 SRA00-03：奇數燈與偶數燈。`}),uh(ch[`SR-A02`],{id:`SRA00-04`,title:`進度條顯示`,starterMessage:`已載入 SRA00-04：進度條顯示。`}),uh(ch[`SR-A02`],{id:`SRA00-05`,title:`分數顯示`,goal:`將分數轉換成 LED 顆數，理解數值比例與陣列顯示。`,description:`例如分數 8/12 顯示 8 顆 LED，未來可延伸到 80/100 轉換成 10 顆。`,demoObserve:`觀察分數值改變時，LED 顆數如何改變。`,practiceTask:`修改 value 與 max，觀察顯示結果。`,functionTask:`整理成 showScore(score, maxScore, color) 函式。`,challenge:`把 0～100 分轉成 0～12 顆 LED。`,starterXml:fh({status:`score`,value:8,max:12,color:`yellow`,message:`分數顯示：8 / 12`}),starterMessage:`已載入 SRA00-05：分數顯示。`}),uh(ch[`SR-A02`],{id:`SRA00-06`,title:`生命值顯示`,goal:`使用 LED 顆數呈現生命值，理解遊戲狀態資料的視覺化。`,description:`生命值越高，亮起 LED 越多；生命值歸零時可清除全部 LED。`,demoObserve:`觀察 life=3、max=5 時的 LED 顯示。`,practiceTask:`修改生命值與最大值，觀察 LED 顯示變化。`,functionTask:`整理成 showLife(life, maxLife, color) 函式。`,challenge:`生命值低於 2 時改成紅色警示。`,starterXml:fh({status:`life`,value:3,max:5,color:`red`,message:`生命值顯示：3 / 5`}),starterMessage:`已載入 SRA00-06：生命值顯示。`})]},mh=s({SRB00:()=>bh}),hh=(e,t)=>({...e,...t}),gh=({index:e=1,color:t=`red`,r:n=30,g:r=0,b:i=0,message:a=`SmartRing 基礎任務`}={})=>`
+</xml>`,hh={id:`SRA00`,title:`SmartRing 陣列任務`,mode:`learning`,type:`smartring`,description:`用 LED 暫存陣列理解索引、位置、數值與狀態顯示。`,level:`國中八年級`,defaultTaskId:`SRA00-01`,tasks:[fh(uh[`SR-A01`],{id:`SRA00-01`,title:`LED 圖樣陣列仿作`,starterMessage:`已載入 SRA00-01：LED 圖樣陣列仿作。`}),fh(uh[`SR-A01`],{id:`SRA00-02`,title:`中間四顆圖樣`,goal:`使用暫存陣列設定 LED 5～8，理解連續索引代表連續位置。`,description:`觀察中間四顆 DEMO，再用暫存陣列指定 LED 5、6、7、8。`,practiceTask:`不用 DEMO 積木，改用四個「設定暫存陣列第 N 顆 LED 顏色」。`,challenge:`改做中間六顆，或讓中間四顆使用不同顏色。`,starterXml:ph({pattern:`centerFour`,color:`blue`,message:`中間四顆圖樣`}),starterMessage:`已載入 SRA00-02：中間四顆圖樣。`}),fh(uh[`SR-A01`],{id:`SRA00-03`,title:`奇數燈與偶數燈`,goal:`理解索引規律，觀察奇數與偶數位置的 LED 圖樣。`,description:`使用暫存陣列做出奇數燈或偶數燈亮起的規律圖樣。`,demoObserve:`觀察交錯位置的 LED 亮起。`,practiceTask:`用迴圈或手動指定 LED 1、3、5、7、9、11。`,functionTask:`整理成 showOddLeds(color) 與 showEvenLeds(color) 函式。`,challenge:`讓奇數燈與偶數燈交替閃爍。`,starterXml:ph({pattern:`odd`,color:`yellow`,message:`奇數燈與偶數燈`}),starterMessage:`已載入 SRA00-03：奇數燈與偶數燈。`}),fh(uh[`SR-A02`],{id:`SRA00-04`,title:`進度條顯示`,starterMessage:`已載入 SRA00-04：進度條顯示。`}),fh(uh[`SR-A02`],{id:`SRA00-05`,title:`分數顯示`,goal:`將分數轉換成 LED 顆數，理解數值比例與陣列顯示。`,description:`例如分數 8/12 顯示 8 顆 LED，未來可延伸到 80/100 轉換成 10 顆。`,demoObserve:`觀察分數值改變時，LED 顆數如何改變。`,practiceTask:`修改 value 與 max，觀察顯示結果。`,functionTask:`整理成 showScore(score, maxScore, color) 函式。`,challenge:`把 0～100 分轉成 0～12 顆 LED。`,starterXml:mh({status:`score`,value:8,max:12,color:`yellow`,message:`分數顯示：8 / 12`}),starterMessage:`已載入 SRA00-05：分數顯示。`}),fh(uh[`SR-A02`],{id:`SRA00-06`,title:`生命值顯示`,goal:`使用 LED 顆數呈現生命值，理解遊戲狀態資料的視覺化。`,description:`生命值越高，亮起 LED 越多；生命值歸零時可清除全部 LED。`,demoObserve:`觀察 life=3、max=5 時的 LED 顯示。`,practiceTask:`修改生命值與最大值，觀察 LED 顯示變化。`,functionTask:`整理成 showLife(life, maxLife, color) 函式。`,challenge:`生命值低於 2 時改成紅色警示。`,starterXml:mh({status:`life`,value:3,max:5,color:`red`,message:`生命值顯示：3 / 5`}),starterMessage:`已載入 SRA00-06：生命值顯示。`})]},gh=s({SRB00:()=>Sh}),_h=(e,t)=>({...e,...t}),vh=({index:e=1,color:t=`red`,r:n=30,g:r=0,b:i=0,message:a=`SmartRing 基礎任務`}={})=>`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="smartring_set_led_rgb" x="40" y="40">
     <value name="INDEX"><shadow type="math_number"><field name="NUM">${e}</field></shadow></value>
@@ -2074,7 +2466,7 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       </block>
     </next>
   </block>
-</xml>`,_h=({color:e=`blue`,message:t=`全部 LED 顏色控制`}={})=>`
+</xml>`,yh=({color:e=`blue`,message:t=`全部 LED 顏色控制`}={})=>`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="smartring_set_all_leds" x="40" y="40">
     <field name="COLOR">${e}</field>
@@ -2093,7 +2485,7 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       </block>
     </next>
   </block>
-</xml>`,vh=({button:e=1,index:t=1,r:n=30,g:r=0,b:i=0,message:a=`按鈕控制 LED`}={})=>`
+</xml>`,bh=({button:e=1,index:t=1,r:n=30,g:r=0,b:i=0,message:a=`按鈕控制 LED`}={})=>`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="controls_if" x="40" y="40">
     <value name="IF0">
@@ -2113,7 +2505,7 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       </block>
     </statement>
   </block>
-</xml>`,yh=ch[`SR-B01`],bh={id:`SRB00`,title:`SmartRing 基礎互動任務`,mode:`learning`,type:`smartring`,description:`從連線、單顆 LED、全部 LED 到按鈕互動，建立 SmartRingController 的基本操作能力。`,level:`國小高年級 / 國中初階`,defaultTaskId:`SRB00-01`,tasks:[hh(yh,{id:`SRB00-01`,title:`SmartRing 連線檢查`,goal:`確認瀏覽器可連線 SmartRingController，並理解「已連線？」狀態判斷。`,description:`本任務先使用 SmartRing 已連線？積木，確認硬體連線狀態。`,demoObserve:`連線前與連線後分別執行程式，觀察輸出文字差異。`,practiceTask:`修改輸出文字，讓程式能提醒自己是否已完成連線。`,functionTask:`整理成 checkSmartRing() 函式，之後每個硬體任務開頭都可以呼叫。`,challenge:`若尚未連線，輸出提醒；若已連線，讓第 1 顆 LED 閃一下。`,starterXml:`
+</xml>`,xh=uh[`SR-B01`],Sh={id:`SRB00`,title:`SmartRing 基礎互動任務`,mode:`learning`,type:`smartring`,description:`從連線、單顆 LED、全部 LED 到按鈕互動，建立 SmartRingController 的基本操作能力。`,level:`國小高年級 / 國中初階`,defaultTaskId:`SRB00-01`,tasks:[_h(xh,{id:`SRB00-01`,title:`SmartRing 連線檢查`,goal:`確認瀏覽器可連線 SmartRingController，並理解「已連線？」狀態判斷。`,description:`本任務先使用 SmartRing 已連線？積木，確認硬體連線狀態。`,demoObserve:`連線前與連線後分別執行程式，觀察輸出文字差異。`,practiceTask:`修改輸出文字，讓程式能提醒自己是否已完成連線。`,functionTask:`整理成 checkSmartRing() 函式，之後每個硬體任務開頭都可以呼叫。`,challenge:`若尚未連線，輸出提醒；若已連線，讓第 1 顆 LED 閃一下。`,starterXml:`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="controls_if" x="40" y="40">
     <value name="IF0"><block type="smartring_is_connected"></block></value>
@@ -2121,7 +2513,7 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       <block type="text_print"><value name="TEXT"><block type="text"><field name="TEXT">SmartRing 已連線，可以開始任務。</field></block></value></block>
     </statement>
   </block>
-</xml>`,starterMessage:`已載入 SRB00-01：SmartRing 連線檢查。`}),hh(yh,{id:`SRB00-02`,title:`單顆 LED RGB 控制`,goal:`理解 LED 編號 1～12 與 RGB 0～30 的輸入規則。`,description:`設定指定 LED 的紅、綠、藍亮度，觀察 RGB 數值改變後的顏色。`,demoObserve:`觀察第 1 顆 LED 在 RGB 30,0,0 時顯示紅色。`,practiceTask:`改變 LED 編號與 RGB 數值，做出不同顏色。`,functionTask:`整理成 setOneLed(index, r, g, b) 函式。`,challenge:`做出紅、綠、藍三顆不同顏色 LED。`,starterXml:gh({index:1,color:`紅色`,r:30,g:0,b:0,message:`單顆 LED RGB 控制`}),starterMessage:`已載入 SRB00-02：單顆 LED RGB 控制。`}),hh(yh,{id:`SRB00-03`,title:`全部 LED 顏色控制`,goal:`理解整體輸出控制與清除 LED 的基本流程。`,description:`讓全部 LED 顯示同一顏色，再使用清除 LED 關閉燈光。`,demoObserve:`觀察全部 LED 同時變色與清除。`,practiceTask:`修改顏色與等待時間，設計自己的提示燈效果。`,functionTask:`整理成 showAllThenClear(color, ms) 函式。`,challenge:`做出紅、黃、綠三段交通號誌效果。`,starterXml:_h({color:`blue`,message:`全部 LED 顏色控制`}),starterMessage:`已載入 SRB00-03：全部 LED 顏色控制。`}),hh(yh,{id:`SRB00-04`,title:`按鈕控制 LED`,starterMessage:`已載入 SRB00-04：按鈕控制 LED。`}),hh(yh,{id:`SRB00-05`,title:`按鈕觸發顏色變化`,goal:`使用條件判斷讓不同按鈕觸發不同 LED 顏色。`,description:`按下不同 SmartRing 按鈕時，讓同一顆或不同顆 LED 顯示不同顏色。`,demoObserve:`觀察按下 BTN1 時是否改變 LED 顏色。`,practiceTask:`新增第二個 if，讓 BTN2 觸發另一種顏色。`,functionTask:`整理成 handleButtonColor() 函式。`,challenge:`做出 BTN1 紅、BTN2 綠、BTN3 藍、BTN4 清除。`,starterXml:vh({button:1,index:1,r:30,g:0,b:0,message:`BTN1 被按下，LED 變紅。`}),starterMessage:`已載入 SRB00-05：按鈕觸發顏色變化。`})]},xh=s({SRF00:()=>wh}),Sh=(e,t)=>({...e,...t}),Ch=({blockType:e,color:t=`cyan`,speed:n=100,times:r=null,message:i=`動畫函式仿作`}={})=>`
+</xml>`,starterMessage:`已載入 SRB00-01：SmartRing 連線檢查。`}),_h(xh,{id:`SRB00-02`,title:`單顆 LED RGB 控制`,goal:`理解 LED 編號 1～12 與 RGB 0～30 的輸入規則。`,description:`設定指定 LED 的紅、綠、藍亮度，觀察 RGB 數值改變後的顏色。`,demoObserve:`觀察第 1 顆 LED 在 RGB 30,0,0 時顯示紅色。`,practiceTask:`改變 LED 編號與 RGB 數值，做出不同顏色。`,functionTask:`整理成 setOneLed(index, r, g, b) 函式。`,challenge:`做出紅、綠、藍三顆不同顏色 LED。`,starterXml:vh({index:1,color:`紅色`,r:30,g:0,b:0,message:`單顆 LED RGB 控制`}),starterMessage:`已載入 SRB00-02：單顆 LED RGB 控制。`}),_h(xh,{id:`SRB00-03`,title:`全部 LED 顏色控制`,goal:`理解整體輸出控制與清除 LED 的基本流程。`,description:`讓全部 LED 顯示同一顏色，再使用清除 LED 關閉燈光。`,demoObserve:`觀察全部 LED 同時變色與清除。`,practiceTask:`修改顏色與等待時間，設計自己的提示燈效果。`,functionTask:`整理成 showAllThenClear(color, ms) 函式。`,challenge:`做出紅、黃、綠三段交通號誌效果。`,starterXml:yh({color:`blue`,message:`全部 LED 顏色控制`}),starterMessage:`已載入 SRB00-03：全部 LED 顏色控制。`}),_h(xh,{id:`SRB00-04`,title:`按鈕控制 LED`,starterMessage:`已載入 SRB00-04：按鈕控制 LED。`}),_h(xh,{id:`SRB00-05`,title:`按鈕觸發顏色變化`,goal:`使用條件判斷讓不同按鈕觸發不同 LED 顏色。`,description:`按下不同 SmartRing 按鈕時，讓同一顆或不同顆 LED 顯示不同顏色。`,demoObserve:`觀察按下 BTN1 時是否改變 LED 顏色。`,practiceTask:`新增第二個 if，讓 BTN2 觸發另一種顏色。`,functionTask:`整理成 handleButtonColor() 函式。`,challenge:`做出 BTN1 紅、BTN2 綠、BTN3 藍、BTN4 清除。`,starterXml:bh({button:1,index:1,r:30,g:0,b:0,message:`BTN1 被按下，LED 變紅。`}),starterMessage:`已載入 SRB00-05：按鈕觸發顏色變化。`})]},Ch=s({SRF00:()=>Eh}),wh=(e,t)=>({...e,...t}),Th=({blockType:e,color:t=`cyan`,speed:n=100,times:r=null,message:i=`動畫函式仿作`}={})=>`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="${e}" x="40" y="40">
     <field name="COLOR">${t}</field>
@@ -2131,37 +2523,37 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       <block type="text_print"><value name="TEXT"><block type="text"><field name="TEXT">${i}：先觀察 DEMO，再用暫存陣列與函式仿作。</field></block></value></block>
     </next>
   </block>
-</xml>`,wh={id:`SRF00`,title:`SmartRing 函式仿作任務`,mode:`learning`,type:`smartring`,description:`從內建動畫 DEMO 回推程式流程，再整理成可重複使用的自訂函式。`,level:`國中八年級 / 九年級`,defaultTaskId:`SRF00-01`,tasks:[Sh(ch[`SR-F01`],{id:`SRF00-01`,title:`填滿動畫函式仿作`,starterMessage:`已載入 SRF00-01：填滿動畫函式仿作。`}),Sh(ch[`SR-F01`],{id:`SRF00-02`,title:`清除動畫函式仿作`,goal:`從清除動畫理解反向索引、逐步關燈與函式封裝。`,description:`先播放清除動畫，再用暫存陣列、迴圈與等待重做。`,demoObserve:`觀察 LED 如何逐顆清除。`,practiceTask:`使用 for 迴圈由 12 到 1，逐步清除 LED。`,functionTask:`整理成 clearAnimation(speed) 函式。`,challenge:`改成只清除前 N 顆或後 N 顆。`,starterXml:`
+</xml>`,Eh={id:`SRF00`,title:`SmartRing 函式仿作任務`,mode:`learning`,type:`smartring`,description:`從內建動畫 DEMO 回推程式流程，再整理成可重複使用的自訂函式。`,level:`國中八年級 / 九年級`,defaultTaskId:`SRF00-01`,tasks:[wh(uh[`SR-F01`],{id:`SRF00-01`,title:`填滿動畫函式仿作`,starterMessage:`已載入 SRF00-01：填滿動畫函式仿作。`}),wh(uh[`SR-F01`],{id:`SRF00-02`,title:`清除動畫函式仿作`,goal:`從清除動畫理解反向索引、逐步關燈與函式封裝。`,description:`先播放清除動畫，再用暫存陣列、迴圈與等待重做。`,demoObserve:`觀察 LED 如何逐顆清除。`,practiceTask:`使用 for 迴圈由 12 到 1，逐步清除 LED。`,functionTask:`整理成 clearAnimation(speed) 函式。`,challenge:`改成只清除前 N 顆或後 N 顆。`,starterXml:`
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="smartring_play_clear_animation" x="40" y="40">
     <value name="SPEED"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
   </block>
-</xml>`,starterMessage:`已載入 SRF00-02：清除動畫函式仿作。`}),Sh(ch[`SR-F02`],{id:`SRF00-03`,title:`跑馬燈函式仿作`,starterMessage:`已載入 SRF00-03：跑馬燈函式仿作。`}),Sh(ch[`SR-F02`],{id:`SRF00-04`,title:`左移動畫函式仿作`,goal:`理解陣列資料向左位移時，索引位置如何改變。`,description:`觀察左移動畫，再用暫存陣列與迴圈重做位移效果。`,demoObserve:`觀察亮燈位置如何往左移動。`,practiceTask:`使用位置變數控制 LED 由高編號往低編號移動。`,functionTask:`整理成 shiftLeftAnimation(color, times, speed) 函式。`,challenge:`讓移動次數由參數控制。`,starterXml:Ch({blockType:`smartring_play_shift_left_animation`,color:`purple`,speed:80,times:2,message:`左移動畫函式仿作`}),starterMessage:`已載入 SRF00-04：左移動畫函式仿作。`}),Sh(ch[`SR-F02`],{id:`SRF00-05`,title:`右移動畫函式仿作`,goal:`理解陣列資料向右位移時，索引位置如何改變。`,description:`觀察右移動畫，再用暫存陣列與迴圈重做位移效果。`,demoObserve:`觀察亮燈位置如何往右移動。`,practiceTask:`使用位置變數控制 LED 由低編號往高編號移動。`,functionTask:`整理成 shiftRightAnimation(color, times, speed) 函式。`,challenge:`比較左移與右移的索引變化。`,starterXml:Ch({blockType:`smartring_play_shift_right_animation`,color:`blue`,speed:80,times:2,message:`右移動畫函式仿作`}),starterMessage:`已載入 SRF00-05：右移動畫函式仿作。`}),Sh(ch[`SR-F02`],{id:`SRF00-06`,title:`來回移動動畫函式仿作`,goal:`理解方向改變與邊界判斷，完成往返移動效果。`,description:`觀察來回移動動畫，思考何時要改變方向。`,demoObserve:`觀察 LED 移動到邊界後如何反向。`,practiceTask:`使用 position 與 direction 兩個變數控制移動。`,functionTask:`整理成 bounceAnimation(color, times, speed) 函式。`,challenge:`讓左右邊界可自訂。`,starterXml:Ch({blockType:`smartring_play_bounce_animation`,color:`green`,speed:80,times:2,message:`來回移動動畫函式仿作`}),starterMessage:`已載入 SRF00-06：來回移動動畫函式仿作。`}),Sh(ch[`SR-F03`],{id:`SRF00-07`,title:`按鈕觸發動畫函式`,starterMessage:`已載入 SRF00-07：按鈕觸發動畫函式。`})]},Th=Object.assign({"./CPB00.js":nh,"./JSA00.js":ih,"./JSB00.js":oh,"./SRA00.js":lh,"./SRB00.js":mh,"./SRF00.js":xh});function Eh(e){return String(e||``).trim().toUpperCase()}function Dh(e){return Eh((String(e||``).split(`/`).pop()||``).replace(/\.js$/i,``))}function Oh(e){return!!(e&&typeof e==`object`&&!Array.isArray(e)&&Array.isArray(e.tasks)&&(e.id||e.code||e.title))}function kh(e,t,n){return!e||typeof e!=`object`?{id:`${t}-${String(n+1).padStart(2,`0`)}`,title:`題目 ${n+1}`}:{...e,id:e.id||`${t}-${String(n+1).padStart(2,`0`)}`,title:e.title||e.problemTitle||`題目 ${n+1}`}}function Ah(e,t){if(!Oh(e))return null;let n=Eh(t),r=Eh(e.code||e.id),i=r||n;if(!i)return null;n&&r&&n!==r&&console.warn(`[Blockly Lab] 課程檔名與課程代碼不一致：檔名 ${n}.js，course.code/id 為 ${r}。建議題庫轉換器輸出時保持一致。`);let a=(e.tasks||[]).map((e,t)=>kh(e,i,t)),o=e.defaultTaskId||a[0]?.id||``;return{...e,id:i,code:e.code||i,title:e.title||i,mode:e.mode||`learning`,type:e.type||(i.startsWith(`SR`)?`smartring`:`programming`),tasks:a,defaultTaskId:o,sourceFileCode:n}}function jh(e,t){let n=Dh(t),r=[e?.default,e?.[n],...Object.values(e||{})];for(let e of r){let t=Ah(e,n);if(t)return t}return null}function Mh(){let e={};return Object.entries(Th).forEach(([t,n])=>{let r=jh(n,t);r&&(e[r.id]=r,r.sourceFileCode&&!e[r.sourceFileCode]&&(e[r.sourceFileCode]=r))}),e}var Nh=Mh();function Ph(e){return Nh[Eh(e)]||null}var Fh=[{category:`SmartRing 課程`,codes:[`SRB00`,`SRA00`,`SRF00`]},{category:`程式解題課程`,codes:[`JSB00`,`JSA00`,`CPB00`]}],Ih={SRB00:`SmartRing 基礎互動任務`,SRA00:`SmartRing 陣列任務`,SRF00:`SmartRing 函式仿作任務`,JSB00:`Blockly 解題基礎一`,JSA00:`Blockly 解題陣列基礎`,CPB00:`程式競賽基礎題組`};function Lh(){return Fh.map(e=>{let t=e.codes.map(e=>`<li><code>${e}</code>${Nh[e]?.title||Ih[e]||`課程內容尚未建立`}</li>`).join(``);return`
+</xml>`,starterMessage:`已載入 SRF00-02：清除動畫函式仿作。`}),wh(uh[`SR-F02`],{id:`SRF00-03`,title:`跑馬燈函式仿作`,starterMessage:`已載入 SRF00-03：跑馬燈函式仿作。`}),wh(uh[`SR-F02`],{id:`SRF00-04`,title:`左移動畫函式仿作`,goal:`理解陣列資料向左位移時，索引位置如何改變。`,description:`觀察左移動畫，再用暫存陣列與迴圈重做位移效果。`,demoObserve:`觀察亮燈位置如何往左移動。`,practiceTask:`使用位置變數控制 LED 由高編號往低編號移動。`,functionTask:`整理成 shiftLeftAnimation(color, times, speed) 函式。`,challenge:`讓移動次數由參數控制。`,starterXml:Th({blockType:`smartring_play_shift_left_animation`,color:`purple`,speed:80,times:2,message:`左移動畫函式仿作`}),starterMessage:`已載入 SRF00-04：左移動畫函式仿作。`}),wh(uh[`SR-F02`],{id:`SRF00-05`,title:`右移動畫函式仿作`,goal:`理解陣列資料向右位移時，索引位置如何改變。`,description:`觀察右移動畫，再用暫存陣列與迴圈重做位移效果。`,demoObserve:`觀察亮燈位置如何往右移動。`,practiceTask:`使用位置變數控制 LED 由低編號往高編號移動。`,functionTask:`整理成 shiftRightAnimation(color, times, speed) 函式。`,challenge:`比較左移與右移的索引變化。`,starterXml:Th({blockType:`smartring_play_shift_right_animation`,color:`blue`,speed:80,times:2,message:`右移動畫函式仿作`}),starterMessage:`已載入 SRF00-05：右移動畫函式仿作。`}),wh(uh[`SR-F02`],{id:`SRF00-06`,title:`來回移動動畫函式仿作`,goal:`理解方向改變與邊界判斷，完成往返移動效果。`,description:`觀察來回移動動畫，思考何時要改變方向。`,demoObserve:`觀察 LED 移動到邊界後如何反向。`,practiceTask:`使用 position 與 direction 兩個變數控制移動。`,functionTask:`整理成 bounceAnimation(color, times, speed) 函式。`,challenge:`讓左右邊界可自訂。`,starterXml:Th({blockType:`smartring_play_bounce_animation`,color:`green`,speed:80,times:2,message:`來回移動動畫函式仿作`}),starterMessage:`已載入 SRF00-06：來回移動動畫函式仿作。`}),wh(uh[`SR-F03`],{id:`SRF00-07`,title:`按鈕觸發動畫函式`,starterMessage:`已載入 SRF00-07：按鈕觸發動畫函式。`})]},Dh=Object.assign({"./CPB00.js":nh,"./JSA00.js":ih,"./JSB00.js":oh,"./JSB02.js":ch,"./SRA00.js":dh,"./SRB00.js":gh,"./SRF00.js":Ch});function Oh(e){return String(e||``).trim().toUpperCase()}function kh(e){return Oh((String(e||``).split(`/`).pop()||``).replace(/\.js$/i,``))}function Ah(e){return!!(e&&typeof e==`object`&&!Array.isArray(e)&&Array.isArray(e.tasks)&&(e.id||e.code||e.title))}function jh(e,t,n){return!e||typeof e!=`object`?{id:`${t}-${String(n+1).padStart(2,`0`)}`,title:`題目 ${n+1}`}:{...e,id:e.id||`${t}-${String(n+1).padStart(2,`0`)}`,title:e.title||e.problemTitle||`題目 ${n+1}`}}function Mh(e,t){if(!Ah(e))return null;let n=Oh(t),r=Oh(e.code||e.id),i=r||n;if(!i)return null;n&&r&&n!==r&&console.warn(`[Blockly Lab] 課程檔名與課程代碼不一致：檔名 ${n}.js，course.code/id 為 ${r}。建議題庫轉換器輸出時保持一致。`);let a=(e.tasks||[]).map((e,t)=>jh(e,i,t)),o=e.defaultTaskId||a[0]?.id||``;return{...e,id:i,code:e.code||i,title:e.title||i,mode:e.mode||`learning`,type:e.type||(i.startsWith(`SR`)?`smartring`:`programming`),tasks:a,defaultTaskId:o,sourceFileCode:n}}function Nh(e,t){let n=kh(t),r=[e?.default,e?.[n],...Object.values(e||{})];for(let e of r){let t=Mh(e,n);if(t)return t}return null}function Ph(){let e={};return Object.entries(Dh).forEach(([t,n])=>{let r=Nh(n,t);r&&(e[r.id]=r,r.sourceFileCode&&!e[r.sourceFileCode]&&(e[r.sourceFileCode]=r))}),e}var Fh=Ph();function Ih(e){return Fh[Oh(e)]||null}var Lh=[{category:`SmartRing 課程`,codes:[`SRB00`,`SRA00`,`SRF00`]},{category:`程式解題課程`,codes:[`JSB00`,`JSA00`,`CPB00`]}],Rh={SRB00:`SmartRing 基礎互動任務`,SRA00:`SmartRing 陣列任務`,SRF00:`SmartRing 函式仿作任務`,JSB00:`Blockly 解題基礎一`,JSA00:`Blockly 解題陣列基礎`,CPB00:`程式競賽基礎題組`};function zh(){return Lh.map(e=>{let t=e.codes.map(e=>`<li><code>${e}</code>${Fh[e]?.title||Rh[e]||`課程內容尚未建立`}</li>`).join(``);return`
         <section class="modal-section">
           <h3>${e.category}</h3>
           <ul class="public-course-list">${t}</ul>
         </section>
-      `}).join(``)}function Rh(e){return e?.tasks?.length?e.tasks.find(t=>t.id===e.defaultTaskId)||e.tasks[0]:null}function zh(e,t){return e?.tasks?.length&&e.tasks.find(e=>e.id===t)||null}Un(Qn);var Bh=document.getElementById(`blocklyDiv`),Vh=document.getElementById(`codePreview`),$=document.getElementById(`outputArea`),Hh=document.getElementById(`btnConnectSmartRing`),Uh=document.getElementById(`btnDisconnectSmartRing`),Wh=document.getElementById(`btnTestLedRed`),Gh=document.getElementById(`btnTestLedClear`),Kh=document.getElementById(`btnLoadSample`),qh=document.getElementById(`btnRun`),Jh=document.getElementById(`btnStop`),Yh=document.getElementById(`btnClear`),Xh=document.getElementById(`btnSaveBlocks`),Zh=document.getElementById(`btnLoadBlocks`),Qh=document.getElementById(`blockFileInput`),$h=document.getElementById(`btnCopyCode`),eg=document.getElementById(`btnClearOutput`),tg=document.getElementById(`btnToggleResultPanel`),ng=document.getElementById(`studentClass`),rg=document.getElementById(`studentNumber`),ig=document.getElementById(`studentName`),ag=document.getElementById(`courseCode`),og=document.getElementById(`courseModeDisplay`),sg=document.getElementById(`taskSelector`),cg=document.getElementById(`btnLoadCourse`),lg=document.getElementById(`btnTestTask`),ug=document.getElementById(`btnSubmitScore`),dg=document.getElementById(`taskInfo`),fg=document.querySelector(`.side-panel`),pg=document.getElementById(`taskPanelHeading`),mg=document.querySelector(`.task-panel`),hg=document.getElementById(`btnToggleTaskPanel`),gg=document.getElementById(`modeStatus`),_g=document.getElementById(`smartRingStatus`),vg=document.getElementById(`btnToggleSmartRingPanel`),yg=document.getElementById(`smartRingInfo`),bg=document.querySelector(`.result-panel`),xg=document.getElementById(`serialStatusValue`),Sg=document.getElementById(`buttonStateValue`),Cg=document.getElementById(`rawStateValue`),wg=document.getElementById(`lastCommandValue`),Tg=document.getElementById(`tabBlocks`),Eg=document.getElementById(`tabCode`),Dg=document.getElementById(`blocksView`),Og=document.getElementById(`codeView`),kg=document.getElementById(`taskModal`),Ag=document.getElementById(`taskModalTitle`),jg=document.getElementById(`taskModalBody`),Mg=document.getElementById(`btnOpenTaskModal`),Ng=document.getElementById(`btnCloseTaskModal`),Pg=null,Fg=null,Ig=null,Lg=`learning`,Rg=!1,zg=!1,Bg=null,Vg=!1,Hg=!1,Ug=!1;function Wg(e){return e===`contest`||e===`competition`?`contest`:`learning`}function Gg(e=Lg){return Wg(e)===`contest`?`競賽模式`:`學習模式`}function Kg(){return Wg(Lg)===`contest`}function qg(e=Fg){return e?.type||(String(e?.id||``).startsWith(`JS`)?`programming`:`smartring`)}function Jg(){let e=Gg();gg.textContent=`目前模式：${e}`,og&&(og.textContent=e,og.classList.toggle(`contest-mode`,Kg()),og.classList.toggle(`learning-mode`,!Kg()))}function Yg(e=Ig,t=Fg){return qg(t)===`programming`||String(t?.id||``).startsWith(`JS`)||String(e?.type||``).includes(`解題`)}function Xg(){if(!ug)return;let e=!!(Yg(Ig,Fg)&&Fg&&Ig&&zg&&!Rg);ug.hidden=!1,ug.disabled=!e}function Zg(){lg&&(lg.disabled=!(Fg&&Ig&&Yg()&&!Rg),Ig?Yg()?lg.title=`使用題目內建測資進行系統評分。`:lg.title=`SmartRing 課程不進行系統評分，請使用「執行程式」。`:lg.title=`請先載入程式解題課程。`),Kh&&(Kh.disabled=!(Ig?.starterXml&&!Rg),Kh.title=Ig?.starterXml?`載入目前題目的範例積木，會覆蓋工作區。`:`請先載入有範例積木的課程任務。`),Xg()}function Qg(){zg=!1,Bg=null,Xg()}function $g(){Pg=Cn(Bh,{toolbox:Nm,trashcan:!0,scrollbars:!0,move:{scrollbars:!0,drag:!0,wheel:!0},zoom:{controls:!0,wheel:!0,startScale:.9,maxScale:1.4,minScale:.5,scaleSpeed:1.1},grid:{spacing:24,length:3,colour:`#d8dce3`,snap:!0},renderer:`geras`}),Pg.addChangeListener(e_),e_()}function e_(){Pg&&(Vh.textContent=T.workspaceToCode(Pg).trim()||`// 尚未建立程式`)}function t_(e){let t=$.textContent;if(t===`尚未執行程式。`||t===``){$.textContent=String(e);return}$.textContent+=`\n${String(e)}`}function n_(){$.textContent=``}function r_(e){Rg=e,qh&&(qh.disabled=e),Jh&&(Jh.disabled=!e),Zg()}function i_(){if(!Rg){$.textContent=`目前沒有正在執行的程式。`;return}th.stopProgram(),t_(`已送出中止程式請求，程式會在下一個 SmartRing 等待或硬體指令處停止。`)}function a_(e){let t=$.textContent;if(t===`尚未執行程式。`||t===``){$.textContent=String(e);return}$.textContent+=`\n${String(e)}`}function o_(e=``){let t=String(e??``).replace(/\r\n/g,`
+      `}).join(``)}function Bh(e){return e?.tasks?.length?e.tasks.find(t=>t.id===e.defaultTaskId)||e.tasks[0]:null}function Vh(e,t){return e?.tasks?.length&&e.tasks.find(e=>e.id===t)||null}Un(Qn);var Hh=document.getElementById(`blocklyDiv`),Uh=document.getElementById(`codePreview`),$=document.getElementById(`outputArea`),Wh=`https://script.google.com/macros/s/AKfycbw58wHIWa9TUK4uuVMR2UwqDQCqEEdp7GOY913Y969JTKNM4kfhtjTPHhnFWcvWhpec/exec`,Gh=document.getElementById(`btnConnectSmartRing`),Kh=document.getElementById(`btnDisconnectSmartRing`),qh=document.getElementById(`btnTestLedRed`),Jh=document.getElementById(`btnTestLedClear`),Yh=document.getElementById(`btnLoadSample`),Xh=document.getElementById(`btnRun`),Zh=document.getElementById(`btnStop`),Qh=document.getElementById(`btnClear`),$h=document.getElementById(`btnSaveBlocks`),eg=document.getElementById(`btnLoadBlocks`),tg=document.getElementById(`blockFileInput`),ng=document.getElementById(`btnCopyCode`),rg=document.getElementById(`btnClearOutput`),ig=document.getElementById(`btnToggleResultPanel`),ag=document.getElementById(`studentClass`),og=document.getElementById(`studentNumber`),sg=document.getElementById(`studentName`),cg=document.getElementById(`courseCode`),lg=document.getElementById(`courseModeDisplay`),ug=document.getElementById(`taskSelector`),dg=document.getElementById(`btnLoadCourse`),fg=document.getElementById(`btnTestTask`),pg=document.getElementById(`btnSubmitScore`),mg=document.getElementById(`taskInfo`),hg=document.querySelector(`.side-panel`),gg=document.getElementById(`taskPanelHeading`),_g=document.querySelector(`.task-panel`),vg=document.getElementById(`btnToggleTaskPanel`),yg=document.getElementById(`modeStatus`),bg=document.getElementById(`smartRingStatus`),xg=document.getElementById(`btnToggleSmartRingPanel`),Sg=document.getElementById(`smartRingInfo`),Cg=document.querySelector(`.result-panel`),wg=document.getElementById(`serialStatusValue`),Tg=document.getElementById(`buttonStateValue`),Eg=document.getElementById(`rawStateValue`),Dg=document.getElementById(`lastCommandValue`),Og=document.getElementById(`tabBlocks`),kg=document.getElementById(`tabCode`),Ag=document.getElementById(`blocksView`),jg=document.getElementById(`codeView`),Mg=document.getElementById(`taskModal`),Ng=document.getElementById(`taskModalTitle`),Pg=document.getElementById(`taskModalBody`),Fg=document.getElementById(`btnOpenTaskModal`),Ig=document.getElementById(`btnCloseTaskModal`),Lg=null,Rg=null,zg=null,Bg=`learning`,Vg=!1,Hg=!1,Ug=null,Wg=!1,Gg=!1,Kg=!1;function qg(e){return e===`contest`||e===`competition`?`contest`:`learning`}function Jg(e=Bg){return qg(e)===`contest`?`競賽模式`:`學習模式`}function Yg(){return qg(Bg)===`contest`}function Xg(e=Rg){return e?.type||(String(e?.id||``).startsWith(`JS`)?`programming`:`smartring`)}function Zg(){let e=Jg();yg.textContent=`目前模式：${e}`,lg&&(lg.textContent=e,lg.classList.toggle(`contest-mode`,Yg()),lg.classList.toggle(`learning-mode`,!Yg()))}function Qg(e=zg,t=Rg){return Xg(t)===`programming`||String(t?.id||``).startsWith(`JS`)||String(e?.type||``).includes(`解題`)}function $g(){if(!pg)return;let e=!!(Qg(zg,Rg)&&Rg&&zg&&Hg&&!Vg);pg.hidden=!1,pg.disabled=!e}function e_(){fg&&(fg.disabled=!(Rg&&zg&&Qg()&&!Vg),zg?Qg()?fg.title=`使用題目內建測資進行系統評分。`:fg.title=`SmartRing 課程不進行系統評分，請使用「執行程式」。`:fg.title=`請先載入程式解題課程。`),Yh&&(Yh.disabled=!(zg?.starterXml&&!Vg),Yh.title=zg?.starterXml?`載入目前題目的範例積木，會覆蓋工作區。`:`請先載入有範例積木的課程任務。`),$g()}function t_(){Hg=!1,Ug=null,$g()}function n_(){Lg=Cn(Hh,{toolbox:Nm,trashcan:!0,scrollbars:!0,move:{scrollbars:!0,drag:!0,wheel:!0},zoom:{controls:!0,wheel:!0,startScale:.9,maxScale:1.4,minScale:.5,scaleSpeed:1.1},grid:{spacing:24,length:3,colour:`#d8dce3`,snap:!0},renderer:`geras`}),Lg.addChangeListener(r_),r_()}function r_(){Lg&&(Uh.textContent=T.workspaceToCode(Lg).trim()||`// 尚未建立程式`)}function i_(e){let t=$.textContent;if(t===`尚未執行程式。`||t===``){$.textContent=String(e);return}$.textContent+=`\n${String(e)}`}function a_(){$.textContent=``}function o_(e){Vg=e,Xh&&(Xh.disabled=e),Zh&&(Zh.disabled=!e),e_()}function s_(){if(!Vg){$.textContent=`目前沒有正在執行的程式。`;return}th.stopProgram(),i_(`已送出中止程式請求，程式會在下一個 SmartRing 等待或硬體指令處停止。`)}function c_(e){let t=$.textContent;if(t===`尚未執行程式。`||t===``){$.textContent=String(e);return}$.textContent+=`\n${String(e)}`}function l_(e=``){let t=String(e??``).replace(/\r\n/g,`
 `).replace(/\r/g,`
 `),n=t.length>0?t.split(`
-`):[],r=0;return()=>{let e=r<n.length?n[r]:``;return r+=1,e}}async function s_({inputText:e=null,writeToOutput:t=!1}={}){if(!Pg)return{ok:!1,output:``,error:Error(`Blockly 工作區尚未初始化。`)};if(Rg){let e=Error(`程式仍在執行中，請先按「中止程式」。`);return t&&a_(e.message),{ok:!1,output:``,error:e}}let n=T.workspaceToCode(Pg);if(!n.trim()){let e=Error(`目前沒有可以執行的程式。`);return t&&($.textContent=e.message),{ok:!1,output:``,error:e}}let r=[],i=window.alert,a=window.prompt,o=console.log,s=o_(e??``),c=e!=null,l=(e=``)=>{let n=String(e);r.push(n),t&&a_(n)};th.resetProgramStop(),r_(!0);try{return window.alert=e=>{l(e)},c&&(window.prompt=()=>s()),console.log=(...e)=>{l(e.join(` `)),o(...e)},await Function(`print`,`SmartRing`,`readLine`,`prompt`,`
+`):[],r=0;return()=>{let e=r<n.length?n[r]:``;return r+=1,e}}async function u_({inputText:e=null,writeToOutput:t=!1}={}){if(!Lg)return{ok:!1,output:``,error:Error(`Blockly 工作區尚未初始化。`)};if(Vg){let e=Error(`程式仍在執行中，請先按「中止程式」。`);return t&&c_(e.message),{ok:!1,output:``,error:e}}let n=T.workspaceToCode(Lg);if(!n.trim()){let e=Error(`目前沒有可以執行的程式。`);return t&&($.textContent=e.message),{ok:!1,output:``,error:e}}let r=[],i=window.alert,a=window.prompt,o=console.log,s=l_(e??``),c=e!=null,l=(e=``)=>{let n=String(e);r.push(n),t&&c_(n)};th.resetProgramStop(),o_(!0);try{return window.alert=e=>{l(e)},c&&(window.prompt=()=>s()),console.log=(...e)=>{l(e.join(` `)),o(...e)},await Function(`print`,`SmartRing`,`readLine`,`prompt`,`
       "use strict";
       return (async () => {
         ${n}
       })();
       `)(e=>{l(e)},th,s,c?s:a.bind(window)),{ok:!0,output:r.join(`
 `),error:null}}catch(e){return t&&(e?.name===`AbortError`||e?.message===`程式已中止。`?$.textContent=`程式已中止。`:$.textContent=`程式執行發生錯誤：\n${e.message}`),{ok:!1,output:r.join(`
-`),error:e}}finally{window.alert=i,window.prompt=a,console.log=o,r_(!1),th.resetProgramStop()}}async function c_(){if(!Pg)return;n_();let e=await s_({writeToOutput:!0});e.ok&&!e.output.trim()&&($.textContent=`程式執行完成，沒有輸出內容。`)}function l_(){Pg&&window.confirm(`確定要清除目前所有積木嗎？`)&&(Pg.clear(),e_(),$.textContent=`已清除工作區。`)}function u_(){let e=Vh.textContent||``;navigator.clipboard.writeText(e).then(()=>{$.textContent=`已複製 JavaScript 程式碼。`}).catch(()=>{$.textContent=`複製失敗，請手動選取程式碼。`})}function d_(e){let t=e===`code`;Tg.classList.toggle(`active`,!t),Eg.classList.toggle(`active`,t),Dg.classList.toggle(`active`,!t),Og.classList.toggle(`active`,t),e_(),!t&&Pg&&setTimeout(()=>{Gn(Pg)},0)}function f_(){if(Pg){if(!Ig){$.textContent=`請先載入課程與子任務，再按「載入範例」。`;return}if(!Ig.starterXml){$.textContent=`${Ig.id}｜${Ig.title} 尚未提供範例積木。`;return}window.confirm(`載入範例會清除目前工作區積木，確定要載入目前題目的範例嗎？`)&&y_(Ig)}}function p_(){return{className:ng.value.trim(),seatNumber:rg.value.trim(),name:ig.value.trim(),courseCode:ag.value.trim().toUpperCase(),taskId:sg.value,mode:Lg}}function m_(e){return String(e).trim().replace(/[\\/:*?"<>|]/g,`_`).replace(/\s+/g,`_`).replace(/_+/g,`_`).replace(/^_+|_+$/g,``)}function h_(){let e=p_();return`${[e.taskId||e.courseCode||`SmartRing`,e.className,e.seatNumber,e.name].map(m_).filter(Boolean).join(`_`)||`SmartRing`}.blockly.xml`}function g_(){if(!Pg)return;let e=$t.workspaceToDom(Pg),t=$t.domToPrettyText(e),n=new Blob([t],{type:`text/xml;charset=utf-8`}),r=URL.createObjectURL(n),i=h_(),a=document.createElement(`a`);a.href=r,a.download=i,document.body.appendChild(a),a.click(),document.body.removeChild(a),URL.revokeObjectURL(r),$.textContent=`已下載積木檔案：${i}`}function __(){Pg&&(Qh.value=``,Qh.click())}function v_(e){if(!e||!Pg||!window.confirm(`載入積木檔會取代目前工作區內容，確定要繼續嗎？`))return;let t=new FileReader;t.onload=()=>{try{let n=String(t.result||``),r=Jn.xml.textToDom(n);Pg.clear(),$t.domToWorkspace(r,Pg),e_(),d_(`blocks`),$.textContent=`已載入積木檔案：${e.name}`}catch(e){$.textContent=`載入積木檔案失敗：\n${e.message}`}},t.onerror=()=>{$.textContent=`讀取檔案失敗，請重新選擇檔案。`},t.readAsText(e,`utf-8`)}function y_(e){if(!Pg||!e?.starterXml)return!1;try{Pg.clear();let t=Jn.xml.textToDom(e.starterXml);return $t.domToWorkspace(t,Pg),e_(),d_(`blocks`),$.textContent=e.starterMessage||`已載入 ${e.id} 起始積木。`,!0}catch(t){return $.textContent=`載入 ${e.id} 起始積木失敗：\n${t.message}`,!1}}function b_(e,t){return t?`
+`),error:e}}finally{window.alert=i,window.prompt=a,console.log=o,o_(!1),th.resetProgramStop()}}async function d_(){if(!Lg)return;a_();let e=await u_({writeToOutput:!0});e.ok&&!e.output.trim()&&($.textContent=`程式執行完成，沒有輸出內容。`)}function f_(){Lg&&window.confirm(`確定要清除目前所有積木嗎？`)&&(Lg.clear(),r_(),$.textContent=`已清除工作區。`)}function p_(){let e=Uh.textContent||``;navigator.clipboard.writeText(e).then(()=>{$.textContent=`已複製 JavaScript 程式碼。`}).catch(()=>{$.textContent=`複製失敗，請手動選取程式碼。`})}function m_(e){let t=e===`code`;Og.classList.toggle(`active`,!t),kg.classList.toggle(`active`,t),Ag.classList.toggle(`active`,!t),jg.classList.toggle(`active`,t),r_(),!t&&Lg&&setTimeout(()=>{Gn(Lg)},0)}function h_(){if(Lg){if(!zg){$.textContent=`請先載入課程與子任務，再按「載入範例」。`;return}if(!zg.starterXml){$.textContent=`${zg.id}｜${zg.title} 尚未提供範例積木。`;return}window.confirm(`載入範例會清除目前工作區積木，確定要載入目前題目的範例嗎？`)&&S_(zg)}}function g_(){return{className:ag.value.trim(),seatNumber:og.value.trim(),name:sg.value.trim(),courseCode:cg.value.trim().toUpperCase(),taskId:ug.value,mode:Bg}}function __(e){return String(e).trim().replace(/[\\/:*?"<>|]/g,`_`).replace(/\s+/g,`_`).replace(/_+/g,`_`).replace(/^_+|_+$/g,``)}function v_(){let e=g_();return`${[e.taskId||e.courseCode||`SmartRing`,e.className,e.seatNumber,e.name].map(__).filter(Boolean).join(`_`)||`SmartRing`}.blockly.xml`}function y_(){if(!Lg)return;let e=$t.workspaceToDom(Lg),t=$t.domToPrettyText(e),n=new Blob([t],{type:`text/xml;charset=utf-8`}),r=URL.createObjectURL(n),i=v_(),a=document.createElement(`a`);a.href=r,a.download=i,document.body.appendChild(a),a.click(),document.body.removeChild(a),URL.revokeObjectURL(r),$.textContent=`已下載積木檔案：${i}`}function b_(){Lg&&(tg.value=``,tg.click())}function x_(e){if(!e||!Lg||!window.confirm(`載入積木檔會取代目前工作區內容，確定要繼續嗎？`))return;let t=new FileReader;t.onload=()=>{try{let n=String(t.result||``),r=Jn.xml.textToDom(n);Lg.clear(),$t.domToWorkspace(r,Lg),r_(),m_(`blocks`),$.textContent=`已載入積木檔案：${e.name}`}catch(e){$.textContent=`載入積木檔案失敗：\n${e.message}`}},t.onerror=()=>{$.textContent=`讀取檔案失敗，請重新選擇檔案。`},t.readAsText(e,`utf-8`)}function S_(e){if(!Lg||!e?.starterXml)return!1;try{Lg.clear();let t=Jn.xml.textToDom(e.starterXml);return $t.domToWorkspace(t,Lg),r_(),m_(`blocks`),$.textContent=e.starterMessage||`已載入 ${e.id} 起始積木。`,!0}catch(t){return $.textContent=`載入 ${e.id} 起始積木失敗：\n${t.message}`,!1}}function C_(e,t){return t?`
     <section class="modal-section">
       <h3>${e}</h3>
       <p>${t}</p>
     </section>
-  `:``}function x_(e){return String(e||``).replace(/^\s*<pre>/i,``).replace(/<\/pre>\s*$/i,``).trim()}function S_(e){return String(e||``).replace(/&/g,`&amp;`).replace(/</g,`&lt;`).replace(/>/g,`&gt;`).replace(/"/g,`&quot;`).replace(/'/g,`&#39;`)}function C_(e,t){let n=String(t||``).trim();return n?`
+  `:``}function w_(e){return String(e||``).replace(/^\s*<pre>/i,``).replace(/<\/pre>\s*$/i,``).trim()}function T_(e){return String(e||``).replace(/&/g,`&amp;`).replace(/</g,`&lt;`).replace(/>/g,`&gt;`).replace(/"/g,`&quot;`).replace(/'/g,`&#39;`)}function E_(e,t){let n=String(t||``).trim();return n?`
     <section class="problem-section modal-section">
       <h3>${e}</h3>
-      <p>${S_(n)}</p>
+      <p>${T_(n)}</p>
     </section>
-  `:``}function w_(e=[]){if(!Array.isArray(e)||e.length===0)return``;let t=e=>S_(x_(e||``)).replace(/\n/g,`<br>`);return`
+  `:``}function D_(e=[]){if(!Array.isArray(e)||e.length===0)return``;let t=e=>T_(w_(e||``)).replace(/\n/g,`<br>`);return`
     <section class="problem-section modal-section problem-example-section">
       <h3>範例格式</h3>
       <div class="problem-example-table-wrap">
@@ -2175,30 +2567,30 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
           </thead>
           <tbody>${e.map(e=>{let n=e.input||`無輸入`,r=e.output||``,i=e.explanation||``;return`
         <tr>
-          <td><pre class="problem-table-pre">${S_(x_(n))}</pre></td>
-          <td><pre class="problem-table-pre">${S_(x_(r))}</pre></td>
+          <td><pre class="problem-table-pre">${T_(w_(n))}</pre></td>
+          <td><pre class="problem-table-pre">${T_(w_(r))}</pre></td>
           <td class="problem-example-explanation">${t(i)}</td>
         </tr>
       `}).join(``)}</tbody>
         </table>
       </div>
     </section>
-  `}function T_(e){if(Array.isArray(e.examples)&&e.examples.length>0)return e.examples;let t=e.sampleInput||``,n=e.sampleOutput||``;return!t&&!n?[]:[{input:t||`無輸入`,output:n,explanation:e.problemNote||e.description||`請比對使用者輸入與輸出結果。`}]}function E_(e){let t=e.problemTitle||e.title||`未命名題目`,n=e.statement||e.problemStatement||e.description||`尚未建立題目內容。`,r=e.inputDescription||e.input||``,i=e.outputDescription||e.output||``,a=T_(e);return`
+  `}function O_(e){if(Array.isArray(e.examples)&&e.examples.length>0)return e.examples;let t=e.sampleInput||``,n=e.sampleOutput||``;return!t&&!n?[]:[{input:t||`無輸入`,output:n,explanation:e.problemNote||e.description||`請比對使用者輸入與輸出結果。`}]}function k_(e){let t=e.problemTitle||e.title||`未命名題目`,n=e.statement||e.problemStatement||e.description||`尚未建立題目內容。`,r=e.inputDescription||e.input||``,i=e.outputDescription||e.output||``,a=O_(e);return`
     <article class="problem-task-content">
-      <h2 class="problem-title">${S_(t)}</h2>
-      ${C_(`題目說明`,n)}
-      ${C_(`輸入說明`,r)}
-      ${C_(`輸出說明`,i)}
-      ${w_(a)}
+      <h2 class="problem-title">${T_(t)}</h2>
+      ${E_(`題目說明`,n)}
+      ${E_(`輸入說明`,r)}
+      ${E_(`輸出說明`,i)}
+      ${D_(a)}
     </article>
-  `}function D_(){if(document.querySelector(`.smartring-panel`)?.classList.toggle(`collapsed`,Vg),fg?.classList.toggle(`smart-ring-collapsed`,Vg),yg&&(yg.hidden=Vg),vg){vg.setAttribute(`aria-expanded`,String(!Vg));let e=vg.querySelector(`.panel-toggle-text`);e&&(e.textContent=Vg?`展開 ▼`:`收合 ▲`)}}function O_(){Vg=!Vg,D_()}function k_(){if(mg?.classList.toggle(`collapsed`,Hg),fg?.classList.toggle(`task-panel-collapsed`,Hg),dg&&(dg.hidden=Hg),hg){hg.setAttribute(`aria-expanded`,String(!Hg));let e=hg.querySelector(`.panel-toggle-text`);e&&(e.textContent=Hg?`展開 ▼`:`收合 ▲`)}}function A_(){Hg=!Hg,k_()}function j_(){if(bg?.classList.toggle(`collapsed`,Ug),fg?.classList.toggle(`result-panel-collapsed`,Ug),$&&($.hidden=Ug),tg){tg.setAttribute(`aria-expanded`,String(!Ug));let e=tg.querySelector(`.panel-toggle-text`);e&&(e.textContent=Ug?`展開 ▼`:`收合 ▲`)}}function M_(){Ug=!Ug,j_()}function N_({announce:e=!1}={}){Jg(),Qg(),e&&(Yg(Ig,Fg)?t_(`已載入${Gg()}題庫：請按「系統評分」，產生評分結果後可上傳成績。`):t_(`已載入 SmartRing 課程：請使用「執行程式」觀察硬體互動結果，此類課程不進行成績上傳。`))}function P_(e){Ag.textContent=e.problemTitle||e.title||`競賽題目`,jg.innerHTML=E_(e)}function F_(e,t){Ag.textContent=`${e.id}｜${e.title}`,jg.innerHTML=`
+  `}function A_(){if(document.querySelector(`.smartring-panel`)?.classList.toggle(`collapsed`,Wg),hg?.classList.toggle(`smart-ring-collapsed`,Wg),Sg&&(Sg.hidden=Wg),xg){xg.setAttribute(`aria-expanded`,String(!Wg));let e=xg.querySelector(`.panel-toggle-text`);e&&(e.textContent=Wg?`展開 ▼`:`收合 ▲`)}}function j_(){Wg=!Wg,A_()}function M_(){if(_g?.classList.toggle(`collapsed`,Gg),hg?.classList.toggle(`task-panel-collapsed`,Gg),mg&&(mg.hidden=Gg),vg){vg.setAttribute(`aria-expanded`,String(!Gg));let e=vg.querySelector(`.panel-toggle-text`);e&&(e.textContent=Gg?`展開 ▼`:`收合 ▲`)}}function N_(){Gg=!Gg,M_()}function P_(){if(Cg?.classList.toggle(`collapsed`,Kg),hg?.classList.toggle(`result-panel-collapsed`,Kg),$&&($.hidden=Kg),ig){ig.setAttribute(`aria-expanded`,String(!Kg));let e=ig.querySelector(`.panel-toggle-text`);e&&(e.textContent=Kg?`展開 ▼`:`收合 ▲`)}}function F_(){Kg=!Kg,P_()}function I_({announce:e=!1}={}){Zg(),t_(),e&&(Qg(zg,Rg)?i_(`已載入${Jg()}題庫：請按「系統評分」，產生評分結果後可上傳成績。`):i_(`已載入 SmartRing 課程：請使用「執行程式」觀察硬體互動結果，此類課程不進行成績上傳。`))}function L_(e){Ng.textContent=e.problemTitle||e.title||`競賽題目`,Pg.innerHTML=k_(e)}function R_(e,t){Ng.textContent=`${e.id}｜${e.title}`,Pg.innerHTML=`
     <section class="modal-section">
       <h3>課程組資料</h3>
       <p><strong>課程組代碼：</strong>${t.id}</p>
       <p><strong>課程組名稱：</strong>${t.title}</p>
       <p><strong>課程組說明：</strong>${t.description}</p>
-      <p><strong>課程模式：</strong>${Gg(t.mode)}</p>
-      <p><strong>課程類型：</strong>${qg(t)}</p>
+      <p><strong>課程模式：</strong>${Jg(t.mode)}</p>
+      <p><strong>課程類型：</strong>${Xg(t)}</p>
     </section>
 
     <section class="modal-section">
@@ -2218,10 +2610,10 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       <p>${e.description}</p>
     </section>
 
-    ${b_(`DEMO 觀察`,e.demoObserve)}
-    ${b_(`仿作任務`,e.practiceTask)}
-    ${b_(`函式整理`,e.functionTask)}
-    ${b_(`延伸挑戰`,e.challenge)}
+    ${C_(`DEMO 觀察`,e.demoObserve)}
+    ${C_(`仿作任務`,e.practiceTask)}
+    ${C_(`函式整理`,e.functionTask)}
+    ${C_(`延伸挑戰`,e.challenge)}
 
     <section class="modal-section">
       <h3>操作說明</h3>
@@ -2247,41 +2639,49 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       <h3>教學提示</h3>
       <p>${e.hint}</p>
     </section>
-  `}function I_(){fg?.classList.remove(`programming-problem`),pg&&(pg.textContent=`公開課程代碼`),dg.innerHTML=`
+  `}function z_(){hg?.classList.remove(`programming-problem`),gg&&(gg.textContent=`公開課程代碼`),mg.innerHTML=`
     <h2>公開課程代碼</h2>
-    ${Lh()}
-  `,Ag.textContent=`公開課程代碼`,jg.innerHTML=dg.innerHTML}function L_(e,t){let n=Yg(e,t);if(fg?.classList.toggle(`programming-problem`,n),pg&&(pg.textContent=n?`競賽題目`:`課程任務摘要`),n){dg.innerHTML=`
+    ${zh()}
+  `,Ng.textContent=`公開課程代碼`,Pg.innerHTML=mg.innerHTML}function B_(e,t){let n=Qg(e,t);if(hg?.classList.toggle(`programming-problem`,n),gg&&(gg.textContent=n?`競賽題目`:`課程任務摘要`),n){mg.innerHTML=`
       <div class="problem-task-fixed-panel">
-        ${E_(e)}
+        ${k_(e)}
       </div>
-    `,P_(e);return}dg.innerHTML=`
+    `,L_(e);return}mg.innerHTML=`
     <h2>${e.title}</h2>
     <p><strong>課程組：</strong>${t.id}｜${t.title}</p>
-    <p><strong>課程模式：</strong>${Gg(t.mode)}</p>
+    <p><strong>課程模式：</strong>${Jg(t.mode)}</p>
     <p><strong>子任務代碼：</strong>${e.id}</p>
     <p><strong>任務類型：</strong>${e.type}</p>
     <p><strong>適用程度：</strong>${e.level}</p>
     <p><strong>學習目標：</strong>${e.goal}</p>
     <p class="summary-note">完整任務說明請按右上角「查看完整任務」。</p>
-  `,F_(e,t)}function R_(e,t){let n=`${t.id}-`,r=String(e.id||``).startsWith(n)?String(e.id).slice(n.length):String(e.id||``);return r?`${r}｜${e.title}`:e.title}function z_(e,t){sg.innerHTML=e.tasks.map(n=>{let r=n.id===t?` selected`:``;return`<option value="${n.id}"${r}>${S_(R_(n,e))}</option>`}).join(``),sg.disabled=!1}function B_(){sg.innerHTML=`<option value="">請先載入課程組</option>`,sg.disabled=!0}function V_(e,t,{shouldLoadStarter:n=!1}={}){if(!(!e||!t)){if(Qg(),Ig=e,z_(t,e.id),L_(e,t),Zg(),n){y_(e)||($.textContent=`已載入子任務：${e.id}｜${e.title}`);return}$.textContent=`已載入子任務：${e.id}｜${e.title}。工作區積木未變更，如需範例請按「載入範例」。`}}function H_(){let e=p_().courseCode;if(!e){$.textContent=`請先輸入課程組代碼，例如 SRB00、SRA00、SRF00、JSB00、JSA00、CPB00。`,ag.focus();return}let t=Ph(e);if(!t){Fg=null,Ig=null,Lg=`learning`,N_(),Qg(),B_(),Zg(),fg?.classList.remove(`programming-problem`),pg&&(pg.textContent=`課程任務摘要`),dg.innerHTML=`
+  `,R_(e,t)}function V_(e,t){let n=`${t.id}-`,r=String(e.id||``).startsWith(n)?String(e.id).slice(n.length):String(e.id||``);return r?`${r}｜${e.title}`:e.title}function H_(e,t){ug.innerHTML=e.tasks.map(n=>{let r=n.id===t?` selected`:``;return`<option value="${n.id}"${r}>${T_(V_(n,e))}</option>`}).join(``),ug.disabled=!1}function U_(){ug.innerHTML=`<option value="">請先載入課程組</option>`,ug.disabled=!0}function W_(e,t,{shouldLoadStarter:n=!1}={}){if(!(!e||!t)){if(t_(),zg=e,H_(t,e.id),B_(e,t),e_(),n){S_(e)||($.textContent=`已載入子任務：${e.id}｜${e.title}`);return}$.textContent=`已載入子任務：${e.id}｜${e.title}。工作區積木未變更，如需範例請按「載入範例」。`}}function G_(){let e=g_().courseCode;if(!e){$.textContent=`請先輸入課程組代碼，例如 SRB00、SRA00、SRF00、JSB00、JSA00、CPB00。`,cg.focus();return}let t=Ih(e);if(!t){Rg=null,zg=null,Bg=`learning`,I_(),t_(),U_(),e_(),hg?.classList.remove(`programming-problem`),gg&&(gg.textContent=`課程任務摘要`),mg.innerHTML=`
       <h2>找不到課程組：${e}</h2>
       <p>請確認課程代碼是否輸入正確，或先使用以下公開基礎課程。</p>
-      ${Lh()}
-    `,Ag.textContent=`找不到課程組`,jg.innerHTML=`
+      ${zh()}
+    `,Ng.textContent=`找不到課程組`,Pg.innerHTML=`
       <p>找不到課程組代碼：${e}</p>
       <p>請先確認課程代碼，或測試以下公開基礎課程：</p>
-      ${Lh()}
-    `,$.textContent=`找不到課程組代碼：${e}`;return}Fg=t,Lg=Wg(t.mode),N_({announce:!0});let n=Rh(t);if(!n){Ig=null,Qg(),B_(),Zg(),fg?.classList.remove(`programming-problem`),pg&&(pg.textContent=`課程任務摘要`),$.textContent=`課程組 ${t.id} 尚未建立子任務。`;return}V_(n,t)}function U_(){if(!Fg)return;let e=zh(Fg,sg.value);if(!e){$.textContent=`找不到子任務：${sg.value}`;return}V_(e,Fg)}function W_(e=``){return String(e).replace(/\r\n/g,`
+      ${zh()}
+    `,$.textContent=`找不到課程組代碼：${e}`;return}Rg=t,Bg=qg(t.mode),I_({announce:!0});let n=Bh(t);if(!n){zg=null,t_(),U_(),e_(),hg?.classList.remove(`programming-problem`),gg&&(gg.textContent=`課程任務摘要`),$.textContent=`課程組 ${t.id} 尚未建立子任務。`;return}W_(n,t)}function K_(){if(!Rg)return;let e=Vh(Rg,ug.value);if(!e){$.textContent=`找不到子任務：${ug.value}`;return}W_(e,Rg)}function q_(e=``){return String(e).replace(/\r\n/g,`
 `).replace(/\r/g,`
 `).split(`
 `).map(e=>e.trimEnd()).join(`
-`).trimEnd()}function G_(e=Ig){return Array.isArray(e?.testCases)?e.testCases.map((e,t)=>({id:e.id||`case-${t+1}`,input:e.input??``,expectedOutput:e.expectedOutput??e.output??``})):[]}function K_(e,t=`無`){let n=String(e??``);return n.length>0?n:t}function q_(e=0,t=0){return t?Math.round(e/t*100):0}function J_(e,t=`無`){return`<pre class="assessment-pre">${S_(K_(e,t))}</pre>`}function Y_(e){let t=Number(e?.total||0),n=(e?.cases||[]).map((e,t)=>{let n=e.passed?`passed`:`failed`,r=e.passed?`通過`:`未通過`,i=e.errorMessage?`<div class="assessment-error">${S_(e.errorMessage)}</div>`:``;return`
+`).trimEnd()}function J_(e=[]){let t=[...e];for(;t.length>0&&String(t[t.length-1]).trim()===``;)t.pop();return t}function Y_(e=``){let t=String(e??``).replace(/\r\n/g,`
+`).replace(/\r/g,`
+`).split(`
+`),n=[];for(let e of t){let t=String(e??``),r=t.trim();if(/^(預期答案|參考答案|正確答案|答案|分數)\s*[:：]/.test(r))break;let i=r.match(/^第[一二三四五六七八九十0-9]+個輸入\s*[:：]\s*(.*)$/);if(i){let e=i[1].trim();e&&n.push(e);continue}n.push(t)}return J_(n).join(`
+`).trim()}function X_(e=``){let t=String(e??``).replace(/\r\n/g,`
+`).replace(/\r/g,`
+`).split(`
+`),n=[];for(let e of t){let t=String(e??``),r=t.trim(),i=r.match(/^(預期答案|參考答案|正確答案|答案)\s*[:：]\s*(.*)$/);if(i){let e=i[2].trim();e&&n.push(e);continue}if(/^分數\s*[:：]/.test(r))break;n.push(t)}return J_(n).join(`
+`).trim()}function Z_(e={},t=0,n=zg){let r=e.input??``,i=e.expectedOutput??e.output??``,a=Y_(r),o=X_(i);return(a!==String(r??``)||o!==String(i??``))&&console.warn(`[Blockly Lab] 測資已自動清理：${n?.id||`unknown-task`} #${t+1}。建議使用新版題庫轉換器重新產生課程 JS。`),{id:e.id||`case-${t+1}`,input:a,expectedOutput:o}}function Q_(e=zg){return Array.isArray(e?.testCases)?e.testCases.map((t,n)=>Z_(t,n,e)):[]}function $_(e,t=`無`){let n=String(e??``);return n.length>0?n:t}function ev(e=0,t=0){return t?Math.round(e/t*100):0}function tv(e,t=`無`){return`<pre class="assessment-pre">${T_($_(e,t))}</pre>`}function nv(e){let t=Number(e?.total||0),n=(e?.cases||[]).map((e,t)=>{let n=e.passed?`passed`:`failed`,r=e.passed?`通過`:`未通過`,i=e.errorMessage?`<div class="assessment-error">${T_(e.errorMessage)}</div>`:``;return`
         <tr class="assessment-row ${n}">
           <td class="assessment-case-number">${t+1}</td>
           <td><span class="assessment-badge ${n}">${r}</span></td>
-          <td>${J_(e.input)}</td>
-          <td>${J_(e.expectedOutput)}</td>
-          <td>${J_(e.actualOutput,`沒有輸出`)}${i}</td>
+          <td>${tv(e.input)}</td>
+          <td>${tv(e.expectedOutput)}</td>
+          <td>${tv(e.actualOutput,`沒有輸出`)}${i}</td>
         </tr>
       `}).join(``);return`
     <article class="assessment-report">
@@ -2303,17 +2703,17 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
       </div>
     `:`<p class="assessment-note">此題尚未建立 testCases，無法進行系統評分。</p>`}
     </article>
-  `}function X_(e){$.innerHTML=Y_(e)}async function Z_(){let e=G_(Ig);if(e.length===0)return await c_(),t_(``),t_(`此題尚未建立 testCases，無法進行系統評分。請改用「執行程式」自行試跑。`),{total:0,passed:0,score:0,allPassed:!1,cases:[]};n_(),t_(`正在進行 ${Ig.id}｜${Ig.title} 的系統評分...`);let t=[];for(let n of e){let e=await s_({inputText:n.input,writeToOutput:!1}),r=e.output,i=n.expectedOutput,a=e.ok&&W_(r)===W_(i);t.push({...n,actualOutput:r,passed:a,errorMessage:e.error?e.error.message:``})}let n=t.filter(e=>e.passed).length,r=t.length,i={courseId:Fg.id,courseTitle:Fg.title,taskId:Ig.id,taskTitle:Ig.problemTitle||Ig.title,mode:Wg(Lg),modeText:Gg(),total:r,passed:n,score:q_(n,r),allPassed:r>0&&n===r,cases:t,assessedAt:new Date().toISOString()};return X_(i),i}async function Q_(){if(!Ig){$.textContent=`請先輸入課程組代碼並按下「載入課程」。`;return}if(Yg()){let e=await Z_();Bg=e,zg=e.total>0,Xg();return}$.textContent=`SmartRing 課程不進行系統評分，請使用「執行程式」觀察硬體互動結果。`,zg=!1,Bg=null,Xg()}function $_(e){return{version:`MVP-J04-1`,submittedAt:new Date().toISOString(),className:e.className,seatNumber:e.seatNumber,studentName:e.name,courseId:Fg?.id||``,courseTitle:Fg?.title||``,taskId:Ig?.id||``,taskTitle:Ig?.problemTitle||Ig?.title||``,mode:Wg(Lg),score:Bg?.score??0,passRate:Bg?.score??0,passed:Bg?.passed??0,total:Bg?.total??0,allPassed:!!Bg?.allPassed}}function ev(){return!1}async function tv(e){if(!ev())throw Error(`尚未設定 Google Apps Script Web App URL。請先部署 Apps Script，並將 Web App URL 填入 src/main.js 的 SCORE_UPLOAD_URL。`);return await fetch(``,{method:`POST`,mode:`no-cors`,headers:{"Content-Type":`text/plain;charset=utf-8`},body:JSON.stringify(e)}),{ok:!0,message:`已送出成績上傳請求。因 Google Apps Script 採 no-cors 送出，請到 Google Sheet 確認是否寫入成功。`}}function nv(e,{status:t=`preview`,message:n=``}={}){let r={preview:`成績上傳資料預覽`,sending:`成績上傳中`,success:`成績上傳請求已送出`,error:`成績上傳失敗`}[t]||`成績上傳資料`,i=t===`success`?`passed`:t===`error`?`failed`:``,a=[[`班級`,e.className],[`座號`,e.seatNumber],[`姓名`,e.studentName],[`課程組`,`${e.courseId}｜${e.courseTitle}`],[`子任務`,`${e.taskId}｜${e.taskTitle}`],[`分數`,`${e.score}`],[`本機測資`,`${e.passed} / ${e.total}`],[`通過狀態`,e.allPassed?`全部通過`:`尚未全部通過`]].map(([e,t])=>`
+  `}function rv(e){$.innerHTML=nv(e)}async function iv(){let e=Q_(zg);if(e.length===0)return await d_(),i_(``),i_(`此題尚未建立 testCases，無法進行系統評分。請改用「執行程式」自行試跑。`),{total:0,passed:0,score:0,allPassed:!1,cases:[]};a_(),i_(`正在進行 ${zg.id}｜${zg.title} 的系統評分...`);let t=[];for(let n of e){let e=await u_({inputText:n.input,writeToOutput:!1}),r=e.output,i=n.expectedOutput,a=e.ok&&q_(r)===q_(i);t.push({...n,actualOutput:r,passed:a,errorMessage:e.error?e.error.message:``})}let n=t.filter(e=>e.passed).length,r=t.length,i={courseId:Rg.id,courseTitle:Rg.title,taskId:zg.id,taskTitle:zg.problemTitle||zg.title,mode:qg(Bg),modeText:Jg(),total:r,passed:n,score:ev(n,r),allPassed:r>0&&n===r,cases:t,assessedAt:new Date().toISOString()};return rv(i),i}async function av(){if(!zg){$.textContent=`請先輸入課程組代碼並按下「載入課程」。`;return}if(Qg()){let e=await iv();Ug=e,Hg=e.total>0,$g();return}$.textContent=`SmartRing 課程不進行系統評分，請使用「執行程式」觀察硬體互動結果。`,Hg=!1,Ug=null,$g()}function ov(e){return{version:`MVP-J05-2`,submittedAt:new Date().toISOString(),className:e.className,seatNumber:e.seatNumber,studentName:e.name,courseId:Rg?.id||``,courseTitle:Rg?.title||``,taskId:zg?.id||``,taskTitle:zg?.problemTitle||zg?.title||``,mode:qg(Bg),score:Ug?.score??0,passRate:Ug?.score??0,passed:Ug?.passed??0,total:Ug?.total??0,allPassed:!!Ug?.allPassed}}function sv(){let e=String(Wh).trim();return!!(e&&!e.includes(`請貼上`)&&!e.includes(`YOUR_`))}async function cv(e){let t=String(Wh).trim();if(!sv())throw Error(`尚未設定 Google Apps Script Web App URL。請先部署 Apps Script，並將 Web App URL 填入 src/main.js 的 SCORE_UPLOAD_URL。`);return await fetch(t,{method:`POST`,mode:`no-cors`,headers:{"Content-Type":`text/plain;charset=utf-8`},body:JSON.stringify(e)}),{ok:!0,message:`已送出成績上傳請求。因 Google Apps Script 採 no-cors 送出，請到 Google Sheet 確認是否寫入成功。`}}function lv(e,{status:t=`preview`,message:n=``}={}){let r={preview:`成績上傳資料預覽`,sending:`成績上傳中`,success:`成績上傳請求已送出`,error:`成績上傳失敗`}[t]||`成績上傳資料`,i=t===`success`?`passed`:t===`error`?`failed`:``,a=[[`班級`,e.className],[`座號`,e.seatNumber],[`姓名`,e.studentName],[`課程組`,`${e.courseId}｜${e.courseTitle}`],[`子任務`,`${e.taskId}｜${e.taskTitle}`],[`分數`,`${e.score}`],[`本機測資`,`${e.passed} / ${e.total}`],[`通過狀態`,e.allPassed?`全部通過`:`尚未全部通過`]].map(([e,t])=>`
       <tr>
-        <th>${S_(e)}</th>
-        <td>${S_(t)}</td>
+        <th>${T_(e)}</th>
+        <td>${T_(t)}</td>
       </tr>
     `).join(``);return`
     <article class="score-upload-preview">
       <h2>${r}</h2>
-      ${n?`<p class="assessment-note ${i}">${S_(n)}</p>`:``}
+      ${n?`<p class="assessment-note ${i}">${T_(n)}</p>`:``}
       <table class="score-upload-table">
         <tbody>${a}</tbody>
       </table>
     </article>
-  `}async function rv(){let e=p_();if(!Yg(Ig,Fg)){$.textContent=`目前課程不是程式解題任務，不支援成績上傳。`;return}if(!e.className||!e.seatNumber||!e.name){$.textContent=`上傳成績前，請先填寫班級、座號與姓名。`;return}if(!Ig){$.textContent=`請先載入課程組與子任務後再上傳成績。`;return}if(!zg||!Bg){$.textContent=`請先按「系統評分」並產生評分結果後，再上傳成績。`,Xg();return}let t=$_(e);ug.disabled=!0,$.innerHTML=nv(t,{status:`sending`,message:`正在送出成績資料，請稍候。`});try{$.innerHTML=nv(t,{status:`success`,message:(await tv(t)).message})}catch(e){$.innerHTML=nv(t,{status:`error`,message:e.message||`成績上傳時發生未知錯誤。`})}finally{Xg()}}function iv(){kg.classList.add(`active`),kg.setAttribute(`aria-hidden`,`false`)}function av(){kg.classList.remove(`active`),kg.setAttribute(`aria-hidden`,`true`)}function ov(e,t){_g.textContent=t||(e?`SmartRing 已連線`:`SmartRing 尚未連線`),xg.textContent=e?`已連線`:`尚未連線`,_g.classList.toggle(`connected`,e),xg.classList.toggle(`connected`,e),Hh.disabled=e,Uh.disabled=!e,Wh.disabled=!e,Gh.disabled=!e}async function sv(){if(!th.isSupported()){$.textContent=`此瀏覽器不支援 WebSerial。請使用 Chrome 或 Edge，並確認網頁在 localhost 或 HTTPS 環境執行。`;return}try{$.textContent=`正在開啟 SmartRing 序列埠選擇視窗...`,await th.connect()}catch(e){$.textContent=`SmartRing 連線失敗：\n${e.message}`,ov(!1,`SmartRing：連線失敗`)}}async function cv(){try{await th.disconnect(),Sg.textContent=`尚無資料`,Cg.textContent=`尚未收到 ESP8266 資料。`,wg.textContent=`尚未送出 LED 指令。`,$.textContent=`SmartRing 已斷開連線。`}catch(e){$.textContent=`SmartRing 斷線時發生錯誤：\n${e.message}`}}async function lv(){try{await th.setLedColor(1,`red`),uv(th.getLastCommand()),$.textContent=`已送出測試指令：設定第 1 顆 LED 為紅色。`}catch(e){$.textContent=`送出 LED 測試指令失敗：\n${e.message}`}}function uv(e){if(wg){if(!e){wg.textContent=`尚未送出 LED 指令。`;return}wg.textContent=JSON.stringify(e)}}async function dv(){try{await th.clearLeds(),uv(th.getLastCommand()),$.textContent=`已送出測試指令：清除所有 LED。`}catch(e){$.textContent=`送出清除 LED 指令失敗：\n${e.message}`}}function fv(){th.addEventListener(`status`,e=>{let{connected:t,message:n}=e.detail;ov(t,n),t_(n)}),th.addEventListener(`data`,e=>{let{ok:t,rawText:n,buttonText:r,message:i}=e.detail;Sg.textContent=r||`尚無資料`,Cg.textContent=n||`尚未收到 ESP8266 資料。`,!t&&i&&t_(i)}),th.addEventListener(`command`,e=>{let{payload:t}=e.detail;uv(t)}),th.addEventListener(`error`,e=>{let{message:t}=e.detail;ov(!1,`SmartRing：連線錯誤`),t_(`SmartRing 錯誤：${t}`)}),th.addEventListener(`log`,e=>{let{message:t}=e.detail;console.log(`[SmartRing]`,t)})}function pv(){Hh.addEventListener(`click`,sv),Uh.addEventListener(`click`,cv),Wh.addEventListener(`click`,lv),Gh.addEventListener(`click`,dv),Kh.addEventListener(`click`,f_),qh.addEventListener(`click`,c_),Jh.addEventListener(`click`,i_),Yh.addEventListener(`click`,l_),Xh.addEventListener(`click`,g_),Zh.addEventListener(`click`,__),Qh.addEventListener(`change`,e=>{let t=e.target.files?.[0];v_(t)}),$h.addEventListener(`click`,u_),eg.addEventListener(`click`,n_),cg.addEventListener(`click`,H_),sg.addEventListener(`change`,U_),lg.addEventListener(`click`,Q_),ug.addEventListener(`click`,rv),vg?.addEventListener(`click`,O_),hg?.addEventListener(`click`,A_),tg?.addEventListener(`click`,M_),Tg.addEventListener(`click`,()=>d_(`blocks`)),Eg.addEventListener(`click`,()=>d_(`code`)),Mg.addEventListener(`click`,iv),Ng.addEventListener(`click`,av),kg.addEventListener(`click`,e=>{e.target===kg&&av()}),window.addEventListener(`keydown`,e=>{e.key===`Escape`&&av()}),window.addEventListener(`resize`,()=>{Gn(Pg)})}function mv(){Lg=`learning`,Jg(),ov(!1,`SmartRing：尚未連線`),xg.textContent=`尚未連線`,Sg.textContent=`尚無資料`,Cg.textContent=`尚未收到 ESP8266 資料。`,uv(null),r_(!1),B_(),Zg(),Hg=!1,k_(),Vg=!1,D_(),Ug=!1,j_(),I_()}$g(),pv(),fv(),mv();
+  `}async function uv(){let e=g_();if(!Qg(zg,Rg)){$.textContent=`目前課程不是程式解題任務，不支援成績上傳。`;return}if(!e.className||!e.seatNumber||!e.name){$.textContent=`上傳成績前，請先填寫班級、座號與姓名。`;return}if(!zg){$.textContent=`請先載入課程組與子任務後再上傳成績。`;return}if(!Hg||!Ug){$.textContent=`請先按「系統評分」並產生評分結果後，再上傳成績。`,$g();return}let t=ov(e);pg.disabled=!0,$.innerHTML=lv(t,{status:`sending`,message:`正在送出成績資料，請稍候。`});try{$.innerHTML=lv(t,{status:`success`,message:(await cv(t)).message})}catch(e){$.innerHTML=lv(t,{status:`error`,message:e.message||`成績上傳時發生未知錯誤。`})}finally{$g()}}function dv(){Mg.classList.add(`active`),Mg.setAttribute(`aria-hidden`,`false`)}function fv(){Mg.classList.remove(`active`),Mg.setAttribute(`aria-hidden`,`true`)}function pv(e,t){bg.textContent=t||(e?`SmartRing 已連線`:`SmartRing 尚未連線`),wg.textContent=e?`已連線`:`尚未連線`,bg.classList.toggle(`connected`,e),wg.classList.toggle(`connected`,e),Gh.disabled=e,Kh.disabled=!e,qh.disabled=!e,Jh.disabled=!e}async function mv(){if(!th.isSupported()){$.textContent=`此瀏覽器不支援 WebSerial。請使用 Chrome 或 Edge，並確認網頁在 localhost 或 HTTPS 環境執行。`;return}try{$.textContent=`正在開啟 SmartRing 序列埠選擇視窗...`,await th.connect()}catch(e){$.textContent=`SmartRing 連線失敗：\n${e.message}`,pv(!1,`SmartRing：連線失敗`)}}async function hv(){try{await th.disconnect(),Tg.textContent=`尚無資料`,Eg.textContent=`尚未收到 ESP8266 資料。`,Dg.textContent=`尚未送出 LED 指令。`,$.textContent=`SmartRing 已斷開連線。`}catch(e){$.textContent=`SmartRing 斷線時發生錯誤：\n${e.message}`}}async function gv(){try{await th.setLedColor(1,`red`),_v(th.getLastCommand()),$.textContent=`已送出測試指令：設定第 1 顆 LED 為紅色。`}catch(e){$.textContent=`送出 LED 測試指令失敗：\n${e.message}`}}function _v(e){if(Dg){if(!e){Dg.textContent=`尚未送出 LED 指令。`;return}Dg.textContent=JSON.stringify(e)}}async function vv(){try{await th.clearLeds(),_v(th.getLastCommand()),$.textContent=`已送出測試指令：清除所有 LED。`}catch(e){$.textContent=`送出清除 LED 指令失敗：\n${e.message}`}}function yv(){th.addEventListener(`status`,e=>{let{connected:t,message:n}=e.detail;pv(t,n),i_(n)}),th.addEventListener(`data`,e=>{let{ok:t,rawText:n,buttonText:r,message:i}=e.detail;Tg.textContent=r||`尚無資料`,Eg.textContent=n||`尚未收到 ESP8266 資料。`,!t&&i&&i_(i)}),th.addEventListener(`command`,e=>{let{payload:t}=e.detail;_v(t)}),th.addEventListener(`error`,e=>{let{message:t}=e.detail;pv(!1,`SmartRing：連線錯誤`),i_(`SmartRing 錯誤：${t}`)}),th.addEventListener(`log`,e=>{let{message:t}=e.detail;console.log(`[SmartRing]`,t)})}function bv(){Gh.addEventListener(`click`,mv),Kh.addEventListener(`click`,hv),qh.addEventListener(`click`,gv),Jh.addEventListener(`click`,vv),Yh.addEventListener(`click`,h_),Xh.addEventListener(`click`,d_),Zh.addEventListener(`click`,s_),Qh.addEventListener(`click`,f_),$h.addEventListener(`click`,y_),eg.addEventListener(`click`,b_),tg.addEventListener(`change`,e=>{let t=e.target.files?.[0];x_(t)}),ng.addEventListener(`click`,p_),rg.addEventListener(`click`,a_),dg.addEventListener(`click`,G_),ug.addEventListener(`change`,K_),fg.addEventListener(`click`,av),pg.addEventListener(`click`,uv),xg?.addEventListener(`click`,j_),vg?.addEventListener(`click`,N_),ig?.addEventListener(`click`,F_),Og.addEventListener(`click`,()=>m_(`blocks`)),kg.addEventListener(`click`,()=>m_(`code`)),Fg.addEventListener(`click`,dv),Ig.addEventListener(`click`,fv),Mg.addEventListener(`click`,e=>{e.target===Mg&&fv()}),window.addEventListener(`keydown`,e=>{e.key===`Escape`&&fv()}),window.addEventListener(`resize`,()=>{Gn(Lg)})}function xv(){Bg=`learning`,Zg(),pv(!1,`SmartRing：尚未連線`),wg.textContent=`尚未連線`,Tg.textContent=`尚無資料`,Eg.textContent=`尚未收到 ESP8266 資料。`,_v(null),o_(!1),U_(),e_(),Gg=!1,M_(),Wg=!1,A_(),Kg=!1,P_(),z_()}n_(),bv(),yv(),xv();
