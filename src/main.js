@@ -23,7 +23,7 @@ const outputArea = document.getElementById('outputArea');
 
 // Google Apps Script Web App URL for score upload.
 // Paste the deployed Web App URL here after setting up google-apps-script/Code.gs.
-const SCORE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbw58wHIWa9TUK4uuVMR2UwqDQCqEEdp7GOY913Y969JTKNM4kfhtjTPHhnFWcvWhpec/exec';
+const SCORE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyOu4ZVMgr3577ZdUZ6o732GUPoayRHFiw3_Xglhaj0mg_W-4REr-KjtZllU9SZnAQq/exec';
 const STUDENT_PROFILE_STORAGE_KEY = 'blocklyLabStudentProfileV1';
 
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
