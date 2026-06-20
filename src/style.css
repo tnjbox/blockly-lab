@@ -177,6 +177,7 @@ button:disabled {
     minmax(120px, 140px)
     minmax(95px, 115px)
     minmax(150px, 190px)
+    auto
     minmax(200px, 240px)
     minmax(170px, 210px)
     minmax(110px, 130px)
@@ -225,6 +226,17 @@ button:disabled {
 .field-group select:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgb(37 99 235 / 14%);
+}
+
+.field-group.field-required-missing input {
+  border-color: #dc2626;
+  background: #fff7f7;
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 12%);
+}
+
+.profile-clear-button {
+  min-height: 40px;
+  white-space: nowrap;
 }
 
 .course-code-field input {

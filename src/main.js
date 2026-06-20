@@ -24,6 +24,7 @@ const outputArea = document.getElementById('outputArea');
 // Google Apps Script Web App URL for score upload.
 // Paste the deployed Web App URL here after setting up google-apps-script/Code.gs.
 const SCORE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbw58wHIWa9TUK4uuVMR2UwqDQCqEEdp7GOY913Y969JTKNM4kfhtjTPHhnFWcvWhpec/exec';
+const STUDENT_PROFILE_STORAGE_KEY = 'blocklyLabStudentProfileV1';
 
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
 const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
@@ -40,6 +41,7 @@ const blockFileInput = document.getElementById('blockFileInput');
 const btnCopyCode = document.getElementById('btnCopyCode');
 const btnClearOutput = document.getElementById('btnClearOutput');
 const btnToggleResultPanel = document.getElementById('btnToggleResultPanel');
+const btnClearStudentProfile = document.getElementById('btnClearStudentProfile');
 
 const studentClass = document.getElementById('studentClass');
 const studentNumber = document.getElementById('studentNumber');
@@ -130,16 +132,28 @@ function isProgrammingProblemTask(task = currentTask, courseGroup = currentCours
 function updateSubmitScoreVisibility() {
   if (!btnSubmitScore) return;
 
-  const shouldEnable = Boolean(
+  const profileStatus = getStudentProfileCompleteness();
+  const hasRequiredContext = Boolean(
     isProgrammingProblemTask(currentTask, currentCourseGroup) &&
       currentCourseGroup &&
       currentTask &&
       hasCompetitionAssessmentResult &&
       !isUserProgramRunning
   );
+  const shouldEnable = Boolean(hasRequiredContext && profileStatus.ok);
 
   btnSubmitScore.hidden = false;
   btnSubmitScore.disabled = !shouldEnable;
+
+  if (!currentTask || !isProgrammingProblemTask(currentTask, currentCourseGroup)) {
+    btnSubmitScore.title = '請先載入程式解題課程並完成系統評分。';
+  } else if (!hasCompetitionAssessmentResult) {
+    btnSubmitScore.title = '請先完成系統評分。';
+  } else if (!profileStatus.ok) {
+    btnSubmitScore.title = `請先填寫：${profileStatus.missingFields.join('、')}`;
+  } else {
+    btnSubmitScore.title = '上傳本次系統評分結果。';
+  }
 }
 
 function updateTaskActionButtons() {
@@ -176,6 +190,94 @@ function updateTaskActionButtons() {
 function resetCompetitionAssessmentResult() {
   hasCompetitionAssessmentResult = false;
   lastAssessmentResult = null;
+  updateSubmitScoreVisibility();
+}
+
+function getRequiredStudentFields() {
+  return [
+    { key: 'className', label: '班級', element: studentClass },
+    { key: 'seatNumber', label: '座號', element: studentNumber },
+    { key: 'name', label: '姓名', element: studentName },
+  ];
+}
+
+function getStudentProfileCompleteness(profile = getStudentProfile()) {
+  const missingFields = getRequiredStudentFields()
+    .filter((field) => !String(profile[field.key] || '').trim())
+    .map((field) => field.label);
+
+  return {
+    ok: missingFields.length === 0,
+    missingFields,
+  };
+}
+
+function markStudentProfileFields(missingFields = []) {
+  getRequiredStudentFields().forEach((field) => {
+    const wrapper = field.element?.closest('.field-group');
+    const isMissing = missingFields.includes(field.label);
+    wrapper?.classList.toggle('field-required-missing', isMissing);
+    field.element?.setAttribute('aria-invalid', isMissing ? 'true' : 'false');
+  });
+}
+
+function getStudentKey(profile = getStudentProfile()) {
+  return [profile.className, profile.seatNumber, profile.name]
+    .map((part) => String(part || '').trim())
+    .filter(Boolean)
+    .join('-');
+}
+
+function saveStudentProfileToStorage() {
+  const profile = getStudentProfile();
+
+  try {
+    window.localStorage.setItem(
+      STUDENT_PROFILE_STORAGE_KEY,
+      JSON.stringify({
+        className: profile.className,
+        seatNumber: profile.seatNumber,
+        name: profile.name,
+      })
+    );
+  } catch (error) {
+    console.warn('[Blockly Lab] 無法儲存學生資料到 localStorage。', error);
+  }
+}
+
+function restoreStudentProfileFromStorage() {
+  try {
+    const raw = window.localStorage.getItem(STUDENT_PROFILE_STORAGE_KEY);
+    if (!raw) return;
+
+    const profile = JSON.parse(raw);
+    studentClass.value = String(profile.className || '');
+    studentNumber.value = String(profile.seatNumber || '');
+    studentName.value = String(profile.name || '');
+  } catch (error) {
+    console.warn('[Blockly Lab] 無法讀取 localStorage 中的學生資料。', error);
+  }
+}
+
+function clearStudentProfile() {
+  studentClass.value = '';
+  studentNumber.value = '';
+  studentName.value = '';
+
+  try {
+    window.localStorage.removeItem(STUDENT_PROFILE_STORAGE_KEY);
+  } catch (error) {
+    console.warn('[Blockly Lab] 無法清除 localStorage 中的學生資料。', error);
+  }
+
+  markStudentProfileFields([]);
+  updateSubmitScoreVisibility();
+  outputArea.textContent = '已清除學生資料。';
+}
+
+function handleStudentProfileInput() {
+  saveStudentProfileToStorage();
+  markStudentProfileFields([]);
   updateSubmitScoreVisibility();
 }
 
@@ -1488,11 +1590,12 @@ async function testTask() {
 
 function buildScoreUploadPayload(profile) {
   return {
-    version: 'MVP-J05-2',
+    version: 'MVP-J06',
     submittedAt: new Date().toISOString(),
     className: profile.className,
     seatNumber: profile.seatNumber,
     studentName: profile.name,
+    studentKey: getStudentKey(profile),
     courseId: currentCourseGroup?.id || '',
     courseTitle: currentCourseGroup?.title || '',
     taskId: currentTask?.id || '',
@@ -1503,6 +1606,8 @@ function buildScoreUploadPayload(profile) {
     passed: lastAssessmentResult?.passed ?? 0,
     total: lastAssessmentResult?.total ?? 0,
     allPassed: Boolean(lastAssessmentResult?.allPassed),
+    pageUrl: window.location.href,
+    userAgent: window.navigator.userAgent,
   };
 }
 
@@ -1546,6 +1651,7 @@ function renderScoreUploadResult(payload, { status = 'preview', message = '' } =
     ['班級', payload.className],
     ['座號', payload.seatNumber],
     ['姓名', payload.studentName],
+    ['學生識別', payload.studentKey],
     ['課程組', `${payload.courseId}｜${payload.courseTitle}`],
     ['子任務', `${payload.taskId}｜${payload.taskTitle}`],
     ['分數', `${payload.score}`],
@@ -1583,11 +1689,18 @@ async function submitScore() {
     return;
   }
 
-  if (!profile.className || !profile.seatNumber || !profile.name) {
+  const profileStatus = getStudentProfileCompleteness(profile);
+
+  if (!profileStatus.ok) {
+    markStudentProfileFields(profileStatus.missingFields);
     outputArea.textContent =
-      '上傳成績前，請先填寫班級、座號與姓名。';
+      `上傳成績前，請先填寫：${profileStatus.missingFields.join('、')}。`;
+    updateSubmitScoreVisibility();
     return;
   }
+
+  saveStudentProfileToStorage();
+  markStudentProfileFields([]);
 
   if (!currentTask) {
     outputArea.textContent = '請先載入課程組與子任務後再上傳成績。';
@@ -1763,6 +1876,12 @@ function bindEvents() {
 
   btnCopyCode.addEventListener('click', copyCode);
   btnClearOutput.addEventListener('click', clearOutput);
+  btnClearStudentProfile?.addEventListener('click', clearStudentProfile);
+
+  [studentClass, studentNumber, studentName].forEach((element) => {
+    element?.addEventListener('input', handleStudentProfileInput);
+    element?.addEventListener('change', handleStudentProfileInput);
+  });
 
   btnLoadCourse.addEventListener('click', loadCourse);
   taskSelector.addEventListener('change', changeTask);
@@ -1797,6 +1916,7 @@ function bindEvents() {
 }
 
 function initStatus() {
+  restoreStudentProfileFromStorage();
   currentCourseMode = 'learning';
   updateCourseModeDisplay();
   setSmartRingConnectedUi(false, 'SmartRing：尚未連線');
