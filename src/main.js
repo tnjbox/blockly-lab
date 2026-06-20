@@ -23,7 +23,7 @@ const outputArea = document.getElementById('outputArea');
 
 // Google Apps Script Web App URL for score upload.
 // Paste the deployed Web App URL here after setting up google-apps-script/Code.gs.
-const SCORE_UPLOAD_URL = '';
+const SCORE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbw58wHIWa9TUK4uuVMR2UwqDQCqEEdp7GOY913Y969JTKNM4kfhtjTPHhnFWcvWhpec/exec';
 
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
 const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
@@ -1243,14 +1243,94 @@ function normalizeOutputForCompare(output = '') {
     .trimEnd();
 }
 
+
+function trimTrailingEmptyLines(lines = []) {
+  const output = [...lines];
+  while (output.length > 0 && String(output[output.length - 1]).trim() === '') {
+    output.pop();
+  }
+  return output;
+}
+
+function sanitizeAssessmentInput(input = '') {
+  const normalized = String(input ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalized.split('\n');
+  const cleanedLines = [];
+
+  for (const rawLine of lines) {
+    const line = String(rawLine ?? '');
+    const trimmed = line.trim();
+
+    if (/^(預期答案|參考答案|正確答案|答案|分數)\s*[:：]/.test(trimmed)) {
+      break;
+    }
+
+    const inputLabelMatch = trimmed.match(/^第[一二三四五六七八九十0-9]+個輸入\s*[:：]\s*(.*)$/);
+    if (inputLabelMatch) {
+      const inlineValue = inputLabelMatch[1].trim();
+      if (inlineValue) {
+        cleanedLines.push(inlineValue);
+      }
+      continue;
+    }
+
+    cleanedLines.push(line);
+  }
+
+  return trimTrailingEmptyLines(cleanedLines).join('\n').trim();
+}
+
+function sanitizeAssessmentExpectedOutput(output = '') {
+  const normalized = String(output ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalized.split('\n');
+  const cleanedLines = [];
+
+  for (const rawLine of lines) {
+    const line = String(rawLine ?? '');
+    const trimmed = line.trim();
+
+    const answerMatch = trimmed.match(/^(預期答案|參考答案|正確答案|答案)\s*[:：]\s*(.*)$/);
+    if (answerMatch) {
+      const inlineValue = answerMatch[2].trim();
+      if (inlineValue) {
+        cleanedLines.push(inlineValue);
+      }
+      continue;
+    }
+
+    if (/^分數\s*[:：]/.test(trimmed)) {
+      break;
+    }
+
+    cleanedLines.push(line);
+  }
+
+  return trimTrailingEmptyLines(cleanedLines).join('\n').trim();
+}
+
+function sanitizeAssessmentTestCase(testCase = {}, index = 0, task = currentTask) {
+  const rawInput = testCase.input ?? '';
+  const rawExpectedOutput = testCase.expectedOutput ?? testCase.output ?? '';
+  const input = sanitizeAssessmentInput(rawInput);
+  const expectedOutput = sanitizeAssessmentExpectedOutput(rawExpectedOutput);
+
+  if (input !== String(rawInput ?? '') || expectedOutput !== String(rawExpectedOutput ?? '')) {
+    console.warn(
+      `[Blockly Lab] 測資已自動清理：${task?.id || 'unknown-task'} #${index + 1}。建議使用新版題庫轉換器重新產生課程 JS。`
+    );
+  }
+
+  return {
+    id: testCase.id || `case-${index + 1}`,
+    input,
+    expectedOutput,
+  };
+}
+
 function getTaskTestCases(task = currentTask) {
   if (!Array.isArray(task?.testCases)) return [];
 
-  return task.testCases.map((testCase, index) => ({
-    id: testCase.id || `case-${index + 1}`,
-    input: testCase.input ?? '',
-    expectedOutput: testCase.expectedOutput ?? testCase.output ?? '',
-  }));
+  return task.testCases.map((testCase, index) => sanitizeAssessmentTestCase(testCase, index, task));
 }
 
 function formatMultilineForOutput(value, emptyText = '無') {
@@ -1408,7 +1488,7 @@ async function testTask() {
 
 function buildScoreUploadPayload(profile) {
   return {
-    version: 'MVP-J04-1',
+    version: 'MVP-J05-2',
     submittedAt: new Date().toISOString(),
     className: profile.className,
     seatNumber: profile.seatNumber,
