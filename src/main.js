@@ -12,10 +12,92 @@ import {
   getCourseGroup,
   getDefaultTask,
   getTaskById,
+  getAllCourseGroups,
+  getCourseTypeLabel,
+  inspectCourseGroup,
 } from './courses/index.js';
 
 Blockly.setLocale(ZhHant);
 registerSmartRingBlocks();
+
+
+// MVP-J08-1: SmartRing tasks use asynchronous hardware commands.
+// Students operate blocks only, so all Blockly custom procedures are generated as async functions,
+// and every procedure call is generated with await. This prevents errors such as:
+// "await is only valid in async functions" when SmartRing wait/show blocks are placed inside a function.
+function patchAsyncProcedureGenerators() {
+  if (javascriptGenerator.__blocklyLabAsyncProceduresPatched) return;
+
+  const patchDefinition = (blockType) => {
+    const original = javascriptGenerator.forBlock[blockType];
+    if (typeof original !== 'function') return;
+
+    javascriptGenerator.forBlock[blockType] = function asyncProcedureDefinition(block, generator) {
+      const code = original.call(this, block, generator);
+      if (typeof code !== 'string') return code;
+      return code.replace(/(^|\n)(\s*)function\s+/, '$1$2async function ');
+    };
+  };
+
+  const patchStatementCall = (blockType) => {
+    const original = javascriptGenerator.forBlock[blockType];
+    if (typeof original !== 'function') return;
+
+    javascriptGenerator.forBlock[blockType] = function asyncProcedureStatementCall(block, generator) {
+      const code = original.call(this, block, generator);
+      if (typeof code !== 'string') return code;
+
+      const trimmed = code.trim();
+      if (!trimmed || trimmed.startsWith('await ')) return code;
+
+      const indentMatch = code.match(/^\s*/);
+      const indent = indentMatch ? indentMatch[0] : '';
+      const ending = code.endsWith('\n') ? '\n' : '';
+      return `${indent}await ${trimmed}${ending}`;
+    };
+  };
+
+  const patchValueCall = (blockType) => {
+    const original = javascriptGenerator.forBlock[blockType];
+    if (typeof original !== 'function') return;
+
+    javascriptGenerator.forBlock[blockType] = function asyncProcedureValueCall(block, generator) {
+      const result = original.call(this, block, generator);
+      if (!Array.isArray(result)) return result;
+
+      const [code, order] = result;
+      if (typeof code !== 'string') return result;
+      const asyncCode = code.trim().startsWith('await ') ? code : `await ${code}`;
+      return [asyncCode, javascriptGenerator.ORDER_AWAIT ?? javascriptGenerator.ORDER_NONE ?? order];
+    };
+  };
+
+  patchDefinition('procedures_defnoreturn');
+  patchDefinition('procedures_defreturn');
+  patchStatementCall('procedures_callnoreturn');
+  patchValueCall('procedures_callreturn');
+
+  javascriptGenerator.__blocklyLabAsyncProceduresPatched = true;
+}
+
+patchAsyncProcedureGenerators();
+
+// MVP-J08-1 fixed: Blockly procedure definitions are emitted through generator definitions,
+// so patching the procedure block generator alone may not change the final generated code.
+// Apply a final safety pass to the complete JavaScript code before preview/execution.
+function normalizeGeneratedAsyncProcedures(code) {
+  if (typeof code !== 'string' || !code.trim()) return code;
+
+  return code.replace(
+    /(^|\n)(\s*)function\s+([A-Za-z_$][\w$]*)\s*\(/g,
+    '$1$2async function $3('
+  );
+}
+
+function getGeneratedUserCode() {
+  const code = javascriptGenerator.workspaceToCode(workspace);
+  return normalizeGeneratedAsyncProcedures(code);
+}
 
 const blocklyDiv = document.getElementById('blocklyDiv');
 const codePreview = document.getElementById('codePreview');
@@ -51,6 +133,7 @@ const courseModeDisplay = document.getElementById('courseModeDisplay');
 const taskSelector = document.getElementById('taskSelector');
 
 const btnLoadCourse = document.getElementById('btnLoadCourse');
+const btnOpenCourseManager = document.getElementById('btnOpenCourseManager');
 const btnTestTask = document.getElementById('btnTestTask');
 const btnSubmitScore = document.getElementById('btnSubmitScore');
 
@@ -75,6 +158,10 @@ const tabCode = document.getElementById('tabCode');
 const blocksView = document.getElementById('blocksView');
 const codeView = document.getElementById('codeView');
 
+const courseManagerModal = document.getElementById('courseManagerModal');
+const courseManagerBody = document.getElementById('courseManagerBody');
+const btnCloseCourseManager = document.getElementById('btnCloseCourseManager');
+
 const taskModal = document.getElementById('taskModal');
 const taskModalTitle = document.getElementById('taskModalTitle');
 const taskModalBody = document.getElementById('taskModalBody');
@@ -86,8 +173,9 @@ let currentCourseGroup = null;
 let currentTask = null;
 let currentCourseMode = 'learning';
 let isUserProgramRunning = false;
-let hasCompetitionAssessmentResult = false;
+let hasProgrammingAssessmentResult = false;
 let lastAssessmentResult = null;
+let hasLoadedStarterForCurrentTask = false;
 let isSmartRingPanelCollapsed = false;
 let isTaskPanelCollapsed = false;
 let isResultPanelCollapsed = false;
@@ -133,24 +221,34 @@ function updateSubmitScoreVisibility() {
   if (!btnSubmitScore) return;
 
   const profileStatus = getStudentProfileCompleteness();
-  const hasRequiredContext = Boolean(
-    isProgrammingProblemTask(currentTask, currentCourseGroup) &&
-      currentCourseGroup &&
+  const isProgrammingCourse = Boolean(
+    currentCourseGroup &&
       currentTask &&
-      hasCompetitionAssessmentResult &&
+      isProgrammingProblemTask(currentTask, currentCourseGroup)
+  );
+  const hasValidAssessmentResult = Boolean(
+    hasProgrammingAssessmentResult &&
+      lastAssessmentResult &&
+      lastAssessmentResult.total > 0
+  );
+  const shouldEnable = Boolean(
+    isProgrammingCourse &&
+      hasValidAssessmentResult &&
+      !hasLoadedStarterForCurrentTask &&
       !isUserProgramRunning
   );
-  const shouldEnable = Boolean(hasRequiredContext && profileStatus.ok);
 
   btnSubmitScore.hidden = false;
   btnSubmitScore.disabled = !shouldEnable;
 
   if (!currentTask || !isProgrammingProblemTask(currentTask, currentCourseGroup)) {
     btnSubmitScore.title = '請先載入程式解題課程並完成系統評分。';
-  } else if (!hasCompetitionAssessmentResult) {
+  } else if (!hasProgrammingAssessmentResult || !hasValidAssessmentResult) {
     btnSubmitScore.title = '請先完成系統評分。';
+  } else if (hasLoadedStarterForCurrentTask) {
+    btnSubmitScore.title = '本題已載入範例積木，不能上傳成績。請清除工作區後自行重新建置積木，再完成系統評分。';
   } else if (!profileStatus.ok) {
-    btnSubmitScore.title = `請先填寫：${profileStatus.missingFields.join('、')}`;
+    btnSubmitScore.title = `已完成系統評分；按下後會提示補填：${profileStatus.missingFields.join('、')}`;
   } else {
     btnSubmitScore.title = '上傳本次系統評分結果。';
   }
@@ -188,7 +286,7 @@ function updateTaskActionButtons() {
 }
 
 function resetCompetitionAssessmentResult() {
-  hasCompetitionAssessmentResult = false;
+  hasProgrammingAssessmentResult = false;
   lastAssessmentResult = null;
   updateSubmitScoreVisibility();
 }
@@ -315,7 +413,7 @@ function initBlockly() {
 function updateCodePreview() {
   if (!workspace) return;
 
-  const code = javascriptGenerator.workspaceToCode(workspace);
+  const code = getGeneratedUserCode();
   codePreview.textContent = code.trim() || '// 尚未建立程式';
 }
 
@@ -392,7 +490,7 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
     return { ok: false, output: '', error };
   }
 
-  const code = javascriptGenerator.workspaceToCode(workspace);
+  const code = getGeneratedUserCode();
 
   if (!code.trim()) {
     const error = new Error('目前沒有可以執行的程式。');
@@ -500,8 +598,11 @@ function clearWorkspace() {
   if (!confirmed) return;
 
   workspace.clear();
+  hasLoadedStarterForCurrentTask = false;
+  resetCompetitionAssessmentResult();
   updateCodePreview();
-  outputArea.textContent = '已清除工作區。';
+  updateTaskActionButtons();
+  outputArea.textContent = '已清除工作區。範例載入紀錄與評分結果已重置，請自行重新建置積木後再進行系統評分。';
 }
 
 function copyCode() {
@@ -882,8 +983,15 @@ function loadCourseStarter(course) {
     updateCodePreview();
     switchWorkspaceTab('blocks');
 
-    outputArea.textContent =
-      course.starterMessage || `已載入 ${course.id} 起始積木。`;
+    hasLoadedStarterForCurrentTask = true;
+    resetCompetitionAssessmentResult();
+    updateTaskActionButtons();
+
+    const starterMessage = course.starterMessage || `已載入 ${course.id} 起始積木。`;
+    outputArea.textContent = isProgrammingProblemTask(course, currentCourseGroup)
+      ? `${starterMessage}
+提醒：本題已載入範例積木，不能上傳成績。若要上傳成績，請按「清除工作區」後自行重新建置積木並完成系統評分。`
+      : starterMessage;
 
     return true;
   } catch (error) {
@@ -892,16 +1000,79 @@ function loadCourseStarter(course) {
   }
 }
 
+function renderListItems(items = []) {
+  if (!Array.isArray(items)) {
+    const text = String(items || '').trim();
+    return text ? `<p>${escapeHtml(text)}</p>` : '';
+  }
+
+  const rows = items
+    .map((item) => String(item || '').trim())
+    .filter(Boolean)
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join('');
+
+  return rows ? `<ol>${rows}</ol>` : '';
+}
+
 function renderOptionalTaskSection(title, content) {
-  if (!content) {
+  const body = Array.isArray(content)
+    ? renderListItems(content)
+    : renderListItems(String(content || '').trim());
+
+  if (!body) {
     return '';
   }
 
   return `
-    <section class="modal-section">
-      <h3>${title}</h3>
-      <p>${content}</p>
+    <section class="modal-section student-task-section">
+      <h3>${escapeHtml(title)}</h3>
+      ${body}
     </section>
+  `;
+}
+
+function getStudentTaskDescription(task) {
+  return task.taskDescription || task.summary || task.description || '請依照任務要求完成 SmartRing 操作。';
+}
+
+function getStudentPassConditions(task) {
+  return task.passConditions || task.criteria || [];
+}
+
+function getStudentHints(task) {
+  return task.hints || task.keyHints || [];
+}
+
+function getStudentChallenges(task) {
+  if (task.challenges) return task.challenges;
+  if (task.challenge) return [task.challenge];
+  return [];
+}
+
+function renderStudentTaskContent(task, { compact = false } = {}) {
+  const description = getStudentTaskDescription(task);
+  const passConditions = getStudentPassConditions(task);
+  const hints = getStudentHints(task);
+  const challenges = getStudentChallenges(task);
+
+  const compactSections = compact
+    ? `
+      ${renderOptionalTaskSection('任務說明', description)}
+      ${renderOptionalTaskSection('過關條件', passConditions)}
+    `
+    : `
+      ${renderOptionalTaskSection('任務說明', description)}
+      ${renderOptionalTaskSection('過關條件', passConditions)}
+      ${renderOptionalTaskSection('重點提示', hints)}
+      ${renderOptionalTaskSection('延伸挑戰', challenges)}
+    `;
+
+  return `
+    <article class="student-task-content">
+      <h2>${escapeHtml(task.title || '未命名任務')}</h2>
+      ${compactSections}
+    </article>
   `;
 }
 
@@ -1035,6 +1206,25 @@ function toggleSmartRingPanel() {
 }
 
 
+function setSmartRingPanelCollapsed(collapsed) {
+  isSmartRingPanelCollapsed = Boolean(collapsed);
+  updateSmartRingPanelCollapsed();
+}
+
+function applyCourseTypePanelPreference(courseGroup) {
+  const type = getCourseType(courseGroup);
+
+  if (type === 'smartring') {
+    setSmartRingPanelCollapsed(false);
+    return;
+  }
+
+  if (type === 'programming') {
+    setSmartRingPanelCollapsed(true);
+  }
+}
+
+
 function updateTaskPanelCollapsed() {
   taskPanel?.classList.toggle('collapsed', isTaskPanelCollapsed);
   sidePanel?.classList.toggle('task-panel-collapsed', isTaskPanelCollapsed);
@@ -1101,61 +1291,7 @@ function renderProblemTaskModal(task) {
 function renderLearningTaskModal(task, courseGroup) {
   taskModalTitle.textContent = `${task.id}｜${task.title}`;
   taskModalBody.innerHTML = `
-    <section class="modal-section">
-      <h3>課程組資料</h3>
-      <p><strong>課程組代碼：</strong>${courseGroup.id}</p>
-      <p><strong>課程組名稱：</strong>${courseGroup.title}</p>
-      <p><strong>課程組說明：</strong>${courseGroup.description}</p>
-      <p><strong>課程模式：</strong>${getModeText(courseGroup.mode)}</p>
-      <p><strong>課程類型：</strong>${getCourseType(courseGroup)}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>子任務基本資料</h3>
-      <p><strong>子任務代碼：</strong>${task.id}</p>
-      <p><strong>任務類型：</strong>${task.type}</p>
-      <p><strong>適用程度：</strong>${task.level}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>學習目標</h3>
-      <p>${task.goal}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>任務說明</h3>
-      <p>${task.description}</p>
-    </section>
-
-    ${renderOptionalTaskSection('DEMO 觀察', task.demoObserve)}
-    ${renderOptionalTaskSection('仿作任務', task.practiceTask)}
-    ${renderOptionalTaskSection('函式整理', task.functionTask)}
-    ${renderOptionalTaskSection('延伸挑戰', task.challenge)}
-
-    <section class="modal-section">
-      <h3>操作說明</h3>
-      <p>${task.operation}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>積木限制 / 建議</h3>
-      <p>${task.blockLimit}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>SmartRing 要求</h3>
-      <p>${task.smartRingRequirement}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>評分方式</h3>
-      <p>${task.scoring}</p>
-    </section>
-
-    <section class="modal-section">
-      <h3>教學提示</h3>
-      <p>${task.hint}</p>
-    </section>
+    ${renderStudentTaskContent(task)}
   `;
 }
 
@@ -1195,14 +1331,8 @@ function renderTaskInfo(task, courseGroup) {
   }
 
   taskInfo.innerHTML = `
-    <h2>${task.title}</h2>
-    <p><strong>課程組：</strong>${courseGroup.id}｜${courseGroup.title}</p>
-    <p><strong>課程模式：</strong>${getModeText(courseGroup.mode)}</p>
-    <p><strong>子任務代碼：</strong>${task.id}</p>
-    <p><strong>任務類型：</strong>${task.type}</p>
-    <p><strong>適用程度：</strong>${task.level}</p>
-    <p><strong>學習目標：</strong>${task.goal}</p>
-    <p class="summary-note">完整任務說明請按右上角「查看完整任務」。</p>
+    ${renderStudentTaskContent(task, { compact: true })}
+    <p class="summary-note">需要提示或延伸挑戰時，請按右上角「查看完整任務」。</p>
   `;
 
   renderLearningTaskModal(task, courseGroup);
@@ -1236,6 +1366,7 @@ function resetTaskSelector() {
 function loadTask(task, courseGroup, { shouldLoadStarter = false } = {}) {
   if (!task || !courseGroup) return;
 
+  hasLoadedStarterForCurrentTask = false;
   resetCompetitionAssessmentResult();
   currentTask = task;
   renderTaskSelector(courseGroup, task.id);
@@ -1269,6 +1400,7 @@ function loadCourse() {
   if (!courseGroup) {
     currentCourseGroup = null;
     currentTask = null;
+    hasLoadedStarterForCurrentTask = false;
     currentCourseMode = 'learning';
     updateModeStatus();
     resetCompetitionAssessmentResult();
@@ -1299,12 +1431,14 @@ function loadCourse() {
 
   currentCourseGroup = courseGroup;
   currentCourseMode = normalizeCourseMode(courseGroup.mode);
+  applyCourseTypePanelPreference(courseGroup);
   updateModeStatus({ announce: true });
 
   const defaultTask = getDefaultTask(courseGroup);
 
   if (!defaultTask) {
     currentTask = null;
+    hasLoadedStarterForCurrentTask = false;
     resetCompetitionAssessmentResult();
     resetTaskSelector();
     updateTaskActionButtons();
@@ -1451,11 +1585,22 @@ function renderAssessmentCellPre(value, emptyText = '無') {
 
 function renderAssessmentResultHtml(assessment) {
   const total = Number(assessment?.total || 0);
+  const isContestMode = normalizeCourseMode(assessment?.mode || currentCourseMode) === 'contest';
 
   const rows = (assessment?.cases || [])
     .map((item, index) => {
       const caseStatusClass = item.passed ? 'passed' : 'failed';
       const caseStatusText = item.passed ? '通過' : '未通過';
+
+      if (isContestMode) {
+        return `
+          <tr class="assessment-row ${caseStatusClass}">
+            <td class="assessment-case-number">${index + 1}</td>
+            <td><span class="assessment-badge ${caseStatusClass}">${caseStatusText}</span></td>
+          </tr>
+        `;
+      }
+
       const errorCell = item.errorMessage
         ? `<div class="assessment-error">${escapeHtml(item.errorMessage)}</div>`
         : '';
@@ -1472,11 +1617,14 @@ function renderAssessmentResultHtml(assessment) {
     })
     .join('');
 
-  const tableHtml = total > 0
+  const tableHeaderHtml = isContestMode
     ? `
-      <div class="assessment-table-wrap">
-        <table class="assessment-table">
-          <thead>
+            <tr>
+              <th>案例</th>
+              <th>結果</th>
+            </tr>
+    `
+    : `
             <tr>
               <th>案例</th>
               <th>結果</th>
@@ -1484,7 +1632,18 @@ function renderAssessmentResultHtml(assessment) {
               <th>預期輸出</th>
               <th>實際輸出</th>
             </tr>
-          </thead>
+    `;
+
+  const contestNote = isContestMode
+    ? '<p class="assessment-note">競賽模式僅顯示每筆測資是否通過，不顯示輸入、預期輸出與實際輸出。</p>'
+    : '';
+
+  const tableHtml = total > 0
+    ? `
+      ${contestNote}
+      <div class="assessment-table-wrap">
+        <table class="assessment-table">
+          <thead>${tableHeaderHtml}</thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
@@ -1576,21 +1735,21 @@ async function testTask() {
     const assessment = await runProgrammingTestCases();
     lastAssessmentResult = assessment;
 
-    hasCompetitionAssessmentResult = assessment.total > 0;
+    hasProgrammingAssessmentResult = assessment.total > 0;
 
     updateSubmitScoreVisibility();
     return;
   }
 
   outputArea.textContent = 'SmartRing 課程不進行系統評分，請使用「執行程式」觀察硬體互動結果。';
-  hasCompetitionAssessmentResult = false;
+  hasProgrammingAssessmentResult = false;
   lastAssessmentResult = null;
   updateSubmitScoreVisibility();
 }
 
 function buildScoreUploadPayload(profile) {
   return {
-    version: 'MVP-J06',
+    version: 'MVP-J09-2-demo-starter-upload-guard',
     submittedAt: new Date().toISOString(),
     className: profile.className,
     seatNumber: profile.seatNumber,
@@ -1707,8 +1866,14 @@ async function submitScore() {
     return;
   }
 
-  if (!hasCompetitionAssessmentResult || !lastAssessmentResult) {
-    outputArea.textContent = '請先按「系統評分」並產生評分結果後，再上傳成績。';
+  if (!hasProgrammingAssessmentResult || !lastAssessmentResult || lastAssessmentResult.total <= 0) {
+    outputArea.textContent = '請先按「系統評分」並產生有效評分結果後，再上傳成績。';
+    updateSubmitScoreVisibility();
+    return;
+  }
+
+  if (hasLoadedStarterForCurrentTask) {
+    outputArea.textContent = '本題已載入範例積木，不能上傳成績。請按「清除工作區」清空積木後，自行重新建置積木並完成系統評分，再上傳成績。';
     updateSubmitScoreVisibility();
     return;
   }
@@ -1736,6 +1901,92 @@ async function submitScore() {
     updateSubmitScoreVisibility();
   }
 }
+
+
+function getCourseHealthText(inspection) {
+  const messages = inspection?.messages || [];
+  return messages.length > 0 ? messages.join('；') : '課程格式檢查正常。';
+}
+
+function renderCourseManager() {
+  const courses = getAllCourseGroups();
+
+  if (!courses.length) {
+    courseManagerBody.innerHTML = '<p>目前沒有可載入的課程。</p>';
+    return;
+  }
+
+  const rows = courses
+    .map((course) => {
+      const inspection = inspectCourseGroup(course);
+      const taskCount = Array.isArray(course.tasks) ? course.tasks.length : 0;
+      const modeText = getModeText(course.mode);
+      const typeText = getCourseTypeLabel(course.type);
+      const healthText = getCourseHealthText(inspection);
+
+      return `
+        <tr>
+          <td><code>${escapeHtml(course.id)}</code></td>
+          <td>${escapeHtml(course.title || course.id)}</td>
+          <td>${escapeHtml(typeText)}</td>
+          <td>${escapeHtml(modeText)}</td>
+          <td>${taskCount}</td>
+          <td>
+            <span class="course-health-badge ${escapeHtml(inspection.status)}">${escapeHtml(inspection.label)}</span>
+            <small>${escapeHtml(healthText)}</small>
+          </td>
+          <td>
+            <button type="button" class="small-button btn-copy-course-code" data-course-code="${escapeHtml(course.id)}">複製代碼</button>
+          </td>
+        </tr>
+      `;
+    })
+    .join('');
+
+  courseManagerBody.innerHTML = `
+    <p class="manager-note">此清單顯示目前平台可載入的所有課程 JS。學生首頁公開課程清單仍維持固定，不會自動公開所有題庫。</p>
+    <div class="course-manager-table-wrap">
+      <table class="course-manager-table">
+        <thead>
+          <tr>
+            <th>課程代碼</th>
+            <th>課程名稱</th>
+            <th>類型</th>
+            <th>模式</th>
+            <th>題數</th>
+            <th>檢查狀態</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function openCourseManager() {
+  renderCourseManager();
+  courseManagerModal.classList.add('active');
+  courseManagerModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeCourseManager() {
+  courseManagerModal.classList.remove('active');
+  courseManagerModal.setAttribute('aria-hidden', 'true');
+}
+
+async function copyCourseCodeFromManager(code) {
+  const courseCodeText = String(code || '').trim();
+  if (!courseCodeText) return;
+
+  try {
+    await navigator.clipboard.writeText(courseCodeText);
+    outputArea.textContent = `已複製課程代碼：${courseCodeText}`;
+  } catch (error) {
+    outputArea.textContent = `無法自動複製課程代碼，請手動複製：${courseCodeText}`;
+  }
+}
+
 
 function openTaskModal() {
   taskModal.classList.add('active');
@@ -1884,6 +2135,7 @@ function bindEvents() {
   });
 
   btnLoadCourse.addEventListener('click', loadCourse);
+  btnOpenCourseManager?.addEventListener('click', openCourseManager);
   taskSelector.addEventListener('change', changeTask);
   btnTestTask.addEventListener('click', testTask);
   btnSubmitScore.addEventListener('click', submitScore);
@@ -1897,16 +2149,31 @@ function bindEvents() {
 
   btnOpenTaskModal.addEventListener('click', openTaskModal);
   btnCloseTaskModal.addEventListener('click', closeTaskModal);
+  btnCloseCourseManager?.addEventListener('click', closeCourseManager);
+
+  courseManagerModal?.addEventListener('click', (event) => {
+    if (event.target === courseManagerModal) {
+      closeCourseManager();
+    }
+  });
+
+  courseManagerBody?.addEventListener('click', (event) => {
+    const copyButton = event.target.closest('.btn-copy-course-code');
+    if (!copyButton) return;
+    copyCourseCodeFromManager(copyButton.dataset.courseCode);
+  });
 
   taskModal.addEventListener('click', (event) => {
     if (event.target === taskModal) {
       closeTaskModal();
+      closeCourseManager();
     }
   });
 
   window.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       closeTaskModal();
+      closeCourseManager();
     }
   });
 

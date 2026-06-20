@@ -41,63 +41,133 @@ export const SRA00 = {
   title: 'SmartRing 陣列任務',
   mode: 'learning',
   type: 'smartring',
-  description: '用 LED 暫存陣列理解索引、位置、數值與狀態顯示。',
+  description: '用 LED 位置與暫存陣列完成圖樣、進度、分數與生命值顯示。',
   level: '國中八年級',
   defaultTaskId: 'SRA00-01',
   tasks: [
     cloneTask(smartRingCourses['SR-A01'], {
       id: 'SRA00-01',
       title: 'LED 圖樣陣列仿作',
+      taskDescription: '請先觀察內建圖樣，再用暫存陣列做出相同或相近的 LED 圖樣。',
+      passConditions: [
+        '能觀察並說出圖樣亮起的位置。',
+        '能用暫存陣列設定多顆 LED。',
+        '能顯示自己仿作的 LED 圖樣。'
+      ],
+      hints: [
+        '先記下哪些 LED 編號亮起。',
+        '設定完暫存陣列後，記得顯示暫存陣列。',
+        '可以先仿作一個簡單圖樣，再增加變化。'
+      ],
+      challenges: [
+        '把圖樣換成不同顏色。',
+        '自己設計一個左右對稱圖樣。'
+      ],
+      starterXml: patternXml({ pattern: 'centerFour', color: 'blue', message: 'LED 圖樣陣列仿作' }),
       starterMessage: '已載入 SRA00-01：LED 圖樣陣列仿作。',
     }),
     cloneTask(smartRingCourses['SR-A01'], {
       id: 'SRA00-02',
       title: '中間四顆圖樣',
-      goal: '使用暫存陣列設定 LED 5～8，理解連續索引代表連續位置。',
-      description: '觀察中間四顆 DEMO，再用暫存陣列指定 LED 5、6、7、8。',
-      practiceTask: '不用 DEMO 積木，改用四個「設定暫存陣列第 N 顆 LED 顏色」。',
-      challenge: '改做中間六顆，或讓中間四顆使用不同顏色。',
+      taskDescription: '請讓 SmartRing 中間四顆 LED 亮起，做出集中在中間的圖樣。',
+      passConditions: [
+        'LED 5、6、7、8 能亮起。',
+        '其他 LED 可以保持熄滅。',
+        '能修改顏色並重新顯示。'
+      ],
+      hints: [
+        '中間四顆是 LED 5～8。',
+        '可以逐一設定第 5、6、7、8 顆。',
+        '顯示前先清除暫存陣列，可以避免殘留舊圖樣。'
+      ],
+      challenges: [
+        '改做中間六顆。',
+        '讓中間四顆使用不同顏色。'
+      ],
       starterXml: patternXml({ pattern: 'centerFour', color: 'blue', message: '中間四顆圖樣' }),
       starterMessage: '已載入 SRA00-02：中間四顆圖樣。',
     }),
     cloneTask(smartRingCourses['SR-A01'], {
       id: 'SRA00-03',
       title: '奇數燈與偶數燈',
-      goal: '理解索引規律，觀察奇數與偶數位置的 LED 圖樣。',
-      description: '使用暫存陣列做出奇數燈或偶數燈亮起的規律圖樣。',
-      demoObserve: '觀察交錯位置的 LED 亮起。',
-      practiceTask: '用迴圈或手動指定 LED 1、3、5、7、9、11。',
-      functionTask: '整理成 showOddLeds(color) 與 showEvenLeds(color) 函式。',
-      challenge: '讓奇數燈與偶數燈交替閃爍。',
+      taskDescription: '請做出奇數位置或偶數位置亮起的交錯 LED 圖樣。',
+      passConditions: [
+        '能讓 LED 1、3、5、7、9、11 亮起，或讓 2、4、6、8、10、12 亮起。',
+        '圖樣位置要呈現交錯效果。',
+        '能切換奇數燈與偶數燈。'
+      ],
+      hints: [
+        '奇數位置每次加 2。',
+        '可以用迴圈，也可以先手動指定。',
+        '先完成奇數燈，再修改成偶數燈。'
+      ],
+      challenges: [
+        '讓奇數燈與偶數燈交替閃爍。',
+        '奇數燈用一種顏色，偶數燈用另一種顏色。'
+      ],
       starterXml: patternXml({ pattern: 'odd', color: 'yellow', message: '奇數燈與偶數燈' }),
       starterMessage: '已載入 SRA00-03：奇數燈與偶數燈。',
     }),
     cloneTask(smartRingCourses['SR-A02'], {
       id: 'SRA00-04',
       title: '進度條顯示',
+      taskDescription: '請用 LED 顆數表示目前進度，讓進度越高時亮起越多 LED。',
+      passConditions: [
+        '能設定目前值與最大值。',
+        '進度增加時，亮起的 LED 數量也會增加。',
+        '能做出至少 3 種不同進度。'
+      ],
+      hints: [
+        '先使用內建進度顯示觀察效果。',
+        'value 是目前值，max 是最大值。',
+        '可以用 3/12、6/12、12/12 測試。'
+      ],
+      challenges: [
+        '用按鈕控制進度增加或減少。',
+        '進度滿格時改用另一種顏色提醒。'
+      ],
+      starterXml: statusXml({ status: 'progress', value: 6, max: 12, color: 'green', message: '進度條顯示：6 / 12' }),
       starterMessage: '已載入 SRA00-04：進度條顯示。',
     }),
     cloneTask(smartRingCourses['SR-A02'], {
       id: 'SRA00-05',
       title: '分數顯示',
-      goal: '將分數轉換成 LED 顆數，理解數值比例與陣列顯示。',
-      description: '例如分數 8/12 顯示 8 顆 LED，未來可延伸到 80/100 轉換成 10 顆。',
-      demoObserve: '觀察分數值改變時，LED 顆數如何改變。',
-      practiceTask: '修改 value 與 max，觀察顯示結果。',
-      functionTask: '整理成 showScore(score, maxScore, color) 函式。',
-      challenge: '把 0～100 分轉成 0～12 顆 LED。',
+      taskDescription: '請用 LED 顆數表示分數，讓分數越高時亮起越多 LED。',
+      passConditions: [
+        '能設定分數與最高分。',
+        '分數不同時，LED 顯示顆數會改變。',
+        '能顯示 8/12 或其他指定分數。'
+      ],
+      hints: [
+        '先用 8/12 觀察 LED 顆數。',
+        '如果要顯示 0～100 分，可以先思考如何換算成 0～12 顆。',
+        '顏色可以用來表示分數狀態。'
+      ],
+      challenges: [
+        '把 0～100 分轉成 0～12 顆 LED。',
+        '高分顯示綠色，低分顯示紅色。'
+      ],
       starterXml: statusXml({ status: 'score', value: 8, max: 12, color: 'yellow', message: '分數顯示：8 / 12' }),
       starterMessage: '已載入 SRA00-05：分數顯示。',
     }),
     cloneTask(smartRingCourses['SR-A02'], {
       id: 'SRA00-06',
       title: '生命值顯示',
-      goal: '使用 LED 顆數呈現生命值，理解遊戲狀態資料的視覺化。',
-      description: '生命值越高，亮起 LED 越多；生命值歸零時可清除全部 LED。',
-      demoObserve: '觀察 life=3、max=5 時的 LED 顯示。',
-      practiceTask: '修改生命值與最大值，觀察 LED 顯示變化。',
-      functionTask: '整理成 showLife(life, maxLife, color) 函式。',
-      challenge: '生命值低於 2 時改成紅色警示。',
+      taskDescription: '請用 LED 顆數表示生命值，生命值越高亮起越多 LED。',
+      passConditions: [
+        '能設定生命值與最大生命值。',
+        '生命值下降時，亮起的 LED 數量會減少。',
+        '生命值低時能用明顯顏色提醒。'
+      ],
+      hints: [
+        '先用 life=3、max=5 測試。',
+        '生命值可以搭配遊戲角色血量或剩餘機會。',
+        '生命值歸零時可以清除全部 LED。'
+      ],
+      challenges: [
+        '生命值低於 2 時改成紅色警示。',
+        '用按鈕控制生命值減少。'
+      ],
       starterXml: statusXml({ status: 'life', value: 3, max: 5, color: 'red', message: '生命值顯示：3 / 5' }),
       starterMessage: '已載入 SRA00-06：生命值顯示。',
     }),
