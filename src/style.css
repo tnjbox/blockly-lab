@@ -1222,3 +1222,15 @@ button:disabled {
   margin: 4px 0;
   line-height: 1.55;
 }
+
+.status-bar a,
+.footer-status a {
+  color: #1d4ed8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.status-bar a:hover,
+.footer-status a:hover {
+  text-decoration: underline;
+}
