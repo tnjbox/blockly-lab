@@ -45,6 +45,7 @@ This project uses third-party open source software, including but not limited to
 | Blockly | Visual programming editor | Apache License 2.0 |
 | Vite | Frontend development and build tool | MIT License |
 | gh-pages | GitHub Pages deployment tool | MIT License |
+| ESP Web Tools | Browser-based ESP firmware flashing tool | Apache License 2.0 |
 
 Each third-party component remains subject to its own license terms.
 
@@ -62,6 +63,7 @@ This project may use the following platforms or browser APIs.
 | Google Apps Script | Score upload endpoint |
 | Google Sheets | Score storage |
 | Web Serial API | Browser-based serial communication with SmartRingController |
+| ESP Web Tools CDN | Loads the ESP Web Tools install button script | Third-party CDN-hosted open source tool |
 
 These platforms and APIs are services or browser capabilities used by the project. They are not part of the project's own source code license.
 
