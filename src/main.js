@@ -1299,15 +1299,15 @@ function renderPublicCourseCodes() {
   sidePanel?.classList.remove('programming-problem');
 
   if (taskPanelHeading) {
-    taskPanelHeading.textContent = '公開課程代碼';
+    taskPanelHeading.textContent = '課程代碼';
   }
 
   taskInfo.innerHTML = `
-    <h2>公開課程代碼</h2>
+    <h2>課程代碼</h2>
     ${getPublicCourseGroupListHtml()}
   `;
 
-  taskModalTitle.textContent = '公開課程代碼';
+  taskModalTitle.textContent = '課程代碼';
   taskModalBody.innerHTML = taskInfo.innerHTML;
 }
 
