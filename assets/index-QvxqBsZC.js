@@ -2870,10 +2870,10 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,score:10}],starterXm
     </article>
   `}function tv(){if(document.querySelector(`.smartring-panel`)?.classList.toggle(`collapsed`,t_),Cg?.classList.toggle(`smart-ring-collapsed`,t_),Ag&&(Ag.hidden=t_),kg){kg.setAttribute(`aria-expanded`,String(!t_));let e=kg.querySelector(`.panel-toggle-text`);e&&(e.textContent=t_?`展開 ▼`:`收合 ▲`)}}function nv(){t_=!t_,tv()}function rv(e){t_=!!e,tv()}function iv(e){let t=s_(e);if(t===`smartring`){rv(!1);return}t===`programming`&&rv(!0)}function av(){if(Tg?.classList.toggle(`collapsed`,n_),Cg?.classList.toggle(`task-panel-collapsed`,n_),Sg&&(Sg.hidden=n_),Eg){Eg.setAttribute(`aria-expanded`,String(!n_));let e=Eg.querySelector(`.panel-toggle-text`);e&&(e.textContent=n_?`展開 ▼`:`收合 ▲`)}}function ov(){n_=!n_,av()}function sv(){if(jg?.classList.toggle(`collapsed`,r_),Cg?.classList.toggle(`result-panel-collapsed`,r_),Q&&(Q.hidden=r_),ug){ug.setAttribute(`aria-expanded`,String(!r_));let e=ug.querySelector(`.panel-toggle-text`);e&&(e.textContent=r_?`展開 ▼`:`收合 ▲`)}}function cv(){r_=!r_,sv()}function lv({announce:e=!1}={}){c_(),f_(),e&&(l_($,Yg)?C_(`已載入${a_()}題庫：請按「系統評分」，產生評分結果後可上傳成績。`):C_(`已載入 SmartRing 課程：請使用「執行程式」觀察硬體互動結果，此類課程不進行成績上傳。`))}function uv(e){Wg.textContent=e.problemTitle||e.title||`競賽題目`,Gg.innerHTML=ev(e)}function dv(e,t){Wg.textContent=`${e.id}｜${e.title}`,Gg.innerHTML=`
     ${J_(e)}
-  `}function fv(){Cg?.classList.remove(`programming-problem`),wg&&(wg.textContent=`公開課程代碼`),Sg.innerHTML=`
-    <h2>公開課程代碼</h2>
+  `}function fv(){Cg?.classList.remove(`programming-problem`),wg&&(wg.textContent=`課程代碼`),Sg.innerHTML=`
+    <h2>課程代碼</h2>
     ${Vh()}
-  `,Wg.textContent=`公開課程代碼`,Gg.innerHTML=Sg.innerHTML}function pv(e,t){let n=l_(e,t);if(Cg?.classList.toggle(`programming-problem`,n),wg&&(wg.textContent=n?`競賽題目`:`課程任務摘要`),n){Sg.innerHTML=`
+  `,Wg.textContent=`課程代碼`,Gg.innerHTML=Sg.innerHTML}function pv(e,t){let n=l_(e,t);if(Cg?.classList.toggle(`programming-problem`,n),wg&&(wg.textContent=n?`競賽題目`:`課程任務摘要`),n){Sg.innerHTML=`
       <div class="problem-task-fixed-panel">
         ${ev(e)}
       </div>
