@@ -1,3 +1,4 @@
+
 import './style.css';
 
 import * as Blockly from 'blockly';
@@ -7,6 +8,11 @@ import * as ZhHant from 'blockly/msg/zh-hant';
 import { competitionToolbox } from './blockly/toolbox.js';
 import { registerSmartRingBlocks } from './blockly/smartring-blocks.js';
 import { smartRingRuntime } from './smartring/runtime.js';
+import {
+  toggleSimulator,
+  isSimulatorOpen,
+} from './smartring/simulator-bridge.js';
+
 import {
   getPublicCourseGroupListHtml,
   getCourseGroup,
@@ -110,6 +116,7 @@ const STUDENT_PROFILE_STORAGE_KEY = 'blocklyLabStudentProfileV1';
 
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
 const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
+const btnToggleSimulator = document.getElementById('btnToggleSimulator');
 const btnTestLedRed = document.getElementById('btnTestLedRed');
 const btnTestLedClear = document.getElementById('btnTestLedClear');
 
@@ -1998,6 +2005,30 @@ function closeTaskModal() {
   taskModal.setAttribute('aria-hidden', 'true');
 }
 
+function updateSmartRingControlButtons(isConnected = smartRingRuntime.isConnected()) {
+  const simulatorOpen = isSimulatorOpen();
+  const canSendLedCommand = isConnected || simulatorOpen;
+
+  if (btnConnectSmartRing) {
+    btnConnectSmartRing.textContent = isConnected ? '斷線' : '連線';
+    btnConnectSmartRing.title = isConnected ? '斷開 SmartRing 實體硬體連線' : '連線 SmartRing 實體硬體';
+    btnConnectSmartRing.disabled = false;
+  }
+
+  if (btnDisconnectSmartRing) {
+    btnDisconnectSmartRing.hidden = true;
+    btnDisconnectSmartRing.disabled = true;
+  }
+
+  if (btnToggleSimulator) {
+    btnToggleSimulator.textContent = simulatorOpen ? '關閉模擬' : '開啟模擬';
+    btnToggleSimulator.title = simulatorOpen ? '關閉 SmartRing 模擬器' : '開啟 SmartRing 模擬器';
+  }
+
+  btnTestLedRed.disabled = !canSendLedCommand;
+  btnTestLedClear.disabled = !canSendLedCommand;
+}
+
 function setSmartRingConnectedUi(isConnected, message) {
   const text = message || (isConnected ? 'SmartRing 已連線' : 'SmartRing 尚未連線');
 
@@ -2007,10 +2038,7 @@ function setSmartRingConnectedUi(isConnected, message) {
   smartRingStatus.classList.toggle('connected', isConnected);
   serialStatusValue.classList.toggle('connected', isConnected);
 
-  btnConnectSmartRing.disabled = isConnected;
-  btnDisconnectSmartRing.disabled = !isConnected;
-  btnTestLedRed.disabled = !isConnected;
-  btnTestLedClear.disabled = !isConnected;
+  updateSmartRingControlButtons(isConnected);
 }
 
 async function connectSmartRing() {
@@ -2039,6 +2067,15 @@ async function disconnectSmartRing() {
   } catch (error) {
     outputArea.textContent = `SmartRing 斷線時發生錯誤：\n${error.message}`;
   }
+}
+
+async function toggleSmartRingConnection() {
+  if (smartRingRuntime.isConnected()) {
+    await disconnectSmartRing();
+    return;
+  }
+
+  await connectSmartRing();
 }
 
 async function testLedRed() {
@@ -2108,8 +2145,13 @@ function bindSmartRingRuntimeEvents() {
 }
 
 function bindEvents() {
-  btnConnectSmartRing.addEventListener('click', connectSmartRing);
-  btnDisconnectSmartRing.addEventListener('click', disconnectSmartRing);
+  btnConnectSmartRing.addEventListener('click', toggleSmartRingConnection);
+
+  btnToggleSimulator?.addEventListener('click', () => {
+    toggleSimulator();
+    updateSmartRingControlButtons();
+  });
+
   btnTestLedRed.addEventListener('click', testLedRed);
   btnTestLedClear.addEventListener('click', testLedClear);
 

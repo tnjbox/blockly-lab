@@ -1,5 +1,18 @@
+// =====================================================
+// Blockly Lab SmartRing Runtime
+// -----------------------------------------------------
+// 修正版：整合 SmartRing 硬體模擬器。
+// - 保留原本 WebSerial 實體硬體控制。
+// - LED 指令同步送到 simulator-bridge.js。
+// - 未連接實體硬體時，允許使用模擬器執行 LED 積木。
+// =====================================================
+
 import { SmartRingSerial } from './serial.js';
 import { createJsonLine, formatButtonState, parseSmartRingLine } from './protocol.js';
+import {
+  sendSmartRingLedCommand,
+  sendSmartRingLedCommands,
+} from './simulator-bridge.js';
 
 const LED_COUNT = 12;
 
@@ -92,6 +105,68 @@ function getPatternLedNumbers(patternName) {
     default:
       return [];
   }
+}
+
+// Blockly-lab 與實體 SmartRing 韌體使用 0～255 RGB，
+// 模擬器交接規格使用 0～30 RGB，因此送到模擬器前需轉換。
+function normalizeSimulatorRgbValue(value) {
+  const rgb255 = clamp(Math.round(Number(value) || 0), 0, 255);
+  return Math.round((rgb255 / 255) * 30);
+}
+
+function toSimulatorColor(color) {
+  return {
+    r: normalizeSimulatorRgbValue(color?.r),
+    g: normalizeSimulatorRgbValue(color?.g),
+    b: normalizeSimulatorRgbValue(color?.b),
+  };
+}
+
+function toSimulatorBuffer(buffer = []) {
+  return Array.from({ length: LED_COUNT }, (_, index) =>
+    toSimulatorColor(buffer[index] || LED_COLOR_TABLE.off)
+  );
+}
+
+function sendSimulatorSetLed(ledIndex, color) {
+  const simulatorColor = toSimulatorColor(color);
+
+  sendSmartRingLedCommand({
+    type: 'setLed',
+    index: ledIndex,
+    r: simulatorColor.r,
+    g: simulatorColor.g,
+    b: simulatorColor.b,
+  });
+}
+
+function sendSimulatorSetAll(color) {
+  const simulatorColor = toSimulatorColor(color);
+
+  sendSmartRingLedCommand({
+    type: 'setAll',
+    r: simulatorColor.r,
+    g: simulatorColor.g,
+    b: simulatorColor.b,
+  });
+}
+
+function sendSimulatorClear() {
+  sendSmartRingLedCommand({
+    type: 'clear',
+  });
+}
+
+function sendSimulatorShowBuffer(buffer = []) {
+  sendSmartRingLedCommands([
+    {
+      type: 'setBuffer',
+      buffer: toSimulatorBuffer(buffer),
+    },
+    {
+      type: 'showBuffer',
+    },
+  ]);
 }
 
 
@@ -224,6 +299,15 @@ class SmartRingRuntime extends EventTarget {
       ...payload,
     };
 
+    // 允許「只有模擬器、沒有實體硬體」的課堂使用情境。
+    // 有連線時仍照原本 WebSerial 流程送給實體 SmartRing；
+    // 沒連線時不丟錯，仍更新最後指令，讓主畫面可以顯示學生送出的指令。
+    if (!this.serial || !this.connected) {
+      this.lastCommand = commandPayload;
+      this.emitCommand(commandPayload);
+      return;
+    }
+
     await this.sendJson(commandPayload);
   }
 
@@ -251,6 +335,8 @@ class SmartRingRuntime extends EventTarget {
     const ledIndex = this.normalizeLedNumber(ledNumber);
     const color = this.getLedColorPayload(colorName);
 
+    sendSimulatorSetLed(ledIndex, color);
+
     await this.sendCommand('setLed', {
       index: ledIndex,
       color: colorName,
@@ -262,7 +348,10 @@ class SmartRingRuntime extends EventTarget {
     this.emitLog(`設定第 ${ledIndex} 顆 LED 為 ${colorName}`);
   }
 
+
   async clearLeds() {
+    sendSimulatorClear();
+
     await this.sendCommand('clearLeds');
 
     this.emitLog('清除所有 LED');
@@ -275,6 +364,8 @@ class SmartRingRuntime extends EventTarget {
       g: normalizeRgbValue(green),
       b: normalizeRgbValue(blue),
     };
+
+    sendSimulatorSetLed(ledIndex, color);
 
     await this.sendCommand('setLed', {
       index: ledIndex,
@@ -289,6 +380,8 @@ class SmartRingRuntime extends EventTarget {
 
   async setAllLeds(colorName) {
     const color = this.getLedColorPayload(colorName);
+
+    sendSimulatorSetAll(color);
 
     await this.sendCommand('setAllLeds', {
       color: colorName,
@@ -512,18 +605,10 @@ class SmartRingRuntime extends EventTarget {
 
   async playFillAnimation(colorName, speed = 100) {
     const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
-    const color = this.getLedColorPayload(colorName);
-
     await this.clearLeds();
 
     for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
-      await this.sendCommand('setLed', {
-        index: ledNumber,
-        color: colorName,
-        r: color.r,
-        g: color.g,
-        b: color.b,
-      });
+      await this.setLedColor(ledNumber, colorName);
       await this.wait(delay);
     }
 
@@ -534,13 +619,7 @@ class SmartRingRuntime extends EventTarget {
     const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
 
     for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
-      await this.sendCommand('setLed', {
-        index: ledNumber,
-        color: 'off',
-        r: 0,
-        g: 0,
-        b: 0,
-      });
+      await this.setLedColor(ledNumber, 'off');
       await this.wait(delay);
     }
 
@@ -549,8 +628,6 @@ class SmartRingRuntime extends EventTarget {
 
   async playRunningLightAnimation(colorName, speed = 100) {
     const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
-    const color = this.getLedColorPayload(colorName);
-
     for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
       await this.clearLeds();
       await this.sendCommand('setLed', {
@@ -570,8 +647,12 @@ class SmartRingRuntime extends EventTarget {
   async showAnimationBuffer(buffer) {
     this.throwIfProgramStopped();
 
+    const leds = buffer.map((color) => cloneColor(color));
+
+    sendSimulatorShowBuffer(leds);
+
     await this.sendCommand('showBuffer', {
-      leds: buffer.map((color) => cloneColor(color)),
+      leds,
     });
   }
 
@@ -735,8 +816,12 @@ class SmartRingRuntime extends EventTarget {
 
 
   async showLedBuffer() {
+    const leds = this.getLedBuffer();
+
+    sendSimulatorShowBuffer(leds);
+
     await this.sendCommand('showBuffer', {
-      leds: this.getLedBuffer(),
+      leds,
     });
 
     this.emitLog('顯示 LED 暫存陣列到 SmartRing');
