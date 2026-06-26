@@ -628,21 +628,17 @@ class SmartRingRuntime extends EventTarget {
 
   async playRunningLightAnimation(colorName, speed = 100) {
     const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+
     for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
       await this.clearLeds();
-      await this.sendCommand('setLed', {
-        index: ledNumber,
-        color: colorName,
-        r: color.r,
-        g: color.g,
-        b: color.b,
-      });
+      await this.setLedColor(ledNumber, colorName);
       await this.wait(delay);
     }
 
+    await this.clearLeds();
+
     this.emitLog(`播放跑馬燈動畫 ${colorName}，速度 ${delay} ms`);
   }
-
 
   async showAnimationBuffer(buffer) {
     this.throwIfProgramStopped();
