@@ -640,7 +640,6 @@ class SmartRingRuntime extends EventTarget {
     this.emitLog(`播放跑馬燈動畫 ${colorName}，速度 ${delay} ms`);
   }
 
-
   async showAnimationBuffer(buffer) {
     this.throwIfProgramStopped();
 
