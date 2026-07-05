@@ -592,7 +592,7 @@ async function runUserCode() {
   const result = await executeGeneratedCode({ writeToOutput: true });
 
   if (result.ok && !result.output.trim()) {
-    outputArea.textContent = '程式執行完成，沒有輸出內容。';
+    outputArea.textContent = '程式執行完成：';
   }
 }
 
@@ -1099,6 +1099,90 @@ function escapeHtml(content) {
     .replace(/'/g, '&#39;');
 }
 
+function normalizeNoOutputWording(content) {
+  return String(content || '')
+    .replace(/輸出為空白/g, '不輸出')
+    .replace(/輸出空白/g, '不輸出')
+    .replace(/空白輸出/g, '不輸出')
+    .replace(/輸出空字串/g, '不輸出')
+    .replace(/沒有輸出內容/g, '不輸出');
+}
+
+function normalizeProblemDescription(content, problemTitle = '') {
+  const title = String(problemTitle || '').trim();
+  const lines = String(content || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .split('\n');
+
+  const cleanedLines = [];
+  let hasRemovedLeadingTitle = false;
+  let hasRemovedHeading = false;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (!hasRemovedLeadingTitle && title && line === `題目：${title}`) {
+      hasRemovedLeadingTitle = true;
+      continue;
+    }
+
+    if (!hasRemovedHeading && /^題目說明\s*[:：]?$/.test(line)) {
+      hasRemovedHeading = true;
+      continue;
+    }
+
+    cleanedLines.push(rawLine);
+  }
+
+  return normalizeNoOutputWording(cleanedLines.join('\n')).trim();
+}
+
+function getStatementText(task, key) {
+  const statement = task?.statement;
+
+  if (statement && typeof statement === 'object' && !Array.isArray(statement)) {
+    return String(statement[key] || '').trim();
+  }
+
+  if (key === 'description' && typeof statement === 'string') {
+    return statement.trim();
+  }
+
+  return '';
+}
+
+function getProblemDescription(task) {
+  const problemTitle = task?.problemTitle || task?.title || '';
+  const description =
+    getStatementText(task, 'description') ||
+    task?.problemStatement ||
+    task?.description ||
+    '尚未建立題目內容。';
+
+  return normalizeProblemDescription(description, problemTitle);
+}
+
+function getProblemInputDescription(task) {
+  const inputDescription =
+    getStatementText(task, 'input') ||
+    task?.inputDescription ||
+    task?.input ||
+    '';
+
+  return normalizeNoOutputWording(inputDescription).trim();
+}
+
+function getProblemOutputDescription(task) {
+  const outputDescription =
+    getStatementText(task, 'output') ||
+    task?.outputDescription ||
+    task?.output ||
+    '';
+
+  return normalizeNoOutputWording(outputDescription).trim();
+}
+
 function renderProblemTextSection(title, content) {
   const text = String(content || '').trim();
   if (!text) return '';
@@ -1120,8 +1204,8 @@ function renderProblemExampleTable(examples = []) {
   const rows = examples
     .map((example) => {
       const input = example.input || '無輸入';
-      const output = example.output || '';
-      const explanation = example.explanation || '';
+      const output = example.output ?? '';
+      const explanation = normalizeNoOutputWording(example.explanation || '');
 
       return `
         <tr>
@@ -1166,16 +1250,16 @@ function getProblemExamples(task) {
     {
       input: sampleInput || '無輸入',
       output: sampleOutput,
-      explanation: task.problemNote || task.description || '請比對使用者輸入與輸出結果。',
+      explanation: normalizeNoOutputWording(task.problemNote || task.description || '請比對使用者輸入與輸出結果。'),
     },
   ];
 }
 
 function renderProblemTaskContent(task) {
   const problemTitle = task.problemTitle || task.title || '未命名題目';
-  const statement = task.statement || task.problemStatement || task.description || '尚未建立題目內容。';
-  const inputDescription = task.inputDescription || task.input || '';
-  const outputDescription = task.outputDescription || task.output || '';
+  const statement = getProblemDescription(task);
+  const inputDescription = getProblemInputDescription(task);
+  const outputDescription = getProblemOutputDescription(task);
   const examples = getProblemExamples(task);
 
   return `
@@ -1576,7 +1660,7 @@ function getTaskTestCases(task = currentTask) {
   return task.testCases.map((testCase, index) => sanitizeAssessmentTestCase(testCase, index, task));
 }
 
-function formatMultilineForOutput(value, emptyText = '無') {
+function formatMultilineForOutput(value, emptyText = '') {
   const text = String(value ?? '');
   return text.length > 0 ? text : emptyText;
 }
@@ -1618,7 +1702,7 @@ function renderAssessmentResultHtml(assessment) {
           <td><span class="assessment-badge ${caseStatusClass}">${caseStatusText}</span></td>
           <td>${renderAssessmentCellPre(item.input)}</td>
           <td>${renderAssessmentCellPre(item.expectedOutput)}</td>
-          <td>${renderAssessmentCellPre(item.actualOutput, '沒有輸出')}${errorCell}</td>
+          <td>${renderAssessmentCellPre(item.actualOutput)}${errorCell}</td>
         </tr>
       `;
     })
