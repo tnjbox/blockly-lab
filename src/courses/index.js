@@ -198,7 +198,7 @@ export function getCourseTypeLabel(type) {
 }
 
 export const publicCourseGroups = [
-  { category: 'SmartRing 課程', codes: ['SRB00', 'SRA00', 'SRF00'] },
+  { category: 'SmartRing 課程', codes: ['SRB00', 'SRA00', 'SRF00', 'SRC00'] },
   { category: '程式解題課程', codes: ['JSB00', 'JSA00', 'CPB00'] },
 ];
 
@@ -206,6 +206,7 @@ const fallbackPublicCourseTitles = {
   SRB00: 'SmartRing 基礎互動任務',
   SRA00: 'SmartRing 陣列任務',
   SRF00: 'SmartRing 函式仿作任務',
+  SRC00: 'SmartRing 動畫解析密室課程',
   JSB00: 'Blockly 解題基礎一',
   JSA00: 'Blockly 解題陣列基礎',
   CPB00: '程式競賽基礎題組',

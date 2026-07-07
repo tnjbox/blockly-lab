@@ -589,7 +589,7 @@ Blockly.Blocks.smartring_play_shift_left_animation = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');
-    this.setTooltip('直接播放單顆 LED 從 LED 1 移動到 LED 12 的左移動畫。');
+    this.setTooltip('直接播放第 5～8 顆連續 LED 圖樣整段往左移動的動畫，用來觀察陣列位移概念。');
     this.setHelpUrl('');
   },
 };
@@ -619,7 +619,7 @@ Blockly.Blocks.smartring_play_shift_right_animation = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour('#0ea5e9');
-    this.setTooltip('直接播放單顆 LED 從 LED 12 移動到 LED 1 的右移動畫。');
+    this.setTooltip('直接播放第 5～8 顆連續 LED 圖樣整段往右移動的動畫，用來觀察陣列位移概念。');
     this.setHelpUrl('');
   },
 };

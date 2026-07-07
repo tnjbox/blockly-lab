@@ -661,34 +661,57 @@ class SmartRingRuntime extends EventTarget {
     await this.showAnimationBuffer(frame);
   }
 
+  async showSegmentFrame(startLedNumber, length, colorName) {
+    const start = Math.floor(Number(startLedNumber) || 1);
+    const segmentLength = clamp(Math.floor(Number(length) || 1), 1, LED_COUNT);
+    const color = this.getLedColorPayload(colorName);
+    const frame = createEmptyLedBuffer();
+
+    for (let offset = 0; offset < segmentLength; offset += 1) {
+      const ledNumber = start + offset;
+
+      if (ledNumber >= 1 && ledNumber <= LED_COUNT) {
+        frame[ledNumber - 1] = cloneColor(color);
+      }
+    }
+
+    await this.showAnimationBuffer(frame);
+  }
+
   async playShiftLeftAnimation(colorName, times = 1, speed = 100) {
     const repeatTimes = clamp(Math.floor(Number(times) || 1), 1, 20);
     const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+    const initialStart = 5;
+    const segmentLength = 4;
+    const leftBoundaryStart = 1;
 
     for (let round = 0; round < repeatTimes; round += 1) {
-      for (let ledNumber = 1; ledNumber <= LED_COUNT; ledNumber += 1) {
-        await this.showSingleLedFrame(ledNumber, colorName);
+      for (let start = initialStart; start >= leftBoundaryStart; start -= 1) {
+        await this.showSegmentFrame(start, segmentLength, colorName);
         await this.wait(delay);
       }
     }
 
     await this.clearLeds();
-    this.emitLog(`播放左移動畫 ${colorName}，次數 ${repeatTimes}，速度 ${delay} ms`);
+    this.emitLog(`播放左移動畫 ${colorName}：第 5～8 顆連續圖樣整段左移，次數 ${repeatTimes}，速度 ${delay} ms`);
   }
 
   async playShiftRightAnimation(colorName, times = 1, speed = 100) {
     const repeatTimes = clamp(Math.floor(Number(times) || 1), 1, 20);
     const delay = clamp(Math.floor(Number(speed) || 100), 20, 2000);
+    const initialStart = 5;
+    const segmentLength = 4;
+    const rightBoundaryStart = LED_COUNT - segmentLength + 1;
 
     for (let round = 0; round < repeatTimes; round += 1) {
-      for (let ledNumber = LED_COUNT; ledNumber >= 1; ledNumber -= 1) {
-        await this.showSingleLedFrame(ledNumber, colorName);
+      for (let start = initialStart; start <= rightBoundaryStart; start += 1) {
+        await this.showSegmentFrame(start, segmentLength, colorName);
         await this.wait(delay);
       }
     }
 
     await this.clearLeds();
-    this.emitLog(`播放右移動畫 ${colorName}，次數 ${repeatTimes}，速度 ${delay} ms`);
+    this.emitLog(`播放右移動畫 ${colorName}：第 5～8 顆連續圖樣整段右移，次數 ${repeatTimes}，速度 ${delay} ms`);
   }
 
   async playBounceAnimation(colorName, times = 1, speed = 100) {

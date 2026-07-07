@@ -1481,7 +1481,7 @@ function loadCourse() {
   const code = profile.courseCode;
 
   if (!code) {
-    outputArea.textContent = '請先輸入課程組代碼，例如 SRB00、SRA00、SRF00、JSB00、JSA00、CPB00。';
+    outputArea.textContent = '請先輸入課程組代碼，例如 SRB00、SRA00、SRF00、SRC00、JSB00、JSA00、CPB00。';
     courseCode.focus();
     return;
   }

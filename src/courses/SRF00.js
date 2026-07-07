@@ -100,43 +100,43 @@ export const SRF00 = {
     cloneTask(smartRingCourses['SR-F02'], {
       id: 'SRF00-04',
       title: '左移動畫函式仿作',
-      taskDescription: '請讓 LED 圖樣往左移動，觀察每次移動後位置如何改變。',
+      taskDescription: '請觀察第 5、6、7、8 顆 LED 形成的四顆連續圖樣如何整段往左移動，並嘗試用 startPosition 與 length 自己寫出左移流程。',
       passConditions: [
-        'LED 圖樣能往左移動。',
-        '移動次數可以設定。',
-        '速度可以調整。'
+        '一開始能呈現第 5、6、7、8 顆 LED 亮起。',
+        '能讓整段四顆連續圖樣往左移動，而不是只移動單一亮點。',
+        '能用 startPosition 每次減 1 說明左移流程。'
       ],
       hints: [
-        '先觀察左移動畫中亮點的位置變化。',
-        '可以使用暫存陣列位移積木。',
-        '每次位移後都要顯示暫存陣列。'
+        '起始圖樣是第 5～8 顆連續亮起。',
+        '左移一次後應變成第 4～7 顆；再左移一次變成第 3～6 顆。',
+        '每次更新圖樣後都要顯示暫存陣列。'
       ],
       challenges: [
         '讓移動次數由變數控制。',
-        '移動到邊界後改成清除或重新開始。'
+        '移動到邊界後改成清除、停止或循環。'
       ],
-      starterXml: animationXml({ blockType: 'smartring_play_shift_left_animation', color: 'purple', speed: 80, times: 2, message: '左移動畫函式仿作' }),
+      starterXml: animationXml({ blockType: 'smartring_play_shift_left_animation', color: 'purple', speed: 80, times: 4, message: '左移動畫函式仿作' }),
       starterMessage: '已載入 SRF00-04：左移動畫函式仿作。',
     }),
     cloneTask(smartRingCourses['SR-F02'], {
       id: 'SRF00-05',
       title: '右移動畫函式仿作',
-      taskDescription: '請讓 LED 圖樣往右移動，並比較右移與左移的差異。',
+      taskDescription: '請觀察第 5、6、7、8 顆 LED 形成的四顆連續圖樣如何整段往右移動，並比較右移與左移的 position 更新方向。',
       passConditions: [
-        'LED 圖樣能往右移動。',
-        '移動次數可以設定。',
-        '能說出右移和左移的方向差異。'
+        '一開始能呈現第 5、6、7、8 顆 LED 亮起。',
+        '能讓整段四顆連續圖樣往右移動，而不是只移動單一亮點。',
+        '能說出右移是 startPosition 每次加 1，左移是每次減 1。'
       ],
       hints: [
-        '可以先完成左移，再改成右移。',
-        '觀察 LED 編號是增加還是減少。',
-        '每次位移後記得顯示結果。'
+        '可以先完成左移，再把 startPosition 更新方向改成加 1。',
+        '右移一次後應變成第 6～9 顆；再右移一次變成第 7～10 顆。',
+        '每次更新圖樣後都要顯示暫存陣列。'
       ],
       challenges: [
         '做出先右移再左移的組合動畫。',
-        '加入按鈕控制移動方向。'
+        '加入 direction 變數控制移動方向。'
       ],
-      starterXml: animationXml({ blockType: 'smartring_play_shift_right_animation', color: 'blue', speed: 80, times: 2, message: '右移動畫函式仿作' }),
+      starterXml: animationXml({ blockType: 'smartring_play_shift_right_animation', color: 'blue', speed: 80, times: 4, message: '右移動畫函式仿作' }),
       starterMessage: '已載入 SRF00-05：右移動畫函式仿作。',
     }),
     cloneTask(smartRingCourses['SR-F02'], {
