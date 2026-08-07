@@ -11,7 +11,7 @@
 const course = {
   "code": "114JPenghu",
   "title": "114-澎湖縣國中",
-  "type": "programming",
+  "type": "learning",
   "mode": "contest",
   "description": "澎湖運算思維競賽-國中題庫",
   "source": {
