@@ -11,7 +11,7 @@
 const course = {
   "code": "114JTaichung",
   "title": "114-臺中市國中",
-  "type": "programming",
+  "type": "learning",
   "mode": "contest",
   "description": "臺中市114學年度國中組資訊科技教育競賽題庫",
   "source": {
