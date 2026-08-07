@@ -12,15 +12,15 @@
 
 const course = {
   "code": "114EChaiyi",
-  "title": "114-嘉義縣國小",
+  "title": "114-嘉義市國小",
   "type": "programming",
   "mode": "learning",
-  "description": "嘉義縣114學年度科技教育創意實作競賽-國小資訊科技組題庫",
+  "description": "嘉義市114學年度科技教育創意實作競賽-國小資訊科技組題庫",
   "source": {
     "project": "YDWS-CodingBank",
     "generatedAt": "2026-08-07T14:15:54.880Z",
     "sourceCsv": "data/problem_bank_master_complete.csv",
-    "problemSetTitle": "114-嘉義縣國小",
+    "problemSetTitle": "114-嘉義市國小",
     "version": "manual-transcription-verified"
   },
   "tasks": [
@@ -29,7 +29,7 @@ const course = {
       "title": "營養午餐分析-1：豆製品週頻率",
       "problemTitle": "營養午餐分析-1：豆製品週頻率",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L2",
       "blocklyFit": "高",
@@ -97,7 +97,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "判斷前5天與後5天各自是否出現過指定主菜，練習區間內的存在性判斷。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -133,7 +133,7 @@ const course = {
       "title": "營養午餐分析-2：紅肉超量警示",
       "problemTitle": "營養午餐分析-2：紅肉超量警示",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L2",
       "blocklyFit": "高",
@@ -201,7 +201,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "比較前5天、後5天各自紅肉與白肉+豆製品的次數，練習分類計數與比較。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -237,7 +237,7 @@ const course = {
       "title": "營養午餐分析-3：白肉接紅肉次數",
       "problemTitle": "營養午餐分析-3：白肉接紅肉次數",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L2",
       "blocklyFit": "高",
@@ -305,7 +305,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "統計相鄰兩天「白肉後緊接紅肉」的出現次數，練習序列中相鄰元素的比對。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -340,7 +340,7 @@ const course = {
       "title": "營養午餐分析-4：最常見主菜",
       "problemTitle": "營養午餐分析-4：最常見主菜",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L1",
       "blocklyFit": "高",
@@ -408,7 +408,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "統計10天中出現次數最多的主菜（保證答案唯一），練習基礎的計數與最大值搜尋。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -445,7 +445,7 @@ const course = {
       "title": "停車費計算",
       "problemTitle": "停車費計算",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -541,7 +541,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "分段計費並設有單日上限，超過24小時需拆成多日分別計算再相加，練習分段條件與迴圈拆分。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -577,7 +577,7 @@ const course = {
       "title": "班級活動票選",
       "problemTitle": "班級活動票選",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L2",
       "blocklyFit": "高",
@@ -645,7 +645,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "統計每個選項得票數並找出最高票（可能有多個並列），練習計數陣列與並列判斷。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -681,7 +681,7 @@ const course = {
       "title": "班級集星比賽",
       "problemTitle": "班級集星比賽",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -749,7 +749,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "找出連續K天總和最大的起始天，若有並列取最早，練習滑動視窗與並列處理。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -784,7 +784,7 @@ const course = {
       "title": "森林小火車的能量大冒險",
       "problemTitle": "森林小火車的能量大冒險",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L4",
       "blocklyFit": "中",
@@ -852,7 +852,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "需要同時處理環狀站點位置、移動消耗、到站補給與數值上下限的多重規則，是較複雜的模擬題。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -888,7 +888,7 @@ const course = {
       "title": "玩具收納挑戰",
       "problemTitle": "玩具收納挑戰",
       "courseCode": "114EChaiyi",
-      "courseName": "114-嘉義縣國小",
+      "courseName": "114-嘉義市國小",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -956,7 +956,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "依序檢查所有已開的箱子是否裝得下（First-Fit），而非只檢查目前的箱子，練習較完整的裝箱模擬。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國小PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國小PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [

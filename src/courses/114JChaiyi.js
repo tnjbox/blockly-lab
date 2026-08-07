@@ -12,15 +12,15 @@
 
 const course = {
   "code": "114JChaiyi",
-  "title": "114-嘉義縣國中",
+  "title": "114-嘉義市國中",
   "type": "programming",
   "mode": "learning",
-  "description": "嘉義縣114學年度科技教育創意實作競賽-國中資訊科技組題庫",
+  "description": "嘉義市114學年度科技教育創意實作競賽-國中資訊科技組題庫",
   "source": {
     "project": "YDWS-CodingBank",
     "generatedAt": "2026-08-07T14:15:54.878Z",
     "sourceCsv": "data/problem_bank_master_complete.csv",
-    "problemSetTitle": "114-嘉義縣國中",
+    "problemSetTitle": "114-嘉義市國中",
     "version": "manual-transcription-verified"
   },
   "tasks": [
@@ -29,7 +29,7 @@ const course = {
       "title": "智慧手環的健康挑戰",
       "problemTitle": "智慧手環的健康挑戰",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -111,7 +111,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "需要追蹤連續靜態小時的streak，並依streak位置給予不同警告分數，練習狀態變數的維護。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -147,7 +147,7 @@ const course = {
       "title": "神秘的古代石板",
       "problemTitle": "神秘的古代石板",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -236,7 +236,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "需要處理超長數字字串（不能轉成一般整數），並實作5的倍數與11的倍數的數字判斷規則。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -271,7 +271,7 @@ const course = {
       "title": "資源回收車的極限挑戰",
       "problemTitle": "資源回收車的極限挑戰",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L2",
       "blocklyFit": "高",
@@ -353,7 +353,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "將重量由小到大排序後貪心裝載，是容量限制下求最大裝載件數的經典入門題。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -390,7 +390,7 @@ const course = {
       "title": "大隊接力的棒次安排",
       "problemTitle": "大隊接力的棒次安排",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -472,7 +472,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "將能力值排序後以最大配最小的方式配對，求各組能力和的最大值，練習排序後的雙端配對策略。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -509,7 +509,7 @@ const course = {
       "title": "變速傳球的特訓",
       "problemTitle": "變速傳球的特訓",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -591,7 +591,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "需要以環狀（模運算）方式模擬傳球位置，並依編號奇偶決定傳球步數，練習模運算與模擬迴圈。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -628,7 +628,7 @@ const course = {
       "title": "校園密室逃脫：書架的密碼",
       "problemTitle": "校園密室逃脫：書架的密碼",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L1",
       "blocklyFit": "高",
@@ -710,7 +710,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "將二進位字串轉換為十進位數值，是進位系統轉換的基礎題。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -745,7 +745,7 @@ const course = {
       "title": "校園密室逃脫：費氏階梯",
       "problemTitle": "校園密室逃脫：費氏階梯",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L2",
       "blocklyFit": "高",
@@ -827,7 +827,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "每次可走1或2階，走法總數即為費氏數列，練習遞迴關係轉迭代計算。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -863,7 +863,7 @@ const course = {
       "title": "校園密室逃脫：書架修繕工程",
       "problemTitle": "校園密室逃脫：書架修繕工程",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L4",
       "blocklyFit": "中",
@@ -945,7 +945,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "經典的「切割木材求最大等長木條長度」二分搜尋題，需要結合可行性檢查與二分搜尋。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
@@ -981,7 +981,7 @@ const course = {
       "title": "校園密室逃脫：社團聯絡網",
       "problemTitle": "校園密室逃脫：社團聯絡網",
       "courseCode": "114JChaiyi",
-      "courseName": "114-嘉義縣國中",
+      "courseName": "114-嘉義市國中",
       "role": "contest",
       "difficulty": "L3",
       "blocklyFit": "中",
@@ -1063,7 +1063,7 @@ const course = {
         "risk": "低",
         "flags": [],
         "note": "需要建立樹狀連絡網並從根節點做深度優先搜尋找最長路徑，練習樹狀結構的走訪。",
-        "exportDecision": "Claude 依使用者提供的114-嘉義縣國中PDF手動轉錄並驗證"
+        "exportDecision": "Claude 依使用者提供的114-嘉義市國中PDF手動轉錄並驗證"
       },
       "tags": {
         "mainConcepts": [
