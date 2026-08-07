@@ -7,6 +7,7 @@ import * as ZhHant from 'blockly/msg/zh-hant';
 
 import { competitionToolbox } from './blockly/toolbox.js';
 import { registerSmartRingBlocks } from './blockly/smartring-blocks.js';
+import { registerInteractionBlocks } from './blockly/interaction-blocks.js';
 import { smartRingRuntime } from './smartring/runtime.js';
 import {
   toggleSimulator,
@@ -25,6 +26,7 @@ import {
 
 Blockly.setLocale(ZhHant);
 registerSmartRingBlocks();
+registerInteractionBlocks();
 
 
 // MVP-J08-1: SmartRing tasks use asynchronous hardware commands.
@@ -486,14 +488,29 @@ function createPromptReader(inputText = '') {
   };
 }
 
-async function executeGeneratedCode({ inputText = null, writeToOutput = false } = {}) {
+function createTokenReader(inputText = '') {
+  const tokens = String(inputText ?? '').trim().length > 0
+    ? String(inputText ?? '').trim().split(/\s+/)
+    : [];
+  let index = 0;
+
+  return () => {
+    const value = index < tokens.length ? tokens[index] : '';
+    index += 1;
+    return value;
+  };
+}
+
+async function executeGeneratedCode({ inputText = null, writeToOutput = false, onLine = null } = {}) {
   if (!workspace) {
     return { ok: false, output: '', error: new Error('Blockly 工作區尚未初始化。') };
   }
 
   if (isUserProgramRunning) {
     const error = new Error('程式仍在執行中，請先按「中止程式」。');
-    if (writeToOutput) appendOutput(error.message);
+    if (writeToOutput) {
+      if (onLine) onLine(error.message, 'system'); else appendOutput(error.message);
+    }
     return { ok: false, output: '', error };
   }
 
@@ -501,22 +518,35 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
 
   if (!code.trim()) {
     const error = new Error('目前沒有可以執行的程式。');
-    if (writeToOutput) outputArea.textContent = error.message;
+    if (writeToOutput) {
+      if (onLine) onLine(error.message, 'system'); else outputArea.textContent = error.message;
+    }
     return { ok: false, output: '', error };
   }
 
   const capturedOutput = [];
+  // 官方平台行為（實測確認）：「輸出」積木（text_print，底層走 window.alert）只是給
+  // 學生看的顯示訊息，不列入評分；只有「說出」積木（interaction_say，底層走 print()）
+  // 的內容才會被拿去跟 expectedOutput 比對。sayOutput 只收集 print() 的內容，供
+  // requiresGreenFlag 課程評分用；capturedOutput 維持收集全部輸出（含 alert/console.log），
+  // 給「執行程式」除錯顯示與舊課程評分沿用。
+  const sayOutput = [];
   const originalAlert = window.alert;
   const originalPrompt = window.prompt;
   const originalConsoleLog = console.log;
   const promptReader = createPromptReader(inputText ?? '');
+  const tokenReader = createTokenReader(inputText ?? '');
   const shouldMockInput = inputText !== null && inputText !== undefined;
 
-  const capture = (message = '') => {
+  const capture = (message = '', channel = 'system') => {
     const text = String(message);
     capturedOutput.push(text);
     if (writeToOutput) {
-      appendOutput(text);
+      if (onLine) {
+        onLine(text, channel);
+      } else {
+        appendOutput(text);
+      }
     }
   };
 
@@ -525,7 +555,7 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
 
   try {
     window.alert = (message) => {
-      capture(message);
+      capture(message, 'system');
     };
 
     if (shouldMockInput) {
@@ -533,12 +563,13 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
     }
 
     console.log = (...args) => {
-      capture(args.join(' '));
+      capture(args.join(' '), 'system');
       originalConsoleLog(...args);
     };
 
     const safePrint = (message) => {
-      capture(message);
+      sayOutput.push(String(message));
+      capture(message, 'say');
     };
 
     const runner = new Function(
@@ -546,6 +577,7 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
       'SmartRing',
       'readLine',
       'prompt',
+      'askAndWait',
       `
       "use strict";
       return (async () => {
@@ -555,25 +587,31 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
     );
 
     const promptArgument = shouldMockInput ? promptReader : originalPrompt.bind(window);
-    await runner(safePrint, smartRingRuntime, promptReader, promptArgument);
+    const askAndWaitArgument = shouldMockInput ? tokenReader : originalPrompt.bind(window);
+    await runner(safePrint, smartRingRuntime, promptReader, promptArgument, askAndWaitArgument);
 
     return {
       ok: true,
       output: capturedOutput.join('\n'),
+      sayOutput: sayOutput.join('\n'),
       error: null,
     };
   } catch (error) {
     if (writeToOutput) {
-      if (error?.name === 'AbortError' || error?.message === '程式已中止。') {
-        outputArea.textContent = '程式已中止。';
+      const message = (error?.name === 'AbortError' || error?.message === '程式已中止。')
+        ? '程式已中止。'
+        : `程式執行發生錯誤：\n${error.message}`;
+      if (onLine) {
+        onLine(message, 'system');
       } else {
-        outputArea.textContent = `程式執行發生錯誤：\n${error.message}`;
+        outputArea.textContent = message;
       }
     }
 
     return {
       ok: false,
       output: capturedOutput.join('\n'),
+      sayOutput: sayOutput.join('\n'),
       error,
     };
   } finally {
@@ -585,10 +623,62 @@ async function executeGeneratedCode({ inputText = null, writeToOutput = false } 
   }
 }
 
+// requiresGreenFlag課程「執行程式」時，把輸出畫面分成兩塊：上面是「系統／除錯訊息」
+// （輸出積木＝window.alert、console.log、系統狀態訊息），下面是「說出內容」（interaction_say＝
+// print()，也就是系統評分實際比對的內容）。讓學生一眼看出只用「輸出」積木寫的答案不會被評分。
+function renderSplitOutputPanes(systemLines, sayLines) {
+  const systemText = systemLines.length > 0 ? escapeHtml(systemLines.join('\n')) : '（無）';
+  const sayText = sayLines.length > 0 ? escapeHtml(sayLines.join('\n')) : '（尚無「說出」內容）';
+
+  outputArea.innerHTML = `
+    <div class="dual-output-panes">
+      <div class="output-pane output-pane-system">
+        <h3>系統／除錯訊息（不列入評分）</h3>
+        <pre class="output-pane-content">${systemText}</pre>
+      </div>
+      <div class="output-pane output-pane-say">
+        <h3>說出內容（系統評分依據）</h3>
+        <pre class="output-pane-content">${sayText}</pre>
+      </div>
+    </div>
+  `;
+}
+
+function hasGreenFlagBlock() {
+  if (!workspace) return false;
+  return workspace
+    .getTopBlocks(true)
+    .some((block) => block.type === 'event_whenflagclicked');
+}
+
 async function runUserCode() {
   if (!workspace) return;
 
   clearOutput();
+
+  if (currentTask?.requiresGreenFlag) {
+    const systemLines = [];
+    const sayLines = [];
+    renderSplitOutputPanes(systemLines, sayLines);
+
+    const result = await executeGeneratedCode({
+      writeToOutput: true,
+      onLine: (text, channel) => {
+        if (channel === 'say') {
+          sayLines.push(text);
+        } else {
+          systemLines.push(text);
+        }
+        renderSplitOutputPanes(systemLines, sayLines);
+      },
+    });
+
+    if (result.ok && systemLines.length === 0 && sayLines.length === 0) {
+      renderSplitOutputPanes(['程式執行完成：'], []);
+    }
+    return;
+  }
+
   const result = await executeGeneratedCode({ writeToOutput: true });
 
   if (result.ok && !result.output.trim()) {
@@ -1676,6 +1766,8 @@ function renderAssessmentCellPre(value, emptyText = '無') {
 
 function renderAssessmentResultHtml(assessment) {
   const total = Number(assessment?.total || 0);
+  const requiresGreenFlag = Boolean(assessment?.requiresGreenFlag);
+  const actualOutputLabel = requiresGreenFlag ? '實際說出內容' : '實際輸出';
   const isContestMode = normalizeCourseMode(assessment?.mode || currentCourseMode) === 'contest';
 
   const rows = (assessment?.cases || [])
@@ -1721,7 +1813,7 @@ function renderAssessmentResultHtml(assessment) {
               <th>結果</th>
               <th>使用者輸入</th>
               <th>預期輸出</th>
-              <th>實際輸出</th>
+              <th>${actualOutputLabel}</th>
             </tr>
     `;
 
@@ -1754,6 +1846,18 @@ function showAssessmentResult(assessment) {
 }
 
 async function runProgrammingTestCases() {
+  if (currentTask?.requiresGreenFlag && !hasGreenFlagBlock()) {
+    clearOutput();
+    writeOutput('請先加入「當🚩被點擊」積木，把要評分的程式接在它下面，再進行系統評分。');
+    return {
+      total: 0,
+      passed: 0,
+      score: 0,
+      allPassed: false,
+      cases: [],
+    };
+  }
+
   const testCases = getTaskTestCases(currentTask);
 
   if (testCases.length === 0) {
@@ -1772,6 +1876,10 @@ async function runProgrammingTestCases() {
   clearOutput();
   writeOutput(`正在進行 ${currentTask.id}｜${currentTask.title} 的系統評分...`);
 
+  // requiresGreenFlag課程比照官方平台規範，評分只認「說出」積木的內容，
+  // 「輸出」積木純粹是給學生看的顯示訊息，不計入比對（見executeGeneratedCode）。
+  const useSayOutputOnly = Boolean(currentTask?.requiresGreenFlag);
+
   const results = [];
 
   for (const testCase of testCases) {
@@ -1780,7 +1888,7 @@ async function runProgrammingTestCases() {
       writeToOutput: false,
     });
 
-    const actualOutput = result.output;
+    const actualOutput = useSayOutputOnly ? (result.sayOutput ?? '') : result.output;
     const expectedOutput = testCase.expectedOutput;
     const passed =
       result.ok &&
@@ -1810,6 +1918,7 @@ async function runProgrammingTestCases() {
     allPassed: totalCount > 0 && passedCount === totalCount,
     cases: results,
     assessedAt: new Date().toISOString(),
+    requiresGreenFlag: Boolean(currentTask?.requiresGreenFlag),
   };
 
   showAssessmentResult(assessment);
