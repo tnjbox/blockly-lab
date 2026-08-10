@@ -18,7 +18,7 @@ const course = {
   "description": "嘉義市114學年度科技教育創意實作競賽-國小資訊科技組題庫",
   "source": {
     "project": "YDWS-CodingBank",
-    "generatedAt": "2026-08-07T14:15:54.880Z",
+    "generatedAt": "2026-08-07T14:15:54.885Z",
     "sourceCsv": "data/problem_bank_master_complete.csv",
     "problemSetTitle": "114-嘉義市國小",
     "version": "manual-transcription-verified"

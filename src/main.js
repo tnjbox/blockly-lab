@@ -93,12 +93,31 @@ patchAsyncProcedureGenerators();
 // MVP-J08-1 fixed: Blockly procedure definitions are emitted through generator definitions,
 // so patching the procedure block generator alone may not change the final generated code.
 // Apply a final safety pass to the complete JavaScript code before preview/execution.
+//
+// 排序積木bug修正（比照BlocklyYdws 2026-08-02的修法，2026-08-09移植進blockly-lab）：這個regex
+// 原本是不分青紅皂白地把整份程式碼裡每一個頂層function宣告都轉成async，結果連Blockly自己用
+// provideFunction_注入的內建輔助函式（例如lists_sort積木用到的listsGetSortCompare）也被轉成
+// async。這些輔助函式是Blockly函式庫本身寫死的純同步工具函式，內容不可能包含任何學生積木
+// （不會用到await），一旦被轉成async，呼叫端(list.slice().sort(listsGetSortCompare(...)))拿到的
+// 就是一個Promise而不是真正的比較函式，導致.sort()噴錯「comparison function must be either
+// a function or undefined: #<Promise>」。修法：明確排除這些已知的Blockly內建輔助函式名稱
+// （清單來自node_modules/blockly/javascript_compressed.js裡所有provideFunction_呼叫），
+// 只把其餘（學生自訂程序）的頂層function轉成async。
+const BLOCKLY_BUILTIN_HELPER_NAMES = new Set([
+  'listsGetRandomItem', 'listsGetSortCompare', 'listsRepeat',
+  'mathIsPrime', 'mathMean', 'mathMedian', 'mathModes', 'mathRandomInt', 'mathRandomList', 'mathStandardDeviation',
+  'subsequence', 'textCount', 'textRandomLetter', 'textReplace', 'textToTitleCase',
+]);
+
 function normalizeGeneratedAsyncProcedures(code) {
   if (typeof code !== 'string' || !code.trim()) return code;
 
   return code.replace(
     /(^|\n)(\s*)function\s+([A-Za-z_$][\w$]*)\s*\(/g,
-    '$1$2async function $3('
+    (match, prefix, indent, name) => {
+      if (BLOCKLY_BUILTIN_HELPER_NAMES.has(name)) return match;
+      return `${prefix}${indent}async function ${name}(`;
+    }
   );
 }
 
@@ -111,9 +130,11 @@ const blocklyDiv = document.getElementById('blocklyDiv');
 const codePreview = document.getElementById('codePreview');
 const outputArea = document.getElementById('outputArea');
 
-// Google Apps Script Web App URL for score upload.
-// Paste the deployed Web App URL here after setting up google-apps-script/Code.gs.
-const SCORE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyOu4ZVMgr3577ZdUZ6o732GUPoayRHFiw3_Xglhaj0mg_W-4REr-KjtZllU9SZnAQq/exec';
+// 成績評分/上傳後端（Cloudflare Worker，blockly-lab獨立部署，跟BlocklyYdws的Worker分開），
+// 取代直接呼叫Google Apps Script Web App URL。前端不再持有任何能寫入Sheet的密鑰；正確答案
+// (expectedOutput)對contest模式課程也不會打包進這裡的課程JS，Worker那邊才有完整評分資料。
+// 詳見 workers/score-grader/README.md。部署後請把這裡換成 wrangler deploy 印出的實際網址。
+const SCORE_GRADER_WORKER_URL = 'https://blockly-lab-score-grader.tnjboxing.workers.dev';
 const STUDENT_PROFILE_STORAGE_KEY = 'blocklyLabStudentProfileV1';
 
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
@@ -1821,9 +1842,14 @@ function renderAssessmentResultHtml(assessment) {
     ? '<p class="assessment-note">競賽模式僅顯示每筆測資是否通過，不顯示輸入、預期輸出與實際輸出。</p>'
     : '';
 
+  const greenFlagNote = requiresGreenFlag && !isContestMode
+    ? '<p class="assessment-note">這個課程比照官方競賽平台規範：系統評分只比對「說出」積木的內容，「輸出」積木只是顯示訊息，不會列入評分。</p>'
+    : '';
+
   const tableHtml = total > 0
     ? `
       ${contestNote}
+      ${greenFlagNote}
       <div class="assessment-table-wrap">
         <table class="assessment-table">
           <thead>${tableHeaderHtml}</thead>
@@ -1843,6 +1869,24 @@ function renderAssessmentResultHtml(assessment) {
 
 function showAssessmentResult(assessment) {
   outputArea.innerHTML = renderAssessmentResultHtml(assessment);
+}
+
+// 2026-08-09比照BlocklyYdws移植：contest模式課程的本機JS不含expectedOutput，
+// 正確答案只存在score-grader Worker那一側，必須送去給Worker比對。
+async function requestServerGrading(courseId, taskId, cases) {
+  const resp = await fetch(`${SCORE_GRADER_WORKER_URL}/grade`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ courseId, taskId, cases }),
+  });
+
+  const body = await resp.json().catch(() => ({}));
+
+  if (!resp.ok) {
+    throw new Error(body.error || `評分伺服器錯誤（狀態碼 ${resp.status}）`);
+  }
+
+  return body;
 }
 
 async function runProgrammingTestCases() {
@@ -1876,11 +1920,12 @@ async function runProgrammingTestCases() {
   clearOutput();
   writeOutput(`正在進行 ${currentTask.id}｜${currentTask.title} 的系統評分...`);
 
+  // 學生程式碼一律在瀏覽器本機執行（Blockly產生的JS本來就只能跑在瀏覽器裡）。
+  // 這裡只是先跑出每筆測資的實際輸出，比對正確答案的方式依課程模式而不同。
+  const runs = [];
   // requiresGreenFlag課程比照官方平台規範，評分只認「說出」積木的內容，
   // 「輸出」積木純粹是給學生看的顯示訊息，不計入比對（見executeGeneratedCode）。
   const useSayOutputOnly = Boolean(currentTask?.requiresGreenFlag);
-
-  const results = [];
 
   for (const testCase of testCases) {
     const result = await executeGeneratedCode({
@@ -1889,16 +1934,51 @@ async function runProgrammingTestCases() {
     });
 
     const actualOutput = useSayOutputOnly ? (result.sayOutput ?? '') : result.output;
-    const expectedOutput = testCase.expectedOutput;
-    const passed =
-      result.ok &&
-      normalizeOutputForCompare(actualOutput) === normalizeOutputForCompare(expectedOutput);
+    runs.push({ testCase, result, actualOutput });
+  }
 
-    results.push({
+  const isContestMode = normalizeCourseMode(currentCourseMode) === 'contest';
+
+  let results;
+
+  if (isContestMode) {
+    // contest模式課程的本機JS已經不含expectedOutput，正確答案只存在score-grader
+    // Worker那一側，必須送去給Worker比對，本機無從得知答案。
+    let graded;
+
+    try {
+      graded = await requestServerGrading(
+        currentCourseGroup.id,
+        currentTask.id,
+        runs.map(({ testCase, actualOutput }) => ({ caseId: testCase.id, actualOutput })),
+      );
+    } catch (error) {
+      writeOutput('');
+      writeOutput(`評分伺服器連線失敗，請稍後再試：${error.message}`);
+      return { total: 0, passed: 0, score: 0, allPassed: false, cases: [] };
+    }
+
+    const passedByCaseId = new Map(graded.results.map((item) => [item.caseId, item.passed]));
+
+    results = runs.map(({ testCase, result, actualOutput }) => ({
       ...testCase,
       actualOutput,
-      passed,
+      passed: Boolean(result.ok && passedByCaseId.get(testCase.id)),
       errorMessage: result.error ? result.error.message : '',
+    }));
+  } else {
+    results = runs.map(({ testCase, result, actualOutput }) => {
+      const expectedOutput = testCase.expectedOutput;
+      const passed =
+        result.ok &&
+        normalizeOutputForCompare(actualOutput) === normalizeOutputForCompare(expectedOutput);
+
+      return {
+        ...testCase,
+        actualOutput,
+        passed,
+        errorMessage: result.error ? result.error.message : '',
+      };
     });
   }
 
@@ -1912,13 +1992,13 @@ async function runProgrammingTestCases() {
     taskTitle: currentTask.problemTitle || currentTask.title,
     mode: normalizeCourseMode(currentCourseMode),
     modeText: getModeText(),
+    requiresGreenFlag: useSayOutputOnly,
     total: totalCount,
     passed: passedCount,
     score: getAssessmentScore(passedCount, totalCount),
     allPassed: totalCount > 0 && passedCount === totalCount,
     cases: results,
     assessedAt: new Date().toISOString(),
-    requiresGreenFlag: Boolean(currentTask?.requiresGreenFlag),
   };
 
   showAssessmentResult(assessment);
@@ -1947,53 +2027,65 @@ async function testTask() {
   updateSubmitScoreVisibility();
 }
 
-function buildScoreUploadPayload(profile) {
+// 2026-08-09比照BlocklyYdws移植：改成送原始測資給Worker重新計算分數，不信任前端算出來的
+// 數字；profile/localPreview分開放，跟main.js其餘讀取路徑（renderScoreUploadResult）對應。
+function buildScoreSubmissionPayload(profile) {
   return {
-    version: 'MVP-J09-2-demo-starter-upload-guard',
-    submittedAt: new Date().toISOString(),
-    className: profile.className,
-    seatNumber: profile.seatNumber,
-    studentName: profile.name,
-    studentKey: getStudentKey(profile),
     courseId: currentCourseGroup?.id || '',
     courseTitle: currentCourseGroup?.title || '',
     taskId: currentTask?.id || '',
     taskTitle: currentTask?.problemTitle || currentTask?.title || '',
     mode: normalizeCourseMode(currentCourseMode),
-    score: lastAssessmentResult?.score ?? 0,
-    passRate: lastAssessmentResult?.score ?? 0,
-    passed: lastAssessmentResult?.passed ?? 0,
-    total: lastAssessmentResult?.total ?? 0,
-    allPassed: Boolean(lastAssessmentResult?.allPassed),
-    pageUrl: window.location.href,
-    userAgent: window.navigator.userAgent,
+    profile: {
+      className: profile.className,
+      seatNumber: profile.seatNumber,
+      studentName: profile.name,
+      studentKey: getStudentKey(profile),
+    },
+    // 送給Worker重新驗證用的原始資料：每筆測資的實際輸出，不含分數/通過與否——
+    // 那些一律由Worker用自己的答案重新算，不信任前端算出來的數字。
+    cases: (lastAssessmentResult?.cases || []).map((item) => ({
+      caseId: item.id,
+      actualOutput: item.actualOutput,
+    })),
+    // 僅供送出前的本機預覽顯示，不是實際寫入Sheet的依據。
+    localPreview: {
+      score: lastAssessmentResult?.score ?? 0,
+      passed: lastAssessmentResult?.passed ?? 0,
+      total: lastAssessmentResult?.total ?? 0,
+      allPassed: Boolean(lastAssessmentResult?.allPassed),
+    },
   };
 }
 
 function isScoreUploadConfigured() {
-  const url = String(SCORE_UPLOAD_URL || '').trim();
+  const url = String(SCORE_GRADER_WORKER_URL || '').trim();
   return Boolean(url && !url.includes('請貼上') && !url.includes('YOUR_'));
 }
 
 async function uploadScorePayload(payload) {
-  const url = String(SCORE_UPLOAD_URL || '').trim();
+  const url = String(SCORE_GRADER_WORKER_URL || '').trim();
 
   if (!isScoreUploadConfigured()) {
-    throw new Error('尚未設定 Google Apps Script Web App URL。請先部署 Apps Script，並將 Web App URL 填入 src/main.js 的 SCORE_UPLOAD_URL。');
+    throw new Error('尚未設定成績評分後端網址。請先部署 workers/score-grader，並將 Worker 網址填入 src/main.js 的 SCORE_GRADER_WORKER_URL。');
   }
 
-  await fetch(url, {
+  const resp = await fetch(`${url}/submit-score`, {
     method: 'POST',
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'text/plain;charset=utf-8',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
 
+  const body = await resp.json().catch(() => ({}));
+
+  if (!resp.ok || !body.ok) {
+    throw new Error(body.error || `成績上傳失敗（狀態碼 ${resp.status}）`);
+  }
+
   return {
     ok: true,
-    message: '已送出成績上傳請求。因 Google Apps Script 採 no-cors 送出，請到 Google Sheet 確認是否寫入成功。',
+    result: body,
+    message: `伺服器已確認分數 ${body.score} 分（${body.passed}/${body.total}），已寫入 Google Sheet。`,
   };
 }
 
@@ -2006,16 +2098,17 @@ function renderScoreUploadResult(payload, { status = 'preview', message = '' } =
   }[status] || '成績上傳資料';
 
   const statusClass = status === 'success' ? 'passed' : status === 'error' ? 'failed' : '';
+  const preview = payload.localPreview || {};
   const rows = [
-    ['班級', payload.className],
-    ['座號', payload.seatNumber],
-    ['姓名', payload.studentName],
-    ['學生識別', payload.studentKey],
+    ['班級', payload.profile?.className],
+    ['座號', payload.profile?.seatNumber],
+    ['姓名', payload.profile?.studentName],
+    ['學生識別', payload.profile?.studentKey],
     ['課程組', `${payload.courseId}｜${payload.courseTitle}`],
     ['子任務', `${payload.taskId}｜${payload.taskTitle}`],
-    ['分數', `${payload.score}`],
-    ['本機測資', `${payload.passed} / ${payload.total}`],
-    ['通過狀態', payload.allPassed ? '全部通過' : '尚未全部通過'],
+    ['本機預覽分數', `${preview.score}`],
+    ['本機測資', `${preview.passed} / ${preview.total}`],
+    ['通過狀態', preview.allPassed ? '全部通過' : '尚未全部通過'],
   ]
     .map(([label, value]) => `
       <tr>
@@ -2078,7 +2171,7 @@ async function submitScore() {
     return;
   }
 
-  const payload = buildScoreUploadPayload(profile);
+  const payload = buildScoreSubmissionPayload(profile);
 
   btnSubmitScore.disabled = true;
   outputArea.innerHTML = renderScoreUploadResult(payload, {

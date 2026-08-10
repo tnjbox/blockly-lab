@@ -18,7 +18,7 @@ const course = {
   "description": "新竹縣114學年度科技教育創意實作競賽-國小資訊科技組題庫",
   "source": {
     "project": "YDWS-CodingBank",
-    "generatedAt": "2026-08-07T14:15:54.881Z",
+    "generatedAt": "2026-08-07T14:15:54.886Z",
     "sourceCsv": "data/problem_bank_master_complete.csv",
     "problemSetTitle": "114-新竹縣國小",
     "version": "manual-transcription-verified"

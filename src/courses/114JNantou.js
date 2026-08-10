@@ -18,7 +18,7 @@ const course = {
   "description": "南投縣114學年度科技教育創意實作競賽-國中資訊科技組題庫",
   "source": {
     "project": "YDWS-CodingBank",
-    "generatedAt": "2026-08-07T14:15:54.874Z",
+    "generatedAt": "2026-08-07T14:15:54.881Z",
     "sourceCsv": "data/problem_bank_master_complete.csv",
     "problemSetTitle": "114-南投縣國中",
     "version": "manual-transcription-verified"
