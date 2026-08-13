@@ -1,15 +1,16 @@
-// 競賽模式版本，2026-08-13由 114ENewTaipei.js 複製並轉換而來（來源課程仍以學習模式繼續上架，互不影響）。
-// 轉換規則：mode改為'contest'、每題starterXml清空（競賽模式不提供範例答案可載入）、
-// 課程代碼/題目id/courseCode/courseName改用新代碼、title加註「（競賽模式）」。
-// 正確答案（testCases[].expectedOutput/output）只在canonical（本檔）與YDWS-CodingBank這份留存；
-// BlocklyYdws/blockly-lab兩平台的公開JS檔已移除，改由各自Worker（workers/score-grader/src/
-// answerKeys.json，私密、不進git）比對評分，詳見workers/score-grader/README.md。
+// blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
+// 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
+// score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
+// 改學習模式後系統評分改回本機JS直接比對（不再打Worker的/grade），testCases的
+// expectedOutput/output從YDWS-CodingBank canonical正本還原回來（canonical本來就保留
+// 完整答案，沒有被拿掉過）。starterXml仍是空字串——這批課程本來就沒有範例答案可載入，
+// 不受這次改動影響，等於三種模式裡的「模式一」（學習模式＋不可載入範例）。
 
 const course = {
   "code": "114TCPE08",
   "title": "114-新北市國小（競賽模式）",
   "type": "programming",
-  "mode": "contest",
+  "mode": "learning",
   "description": "新北市114學年度資訊科技組參考題目，涵蓋公式計算、清單搜尋與迴圈加總。",
   "tasks": [
     {
@@ -43,51 +44,71 @@ const course = {
       "testCases": [
         {
           "input": "165\n45",
+          "expectedOutput": "16.5 體重過輕",
+          "output": "16.5 體重過輕",
           "score": 10,
           "hidden": false
         },
         {
           "input": "180\n85",
+          "expectedOutput": "26.2 體重過重",
+          "output": "26.2 體重過重",
           "score": 10,
           "hidden": false
         },
         {
           "input": "170\n60",
+          "expectedOutput": "20.8 正常範圍",
+          "output": "20.8 正常範圍",
           "score": 10,
           "hidden": false
         },
         {
           "input": "160\n81",
+          "expectedOutput": "31.6 輕度肥胖",
+          "output": "31.6 輕度肥胖",
           "score": 10,
           "hidden": false
         },
         {
           "input": "150\n85",
+          "expectedOutput": "37.8 中度肥胖",
+          "output": "37.8 中度肥胖",
           "score": 10,
           "hidden": false
         },
         {
           "input": "150\n100",
+          "expectedOutput": "44.4 重度肥胖",
+          "output": "44.4 重度肥胖",
           "score": 10,
           "hidden": false
         },
         {
           "input": "170\n50",
+          "expectedOutput": "17.3 體重過輕",
+          "output": "17.3 體重過輕",
           "score": 10,
           "hidden": false
         },
         {
           "input": "175\n75",
+          "expectedOutput": "24.5 正常範圍",
+          "output": "24.5 正常範圍",
           "score": 10,
           "hidden": false
         },
         {
           "input": "180\n95",
+          "expectedOutput": "29.3 體重過重",
+          "output": "29.3 體重過重",
           "score": 10,
           "hidden": false
         },
         {
           "input": "170\n120",
+          "expectedOutput": "41.5 重度肥胖",
+          "output": "41.5 重度肥胖",
           "score": 10,
           "hidden": false
         }
@@ -162,51 +183,71 @@ const course = {
       "testCases": [
         {
           "input": "8 9 7 9 8 10 7",
+          "expectedOutput": "41",
+          "output": "41",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1.5 2.5 3.5 4.5 5.5 6.5 7.5",
+          "expectedOutput": "22.5",
+          "output": "22.5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10 10 10 10 10 10 10",
+          "expectedOutput": "50",
+          "output": "50",
           "score": 10,
           "hidden": false
         },
         {
           "input": "0 0 0 0 0 0 0",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 5 5 5 5 10 0",
+          "expectedOutput": "25",
+          "output": "25",
           "score": 10,
           "hidden": false
         },
         {
           "input": "9.5 8.5 7.5 9 8 10 6",
+          "expectedOutput": "42.5",
+          "output": "42.5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1 2 3 4 5 6 7",
+          "expectedOutput": "20",
+          "output": "20",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10 9 8 7 6 5 4",
+          "expectedOutput": "35",
+          "output": "35",
           "score": 10,
           "hidden": false
         },
         {
           "input": "100 10 10 10 10 10 1",
+          "expectedOutput": "50",
+          "output": "50",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2.2 3.3 4.4 5.5 6.6 7.7 8.8",
+          "expectedOutput": "27.5",
+          "output": "27.5",
           "score": 10,
           "hidden": false
         }
@@ -278,51 +319,71 @@ const course = {
       "testCases": [
         {
           "input": "7 18 29 31 35",
+          "expectedOutput": "猜中2個號碼獎金500元",
+          "output": "猜中2個號碼獎金500元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1 2 3 4 5",
+          "expectedOutput": "猜中0個號碼獎金0元",
+          "output": "猜中0個號碼獎金0元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7 24 31 42 45",
+          "expectedOutput": "猜中5個號碼獎金100000元",
+          "output": "猜中5個號碼獎金100000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7 24 31 42 1",
+          "expectedOutput": "猜中4個號碼獎金10000元",
+          "output": "猜中4個號碼獎金10000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7 24 31 2 3",
+          "expectedOutput": "猜中3個號碼獎金2000元",
+          "output": "猜中3個號碼獎金2000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7 2 3 4 5",
+          "expectedOutput": "猜中1個號碼獎金200元",
+          "output": "猜中1個號碼獎金200元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "56 63 78 80 99",
+          "expectedOutput": "猜中5個號碼獎金100000元",
+          "output": "猜中5個號碼獎金100000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "56 63 78 80 1",
+          "expectedOutput": "猜中4個號碼獎金10000元",
+          "output": "猜中4個號碼獎金10000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "56 63 78 2 3",
+          "expectedOutput": "猜中3個號碼獎金2000元",
+          "output": "猜中3個號碼獎金2000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "99 2 3 4 5",
+          "expectedOutput": "猜中1個號碼獎金200元",
+          "output": "猜中1個號碼獎金200元",
           "score": 10,
           "hidden": false
         }
@@ -395,51 +456,71 @@ const course = {
       "testCases": [
         {
           "input": "10\n20",
+          "expectedOutput": "75",
+          "output": "75",
           "score": 10,
           "hidden": false
         },
         {
           "input": "31\n39",
+          "expectedOutput": "175",
+          "output": "175",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1\n10",
+          "expectedOutput": "25",
+          "output": "25",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10\n10",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "11\n11",
+          "expectedOutput": "11",
+          "output": "11",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1\n5",
+          "expectedOutput": "9",
+          "output": "9",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\n8",
+          "expectedOutput": "15",
+          "output": "15",
           "score": 10,
           "hidden": false
         },
         {
           "input": "100\n200",
+          "expectedOutput": "7500",
+          "output": "7500",
           "score": 10,
           "hidden": false
         },
         {
           "input": "21\n25",
+          "expectedOutput": "69",
+          "output": "69",
           "score": 10,
           "hidden": false
         },
         {
           "input": "0\n9",
+          "expectedOutput": "25",
+          "output": "25",
           "score": 10,
           "hidden": false
         }

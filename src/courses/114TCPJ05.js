@@ -1,15 +1,16 @@
-// 競賽模式版本，2026-08-13由 114JHsinchuC.js 複製並轉換而來（來源課程仍以學習模式繼續上架，互不影響）。
-// 轉換規則：mode改為'contest'、每題starterXml清空（競賽模式不提供範例答案可載入）、
-// 課程代碼/題目id/courseCode/courseName改用新代碼、title加註「（競賽模式）」。
-// 正確答案（testCases[].expectedOutput/output）只在canonical（本檔）與YDWS-CodingBank這份留存；
-// BlocklyYdws/blockly-lab兩平台的公開JS檔已移除，改由各自Worker（workers/score-grader/src/
-// answerKeys.json，私密、不進git）比對評分，詳見workers/score-grader/README.md。
+// blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
+// 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
+// score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
+// 改學習模式後系統評分改回本機JS直接比對（不再打Worker的/grade），testCases的
+// expectedOutput/output從YDWS-CodingBank canonical正本還原回來（canonical本來就保留
+// 完整答案，沒有被拿掉過）。starterXml仍是空字串——這批課程本來就沒有範例答案可載入，
+// 不受這次改動影響，等於三種模式裡的「模式一」（學習模式＋不可載入範例）。
 
 const course = {
   "code": "114TCPJ05",
   "title": "114-新竹縣國中（競賽模式）",
   "type": "programming",
-  "mode": "contest",
+  "mode": "learning",
   "description": "新竹縣114學年度科技教育創意實作競賽-國中資訊科技組題庫",
   "source": {
     "project": "YDWS-CodingBank",
@@ -55,26 +56,36 @@ const course = {
       "testCases": [
         {
           "input": "5\n7 7 9 10 10",
+          "expectedOutput": "108",
+          "output": "108",
           "score": 20,
           "hidden": false
         },
         {
           "input": "7\n5 3 3 4 10 0 3",
+          "expectedOutput": "65",
+          "output": "65",
           "score": 20,
           "hidden": false
         },
         {
           "input": "5\n10 10 10 10 10",
+          "expectedOutput": "130",
+          "output": "130",
           "score": 20,
           "hidden": false
         },
         {
           "input": "6\n1 2 3 4 5 6",
+          "expectedOutput": "61",
+          "output": "61",
           "score": 20,
           "hidden": false
         },
         {
           "input": "3\n10 9 10",
+          "expectedOutput": "49",
+          "output": "49",
           "score": 20,
           "hidden": false
         }
@@ -149,26 +160,36 @@ const course = {
       "testCases": [
         {
           "input": "4\n4 7 1 9\n4 9 7 8",
+          "expectedOutput": "1A2B",
+          "output": "1A2B",
           "score": 20,
           "hidden": false
         },
         {
           "input": "3\n3 5 8\n5 3 8",
+          "expectedOutput": "1A2B",
+          "output": "1A2B",
           "score": 20,
           "hidden": false
         },
         {
           "input": "4\n1 2 3 4\n1 2 3 4",
+          "expectedOutput": "4A0B",
+          "output": "4A0B",
           "score": 20,
           "hidden": false
         },
         {
           "input": "4\n1 2 3 4\n4 3 2 1",
+          "expectedOutput": "0A4B",
+          "output": "0A4B",
           "score": 20,
           "hidden": false
         },
         {
           "input": "5\n1 2 3 4 5\n5 4 3 2 1",
+          "expectedOutput": "1A4B",
+          "output": "1A4B",
           "score": 20,
           "hidden": false
         }
@@ -242,26 +263,36 @@ const course = {
       "testCases": [
         {
           "input": "5\n火 2 水 1 火 3 電 2 水 1",
+          "expectedOutput": "火5 水2 電2",
+          "output": "火5 水2 電2",
           "score": 20,
           "hidden": false
         },
         {
           "input": "4\n草 1 草 2 毒 3 草 4",
+          "expectedOutput": "草7 毒3",
+          "output": "草7 毒3",
           "score": 20,
           "hidden": false
         },
         {
           "input": "3\n水 5 水 5 水 5",
+          "expectedOutput": "水15",
+          "output": "水15",
           "score": 20,
           "hidden": false
         },
         {
           "input": "6\n火 1 水 2 電 3 草 4 毒 5 火 6",
+          "expectedOutput": "火7 水2 電3 草4 毒5",
+          "output": "火7 水2 電3 草4 毒5",
           "score": 20,
           "hidden": false
         },
         {
           "input": "2\n電 10 火 20",
+          "expectedOutput": "電10 火20",
+          "output": "電10 火20",
           "score": 20,
           "hidden": false
         }
@@ -335,26 +366,36 @@ const course = {
       "testCases": [
         {
           "input": "5\nU2 D3 D4 L5 R3",
+          "expectedOutput": "(3,0)",
+          "output": "(3,0)",
           "score": 20,
           "hidden": false
         },
         {
           "input": "4\nR3 L2 U3 D1",
+          "expectedOutput": "(1,2)",
+          "output": "(1,2)",
           "score": 20,
           "hidden": false
         },
         {
           "input": "3\nR15 U15 D3",
+          "expectedOutput": "(10,7)",
+          "output": "(10,7)",
           "score": 20,
           "hidden": false
         },
         {
           "input": "2\nU5 U10",
+          "expectedOutput": "(0,10)",
+          "output": "(0,10)",
           "score": 20,
           "hidden": false
         },
         {
           "input": "4\nR5 D2 L10 U1",
+          "expectedOutput": "(0,1)",
+          "output": "(0,1)",
           "score": 20,
           "hidden": false
         }
@@ -429,26 +470,36 @@ const course = {
       "testCases": [
         {
           "input": "5\n一甲 85 二乙 92 三丙 78 四丁 95 五戊 88",
+          "expectedOutput": "四丁 二乙 五戊",
+          "output": "四丁 二乙 五戊",
           "score": 20,
           "hidden": false
         },
         {
           "input": "3\n一甲 70 二乙 90 三丙 80",
+          "expectedOutput": "二乙 三丙",
+          "output": "二乙 三丙",
           "score": 20,
           "hidden": false
         },
         {
           "input": "4\nA 10 B 40 C 30 D 20",
+          "expectedOutput": "B C",
+          "output": "B C",
           "score": 20,
           "hidden": false
         },
         {
           "input": "6\nA 1 B 2 C 3 D 4 E 5 F 6",
+          "expectedOutput": "F E D",
+          "output": "F E D",
           "score": 20,
           "hidden": false
         },
         {
           "input": "3\nA 50 B 50 C 10",
+          "expectedOutput": "A B",
+          "output": "A B",
           "score": 20,
           "hidden": false
         }
@@ -522,31 +573,43 @@ const course = {
       "testCases": [
         {
           "input": "4\n2",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 17,
           "hidden": false
         },
         {
           "input": "4\n3",
+          "expectedOutput": "7",
+          "output": "7",
           "score": 17,
           "hidden": false
         },
         {
           "input": "1\n1",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 17,
           "hidden": false
         },
         {
           "input": "5\n1",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 17,
           "hidden": false
         },
         {
           "input": "6\n2",
+          "expectedOutput": "13",
+          "output": "13",
           "score": 17,
           "hidden": false
         },
         {
           "input": "10\n2",
+          "expectedOutput": "89",
+          "output": "89",
           "score": 17,
           "hidden": false
         }

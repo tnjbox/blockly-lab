@@ -137,6 +137,13 @@ const outputArea = document.getElementById('outputArea');
 const SCORE_GRADER_WORKER_URL = 'https://blockly-lab-score-grader.tnjboxing.workers.dev';
 const STUDENT_PROFILE_STORAGE_KEY = 'blocklyLabStudentProfileV1';
 
+// 2026-08-13使用者決定：blockly-lab要公開分享給外校老師使用，成績上傳（送進本帳號的
+// Google Sheet）對外校學生沒有意義，且blockly-lab跟BlocklyYdws的score-grader Worker
+// 是同一個Cloudflare帳號、免費額度共用，全平台停用這個功能以避免外部流量吃掉額度。
+// 按鈕維持原本顯示/啟用邏輯（updateSubmitScoreVisibility()完全沒動），只有按下去
+// 真正送出這一步被擋掉，不分課程模式。要恢復功能只要把這個常數改回true。
+const SCORE_SUBMISSION_ENABLED = false;
+
 const btnConnectSmartRing = document.getElementById('btnConnectSmartRing');
 const btnDisconnectSmartRing = document.getElementById('btnDisconnectSmartRing');
 const btnToggleSimulator = document.getElementById('btnToggleSimulator');
@@ -2134,6 +2141,8 @@ function renderScoreUploadResult(payload, { status = 'preview', message = '' } =
 }
 
 async function submitScore() {
+  if (!SCORE_SUBMISSION_ENABLED) return;
+
   const profile = getStudentProfile();
 
   if (!isProgrammingProblemTask(currentTask, currentCourseGroup)) {

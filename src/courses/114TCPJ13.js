@@ -1,15 +1,16 @@
-// 競賽模式版本，2026-08-13由 114JTaitung.js 複製並轉換而來（來源課程仍以學習模式繼續上架，互不影響）。
-// 轉換規則：mode改為'contest'、每題starterXml清空（競賽模式不提供範例答案可載入）、
-// 課程代碼/題目id/courseCode/courseName改用新代碼、title加註「（競賽模式）」。
-// 正確答案（testCases[].expectedOutput/output）只在canonical（本檔）與YDWS-CodingBank這份留存；
-// BlocklyYdws/blockly-lab兩平台的公開JS檔已移除，改由各自Worker（workers/score-grader/src/
-// answerKeys.json，私密、不進git）比對評分，詳見workers/score-grader/README.md。
+// blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
+// 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
+// score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
+// 改學習模式後系統評分改回本機JS直接比對（不再打Worker的/grade），testCases的
+// expectedOutput/output從YDWS-CodingBank canonical正本還原回來（canonical本來就保留
+// 完整答案，沒有被拿掉過）。starterXml仍是空字串——這批課程本來就沒有範例答案可載入，
+// 不受這次改動影響，等於三種模式裡的「模式一」（學習模式＋不可載入範例）。
 
 const course = {
   "code": "114TCPJ13",
   "title": "114-臺東縣國中（競賽模式）",
   "type": "programming",
-  "mode": "contest",
+  "mode": "learning",
   "description": "臺東縣114學年度國中組資訊科技競賽練習題，涵蓋分段計費、清單搜尋、公式計算與不定長度輸入處理。",
   "tasks": [
     {
@@ -48,51 +49,71 @@ const course = {
       "testCases": [
         {
           "input": "1\n9\n30",
+          "expectedOutput": "10",
+          "output": "10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\n11\n15",
+          "expectedOutput": "20",
+          "output": "20",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10\n15\n40",
+          "expectedOutput": "10",
+          "output": "10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "15\n1\n7",
+          "expectedOutput": "10",
+          "output": "10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "9\n10\n5",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1\n15\n10",
+          "expectedOutput": "10",
+          "output": "10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1\n10\n20",
+          "expectedOutput": "10",
+          "output": "10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10\n1\n12",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "11\n15\n11",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "12\n8\n35",
+          "expectedOutput": "20",
+          "output": "20",
           "score": 10,
           "hidden": false
         }
@@ -165,51 +186,71 @@ const course = {
       "testCases": [
         {
           "input": "10 18 29 31 35 36",
+          "expectedOutput": "猜中6個號碼,獎金100000元",
+          "output": "猜中6個號碼,獎金100000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1 2 3 4 5 6",
+          "expectedOutput": "猜中0個號碼,獎金0元",
+          "output": "猜中0個號碼,獎金0元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10 18 29 31 35 45",
+          "expectedOutput": "猜中5個號碼,獎金10000元",
+          "output": "猜中5個號碼,獎金10000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10 18 29 40 41 42",
+          "expectedOutput": "猜中3個號碼,獎金100元",
+          "output": "猜中3個號碼,獎金100元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10 18 29 31 38 49",
+          "expectedOutput": "猜中4個號碼,獎金1000元",
+          "output": "猜中4個號碼,獎金1000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10 18 40 41 42 43",
+          "expectedOutput": "猜中2個號碼,獎金0元",
+          "output": "猜中2個號碼,獎金0元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10 40 41 42 43 44",
+          "expectedOutput": "猜中1個號碼,獎金0元",
+          "output": "猜中1個號碼,獎金0元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "18 29 31 35 36 40",
+          "expectedOutput": "猜中5個號碼,獎金10000元",
+          "output": "猜中5個號碼,獎金10000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "29 31 35 36 40 41",
+          "expectedOutput": "猜中4個號碼,獎金1000元",
+          "output": "猜中4個號碼,獎金1000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "31 35 36 40 41 42",
+          "expectedOutput": "猜中3個號碼,獎金100元",
+          "output": "猜中3個號碼,獎金100元",
           "score": 10,
           "hidden": false
         }
@@ -282,51 +323,71 @@ const course = {
       "testCases": [
         {
           "input": "150\n35",
+          "expectedOutput": "1195 極低能量",
+          "output": "1195 極低能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "160\n45",
+          "expectedOutput": "1309 較低能量",
+          "output": "1309 較低能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "165\n50",
+          "expectedOutput": "1366 較低能量",
+          "output": "1366 較低能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "170\n55",
+          "expectedOutput": "1423 較低能量",
+          "output": "1423 較低能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "168\n68",
+          "expectedOutput": "1544 標準能量",
+          "output": "1544 標準能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "180\n85",
+          "expectedOutput": "1729 標準能量",
+          "output": "1729 標準能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "180\n95",
+          "expectedOutput": "1825 較高能量",
+          "output": "1825 較高能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "190\n100",
+          "expectedOutput": "1891 較高能量",
+          "output": "1891 較高能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "200\n120",
+          "expectedOutput": "2101 極高能量",
+          "output": "2101 極高能量",
           "score": 10,
           "hidden": false
         },
         {
           "input": "175\n70",
+          "expectedOutput": "1576 標準能量",
+          "output": "1576 標準能量",
           "score": 10,
           "hidden": false
         }
@@ -401,51 +462,71 @@ const course = {
       "testCases": [
         {
           "input": "5000 3 5 -1",
+          "expectedOutput": "餘額不足,請另外加值5880元",
+          "output": "餘額不足,請另外加值5880元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10000 1 4 -1",
+          "expectedOutput": "結帳成功,餘額剩3920元",
+          "output": "結帳成功,餘額剩3920元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "8000 6 7 3 -1",
+          "expectedOutput": "餘額不足,請另外加值970元",
+          "output": "餘額不足,請另外加值970元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "20000 5 1 6 -1",
+          "expectedOutput": "結帳成功,餘額剩6130元",
+          "output": "結帳成功,餘額剩6130元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10000 1 4 -1",
+          "expectedOutput": "結帳成功,餘額剩3920元",
+          "output": "結帳成功,餘額剩3920元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5000 -1",
+          "expectedOutput": "結帳成功,餘額剩5000元",
+          "output": "結帳成功,餘額剩5000元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10000 2 -1",
+          "expectedOutput": "結帳成功,餘額剩2010元",
+          "output": "結帳成功,餘額剩2010元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1000 7 -1",
+          "expectedOutput": "餘額不足,請另外加值490元",
+          "output": "餘額不足,請另外加值490元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "30000 2 2 2 -1",
+          "expectedOutput": "結帳成功,餘額剩6030元",
+          "output": "結帳成功,餘額剩6030元",
           "score": 10,
           "hidden": false
         },
         {
           "input": "0 4 -1",
+          "expectedOutput": "餘額不足,請另外加值2590元",
+          "output": "餘額不足,請另外加值2590元",
           "score": 10,
           "hidden": false
         }

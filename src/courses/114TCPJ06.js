@@ -1,15 +1,16 @@
-// 競賽模式版本，2026-08-13由 114JHualien.js 複製並轉換而來（來源課程仍以學習模式繼續上架，互不影響）。
-// 轉換規則：mode改為'contest'、每題starterXml清空（競賽模式不提供範例答案可載入）、
-// 課程代碼/題目id/courseCode/courseName改用新代碼、title加註「（競賽模式）」。
-// 正確答案（testCases[].expectedOutput/output）只在canonical（本檔）與YDWS-CodingBank這份留存；
-// BlocklyYdws/blockly-lab兩平台的公開JS檔已移除，改由各自Worker（workers/score-grader/src/
-// answerKeys.json，私密、不進git）比對評分，詳見workers/score-grader/README.md。
+// blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
+// 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
+// score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
+// 改學習模式後系統評分改回本機JS直接比對（不再打Worker的/grade），testCases的
+// expectedOutput/output從YDWS-CodingBank canonical正本還原回來（canonical本來就保留
+// 完整答案，沒有被拿掉過）。starterXml仍是空字串——這批課程本來就沒有範例答案可載入，
+// 不受這次改動影響，等於三種模式裡的「模式一」（學習模式＋不可載入範例）。
 
 const course = {
   "code": "114TCPJ06",
   "title": "114-花蓮縣國中（競賽模式）",
   "type": "programming",
-  "mode": "contest",
+  "mode": "learning",
   "description": "花蓮縣114學年度國中組資訊科技競賽練習題，涵蓋整數除法、連續段追蹤與經典區間排程貪婪演算法。",
   "tasks": [
     {
@@ -43,51 +44,71 @@ const course = {
       "testCases": [
         {
           "input": "6 15 20",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 50 20",
+          "expectedOutput": "10",
+          "output": "10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "6 0 15",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 45 30",
+          "expectedOutput": "15",
+          "output": "15",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7 0 20",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7 10 45",
+          "expectedOutput": "20",
+          "output": "20",
           "score": 10,
           "hidden": false
         },
         {
           "input": "8 30 50",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "8 31 50",
+          "expectedOutput": "49",
+          "output": "49",
           "score": 10,
           "hidden": false
         },
         {
           "input": "12 0 120",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "11 59 120",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 10,
           "hidden": false
         }
@@ -162,51 +183,71 @@ const course = {
       "testCases": [
         {
           "input": "5\n60 65 70 68 72",
+          "expectedOutput": "2",
+          "output": "2",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\n50 60 55 56 57",
+          "expectedOutput": "2",
+          "output": "2",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n100 90 90 80",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "6\n10 20 30 40 50 60",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "10\n80 85 90 88 89 90 95 95 96 98",
+          "expectedOutput": "3",
+          "output": "3",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1\n100",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\n10 10 10",
+          "expectedOutput": "0",
+          "output": "0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7\n1 2 1 2 1 2 1",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "8\n1 2 3 4 5 4 5 6",
+          "expectedOutput": "4",
+          "output": "4",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\n0 0 1 1 2",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 10,
           "hidden": false
         }
@@ -278,51 +319,71 @@ const course = {
       "testCases": [
         {
           "input": "WWWWWWWWWWWWBBWW",
+          "expectedOutput": "W 12",
+          "output": "W 12",
           "score": 10,
           "hidden": false
         },
         {
           "input": "AAABCCCC",
+          "expectedOutput": "C 4",
+          "output": "C 4",
           "score": 10,
           "hidden": false
         },
         {
           "input": "ABCDE",
+          "expectedOutput": "A 1",
+          "output": "A 1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "AABBCC",
+          "expectedOutput": "A 2",
+          "output": "A 2",
           "score": 10,
           "hidden": false
         },
         {
           "input": "ZZZZZZZZZZ",
+          "expectedOutput": "Z 10",
+          "output": "Z 10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "ABBBBAAACC",
+          "expectedOutput": "B 4",
+          "output": "B 4",
           "score": 10,
           "hidden": false
         },
         {
           "input": "XYYYZZZZX",
+          "expectedOutput": "Z 4",
+          "output": "Z 4",
           "score": 10,
           "hidden": false
         },
         {
           "input": "PQQQQQQRRRRRR",
+          "expectedOutput": "Q 6",
+          "output": "Q 6",
           "score": 10,
           "hidden": false
         },
         {
           "input": "A",
+          "expectedOutput": "A 1",
+          "output": "A 1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "MMNNNOOOOPPPPPPPPP",
+          "expectedOutput": "P 9",
+          "output": "P 9",
           "score": 10,
           "hidden": false
         }
@@ -394,51 +455,71 @@ const course = {
       "testCases": [
         {
           "input": "4\n1 3 2 4 3 5 5 7",
+          "expectedOutput": "3",
+          "output": "3",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\n1 10 10 20 20 30",
+          "expectedOutput": "3",
+          "output": "3",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n0 50 1 5 5 10 10 15",
+          "expectedOutput": "3",
+          "output": "3",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\n5 10 5 10 5 10 5 10 5 10",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "6\n10 15 2 4 6 8 1 9 4 5 15 20",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1\n0 100",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\n1 2 2 3 3 4 4 5 5 6",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n1 5 2 6 3 7 4 8",
+          "expectedOutput": "1",
+          "output": "1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7\n1 3 2 5 4 6 5 8 7 9 8 10 9 11",
+          "expectedOutput": "4",
+          "output": "4",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\n1 4 3 5 0 6 4 7 3 8",
+          "expectedOutput": "2",
+          "output": "2",
           "score": 10,
           "hidden": false
         }

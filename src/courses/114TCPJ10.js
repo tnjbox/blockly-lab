@@ -1,15 +1,16 @@
-// 競賽模式版本，2026-08-13由 114JTaichung.js 複製並轉換而來（來源課程仍以學習模式繼續上架，互不影響）。
-// 轉換規則：mode改為'contest'、每題starterXml清空（競賽模式不提供範例答案可載入）、
-// 課程代碼/題目id/courseCode/courseName改用新代碼、title加註「（競賽模式）」。
-// 正確答案（testCases[].expectedOutput/output）只在canonical（本檔）與YDWS-CodingBank這份留存；
-// BlocklyYdws/blockly-lab兩平台的公開JS檔已移除，改由各自Worker（workers/score-grader/src/
-// answerKeys.json，私密、不進git）比對評分，詳見workers/score-grader/README.md。
+// blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
+// 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
+// score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
+// 改學習模式後系統評分改回本機JS直接比對（不再打Worker的/grade），testCases的
+// expectedOutput/output從YDWS-CodingBank canonical正本還原回來（canonical本來就保留
+// 完整答案，沒有被拿掉過）。starterXml仍是空字串——這批課程本來就沒有範例答案可載入，
+// 不受這次改動影響，等於三種模式裡的「模式一」（學習模式＋不可載入範例）。
 
 const course = {
   "code": "114TCPJ10",
   "title": "114-臺中市國中（競賽模式）",
   "type": "programming",
-  "mode": "contest",
+  "mode": "learning",
   "description": "臺中市114學年度國中組資訊科技教育競賽題庫",
   "source": {
     "project": "YDWS-CodingBank",
@@ -55,26 +56,36 @@ const course = {
       "testCases": [
         {
           "input": "6\n40 80 67 34 55 99",
+          "expectedOutput": "幸運 67\n倒楣 55",
+          "output": "幸運 67\n倒楣 55",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\n34 1",
+          "expectedOutput": "倒楣 34",
+          "output": "倒楣 34",
           "score": 10,
           "hidden": false
         },
         {
           "input": "1\n66",
+          "expectedOutput": "幸運 66",
+          "output": "幸運 66",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\n65 64 90",
+          "expectedOutput": "幸運 65\n倒楣 64",
+          "output": "幸運 65\n倒楣 64",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n0 100 64 65",
+          "expectedOutput": "幸運 65\n倒楣 64",
+          "output": "幸運 65\n倒楣 64",
           "score": 10,
           "hidden": false
         }
@@ -145,21 +156,29 @@ const course = {
       "testCases": [
         {
           "input": "4\n95 84 18 16 25 76 1 7 125687 99 24 16 120 14 8 0",
+          "expectedOutput": "95 18\n125687 24",
+          "output": "95 18\n125687 24",
           "score": 10,
           "hidden": false
         },
         {
           "input": "8\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64",
+          "expectedOutput": "10 12 14 16\n26 28 30 32\n42 44 46 48\n58 60 62 64",
+          "output": "10 12 14 16\n26 28 30 32\n42 44 46 48\n58 60 62 64",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\n1 5 3 2",
+          "expectedOutput": "5",
+          "output": "5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16",
+          "expectedOutput": "6 8\n14 16",
+          "output": "6 8\n14 16",
           "score": 10,
           "hidden": false
         }
@@ -229,21 +248,29 @@ const course = {
       "testCases": [
         {
           "input": "5\nA B C D E\n5 6 8 8 12\n20 10 30 80 50",
+          "expectedOutput": "B A C E D\n6 5 8 12 8",
+          "output": "B A C E D\n6 5 8 12 8",
           "score": 10,
           "hidden": false
         },
         {
           "input": "6\nA B C D E F\n10 18 11 11 14 6\n28 34 60 48 20 25",
+          "expectedOutput": "E F A B D C\n14 6 10 18 11 11",
+          "output": "E F A B D C\n14 6 10 18 11 11",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\nA B C D\n8 9 10 11\n30 30 28 32",
+          "expectedOutput": "C A B D\n10 8 9 11",
+          "output": "C A B D\n10 8 9 11",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\nX Y Z\n7 3 9\n15 15 5",
+          "expectedOutput": "Z X Y\n9 7 3",
+          "output": "Z X Y\n9 7 3",
           "score": 10,
           "hidden": false
         }
@@ -317,21 +344,29 @@ const course = {
       "testCases": [
         {
           "input": "6\nA B C D E F",
+          "expectedOutput": "179",
+          "output": "179",
           "score": 12,
           "hidden": false
         },
         {
           "input": "4\nA B C C",
+          "expectedOutput": "115",
+          "output": "115",
           "score": 13,
           "hidden": false
         },
         {
           "input": "7\nC C C C C C C",
+          "expectedOutput": "庫存不足",
+          "output": "庫存不足",
           "score": 12,
           "hidden": false
         },
         {
           "input": "10\nA A B B C C D D E E",
+          "expectedOutput": "262",
+          "output": "262",
           "score": 13,
           "hidden": false
         }
@@ -407,21 +442,29 @@ const course = {
       "testCases": [
         {
           "input": "179\n500\n3 3 5 5 18",
+          "expectedOutput": "3 0 2 0 1",
+          "output": "3 0 2 0 1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "220\n220\n3 3 5 5 18",
+          "expectedOutput": "不須找零",
+          "output": "不須找零",
           "score": 10,
           "hidden": false
         },
         {
           "input": "262\n1000\n3 3 5 5 18",
+          "expectedOutput": "無法找零",
+          "output": "無法找零",
           "score": 10,
           "hidden": false
         },
         {
           "input": "241\n300\n5 0 6 0 8",
+          "expectedOutput": "無法找零",
+          "output": "無法找零",
           "score": 10,
           "hidden": false
         }

@@ -1,15 +1,16 @@
-// 競賽模式版本，2026-08-13由 114JTaipei.js 複製並轉換而來（來源課程仍以學習模式繼續上架，互不影響）。
-// 轉換規則：mode改為'contest'、每題starterXml清空（競賽模式不提供範例答案可載入）、
-// 課程代碼/題目id/courseCode/courseName改用新代碼、title加註「（競賽模式）」。
-// 正確答案（testCases[].expectedOutput/output）只在canonical（本檔）與YDWS-CodingBank這份留存；
-// BlocklyYdws/blockly-lab兩平台的公開JS檔已移除，改由各自Worker（workers/score-grader/src/
-// answerKeys.json，私密、不進git）比對評分，詳見workers/score-grader/README.md。
+// blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
+// 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
+// score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
+// 改學習模式後系統評分改回本機JS直接比對（不再打Worker的/grade），testCases的
+// expectedOutput/output從YDWS-CodingBank canonical正本還原回來（canonical本來就保留
+// 完整答案，沒有被拿掉過）。starterXml仍是空字串——這批課程本來就沒有範例答案可載入，
+// 不受這次改動影響，等於三種模式裡的「模式一」（學習模式＋不可載入範例）。
 
 const course = {
   "code": "114TCPJ12",
   "title": "114-臺北市國中（競賽模式）",
   "type": "programming",
-  "mode": "contest",
+  "mode": "learning",
   "description": "臺北市114學年度國中組資訊科技競賽練習題，涵蓋經典圖論演算法(BFS/Union-Find/關鍵路徑法)、多鍵排序與幾何窮舉，是全部16個縣市題組中演算法難度最高的一組。",
   "tasks": [
     {
@@ -43,51 +44,71 @@ const course = {
       "testCases": [
         {
           "input": "AAAB",
+          "expectedOutput": "A3B1",
+          "output": "A3B1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "A",
+          "expectedOutput": "A1",
+          "output": "A1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "BB",
+          "expectedOutput": "B2",
+          "output": "B2",
           "score": 10,
           "hidden": false
         },
         {
           "input": "XY",
+          "expectedOutput": "X1Y1",
+          "output": "X1Y1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "ABABABABAB",
+          "expectedOutput": "A1B1A1B1A1B1A1B1A1B1",
+          "output": "A1B1A1B1A1B1A1B1A1B1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "ZZZZZZZZZZZZZZZZZZZZ",
+          "expectedOutput": "Z20",
+          "output": "Z20",
           "score": 10,
           "hidden": false
         },
         {
           "input": "AABBCC",
+          "expectedOutput": "A2B2C2",
+          "output": "A2B2C2",
           "score": 10,
           "hidden": false
         },
         {
           "input": "ABCDEF",
+          "expectedOutput": "A1B1C1D1E1F1",
+          "output": "A1B1C1D1E1F1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "A11B",
+          "expectedOutput": "A112B1",
+          "output": "A112B1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "XXXXYYYYZZZZ",
+          "expectedOutput": "X4Y4Z4",
+          "output": "X4Y4Z4",
           "score": 10,
           "hidden": false
         }
@@ -154,51 +175,71 @@ const course = {
       "testCases": [
         {
           "input": "1\nID359 100 5",
+          "expectedOutput": "ID359 100 5",
+          "output": "ID359 100 5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\nID380 50 1 ID313 100 2",
+          "expectedOutput": "ID313 100 2\nID380 50 1",
+          "output": "ID313 100 2\nID380 50 1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\nID951 100 1 ID318 100 5",
+          "expectedOutput": "ID318 100 5\nID951 100 1",
+          "output": "ID318 100 5\nID951 100 1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\nID237 100 1 ID139 100 1",
+          "expectedOutput": "ID139 100 1\nID237 100 1",
+          "output": "ID139 100 1\nID237 100 1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\nID221 10 10 ID708 10 10 ID007 10 10 ID741 10 10 ID479 10 10",
+          "expectedOutput": "ID007 10 10\nID221 10 10\nID479 10 10\nID708 10 10\nID741 10 10",
+          "output": "ID007 10 10\nID221 10 10\nID479 10 10\nID708 10 10\nID741 10 10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\nID111 50 50 ID222 50 50 ID333 50 50",
+          "expectedOutput": "ID111 50 50\nID222 50 50\nID333 50 50",
+          "output": "ID111 50 50\nID222 50 50\nID333 50 50",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\nID333 50 50 ID222 50 50 ID111 50 50",
+          "expectedOutput": "ID111 50 50\nID222 50 50\nID333 50 50",
+          "output": "ID111 50 50\nID222 50 50\nID333 50 50",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\nID001 10 1 ID002 20 1 ID003 30 1 ID004 40 1",
+          "expectedOutput": "ID004 40 1\nID003 30 1\nID002 20 1\nID001 10 1",
+          "output": "ID004 40 1\nID003 30 1\nID002 20 1\nID001 10 1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\nID001 10 10 ID002 10 20 ID003 10 30 ID004 10 40",
+          "expectedOutput": "ID004 10 40\nID003 10 30\nID002 10 20\nID001 10 10",
+          "output": "ID004 10 40\nID003 10 30\nID002 10 20\nID001 10 10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\nID100 100 100 ID200 50 200 ID300 200 50 ID400 100 100 ID500 200 50",
+          "expectedOutput": "ID300 200 50\nID500 200 50\nID100 100 100\nID400 100 100\nID200 50 200",
+          "output": "ID300 200 50\nID500 200 50\nID100 100 100\nID400 100 100\nID200 50 200",
           "score": 10,
           "hidden": false
         }
@@ -270,51 +311,71 @@ const course = {
       "testCases": [
         {
           "input": "1 0",
+          "expectedOutput": "0:0",
+          "output": "0:0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2 1\n0 1",
+          "expectedOutput": "0:0 1:1",
+          "output": "0:0 1:1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2 0",
+          "expectedOutput": "0:0",
+          "output": "0:0",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4 3\n0 1 1 2 2 3",
+          "expectedOutput": "0:0 1:1 2:2 3:3",
+          "output": "0:0 1:1 2:2 3:3",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 4\n0 1 0 2 0 3 0 4",
+          "expectedOutput": "0:0 1:1 2:1 3:1 4:1",
+          "output": "0:0 1:1 2:1 3:1 4:1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3 3\n0 1 1 2 2 0",
+          "expectedOutput": "0:0 1:1 2:1",
+          "output": "0:0 1:1 2:1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 4\n0 1 1 2 0 3 3 4",
+          "expectedOutput": "0:0 1:1 2:2 3:1 4:2",
+          "output": "0:0 1:1 2:2 3:1 4:2",
           "score": 10,
           "hidden": false
         },
         {
           "input": "6 5\n0 1 1 2 2 3 3 4 4 5",
+          "expectedOutput": "0:0 1:1 2:2 3:3 4:4 5:5",
+          "output": "0:0 1:1 2:2 3:3 4:4 5:5",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4 2\n0 1 2 3",
+          "expectedOutput": "0:0 1:1",
+          "output": "0:0 1:1",
           "score": 10,
           "hidden": false
         },
         {
           "input": "7 6\n0 1 0 2 1 3 1 4 2 5 2 6",
+          "expectedOutput": "0:0 1:1 2:1 3:2 4:2 5:2 6:2",
+          "output": "0:0 1:1 2:1 3:2 4:2 5:2 6:2",
           "score": 10,
           "hidden": false
         }
@@ -383,51 +444,71 @@ const course = {
       "testCases": [
         {
           "input": "2 1\nQUERY 0 1",
+          "expectedOutput": "NO",
+          "output": "NO",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2 2\nCONNECT 0 1 QUERY 0 1",
+          "expectedOutput": "YES",
+          "output": "YES",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 4\nCONNECT 0 1 CONNECT 1 2 CONNECT 2 3 QUERY 0 3",
+          "expectedOutput": "YES",
+          "output": "YES",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4 5\nCONNECT 0 1 CONNECT 2 3 QUERY 0 2 QUERY 1 0 QUERY 3 2",
+          "expectedOutput": "NO\nYES\nYES",
+          "output": "NO\nYES\nYES",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3 2\nCONNECT 0 0 QUERY 0 0",
+          "expectedOutput": "YES",
+          "output": "YES",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4 4\nQUERY 0 1 QUERY 1 2 QUERY 2 3 QUERY 0 3",
+          "expectedOutput": "NO\nNO\nNO\nNO",
+          "output": "NO\nNO\nNO\nNO",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3 4\nCONNECT 0 1 CONNECT 1 2 QUERY 0 2 QUERY 2 0",
+          "expectedOutput": "YES\nYES",
+          "output": "YES\nYES",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 6\nCONNECT 0 1 CONNECT 3 4 QUERY 0 4 CONNECT 1 3 QUERY 0 4 QUERY 1 4",
+          "expectedOutput": "NO\nYES\nYES",
+          "output": "NO\nYES\nYES",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2 3\nQUERY 0 1 CONNECT 1 0 QUERY 0 1",
+          "expectedOutput": "NO\nYES",
+          "output": "NO\nYES",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 5\nCONNECT 0 1 CONNECT 0 2 CONNECT 0 3 CONNECT 0 4 QUERY 1 4",
+          "expectedOutput": "YES",
+          "output": "YES",
           "score": 10,
           "hidden": false
         }
@@ -500,51 +581,71 @@ const course = {
       "testCases": [
         {
           "input": "3\n0 0 3 4 1 1",
+          "expectedOutput": "1.4142",
+          "output": "1.4142",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\n0 0 10 10 20 20",
+          "expectedOutput": "14.1421",
+          "output": "14.1421",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n0 0 0 1 1 0 1 1",
+          "expectedOutput": "1.0000",
+          "output": "1.0000",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\n1.5 1.5 1.5 1.5",
+          "expectedOutput": "0.0000",
+          "output": "0.0000",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\n0 0 1 1 2 2 0.1 0.1 5 5",
+          "expectedOutput": "0.1414",
+          "output": "0.1414",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n0 0 0 5 5 0 5 5",
+          "expectedOutput": "5.0000",
+          "output": "5.0000",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3\n100 100 100 101 200 200",
+          "expectedOutput": "1.0000",
+          "output": "1.0000",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2\n0 0 10000 10000",
+          "expectedOutput": "14142.1356",
+          "output": "14142.1356",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4\n1 1 2 2 3 3 4 4",
+          "expectedOutput": "1.4142",
+          "output": "1.4142",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5\n10 10 20 20 30 30 40 40 40 40.5",
+          "expectedOutput": "0.5000",
+          "output": "0.5000",
           "score": 10,
           "hidden": false
         }
@@ -619,51 +720,71 @@ const course = {
       "testCases": [
         {
           "input": "1 0\n10",
+          "expectedOutput": "10",
+          "output": "10",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2 1\n10 20\n0 1",
+          "expectedOutput": "30",
+          "output": "30",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3 3\n10 10 10\n0 1 1 2 2 0",
+          "expectedOutput": "IMPOSSIBLE",
+          "output": "IMPOSSIBLE",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3 2\n10 20 30\n0 1 0 2",
+          "expectedOutput": "40",
+          "output": "40",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4 3\n10 10 10 10\n0 1 1 2 2 3",
+          "expectedOutput": "40",
+          "output": "40",
           "score": 10,
           "hidden": false
         },
         {
           "input": "3 0\n100 200 300",
+          "expectedOutput": "300",
+          "output": "300",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 4\n10 20 30 40 50\n0 4 1 4 2 4 3 4",
+          "expectedOutput": "90",
+          "output": "90",
           "score": 10,
           "hidden": false
         },
         {
           "input": "4 4\n10 20 30 40\n0 1 1 2 2 3 3 1",
+          "expectedOutput": "IMPOSSIBLE",
+          "output": "IMPOSSIBLE",
           "score": 10,
           "hidden": false
         },
         {
           "input": "5 4\n10 10 10 10 10\n0 1 0 2 1 3 2 3",
+          "expectedOutput": "30",
+          "output": "30",
           "score": 10,
           "hidden": false
         },
         {
           "input": "2 2\n100 100\n0 1 1 0",
+          "expectedOutput": "IMPOSSIBLE",
+          "output": "IMPOSSIBLE",
           "score": 10,
           "hidden": false
         }
