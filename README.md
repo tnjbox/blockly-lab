@@ -1,50 +1,34 @@
 # OSEP Blockly Lab
 
-OSEP Blockly Lab 是一個以 Google Blockly 為基礎的教學實驗平台，目標是銜接資訊科技競賽的 Blockly / JavaScript 學習，並逐步整合 SmartRingController 實體控制器，讓學生透過按鈕、LED 燈光動畫與演算法視覺化提升學習動機。
+OSEP Blockly Lab 是一個以 Google Blockly 為基礎的程式解題教學平台，介面對準
+台師大官方程式解題平台（demo.csie.ntnu.edu.tw/ps）修改，並整合
+SmartRingController 實體控制器，讓學生透過按鈕、LED 燈光動畫提升學習動機。
 
-## 專案定位
+## 課程內容
 
-本專案規劃作為：
+- **114學年度縣市競賽題目（國小／國中）**：由參與共享的17個縣市提供（16個
+  縣市已上架，連江縣114學年度未辦理縣市賽故暫無題目），僅限參與縣市師生教
+  育目的使用，詳見下方「使用範圍」與 `NOTICE.md`。
+- **SmartRingController 課程**：搭配實體控制器的硬體互動課程，不進行系統評
+  分，供課堂操作練習使用。
 
-- 資訊科技競賽 Blockly 前導課程
-- JavaScript 程式邏輯練習平台
-- SmartRingController 實體運算教學介面
-- 結構化程式、陣列、模組化、排序與搜尋的互動教材
+課程以「課程組代碼」載入，輸入代碼後才會展開該課程組的子任務清單。
 
-## MVP-B01 功能
+## 使用範圍
 
-目前版本為 MVP-B01，已完成：
+本平台僅供**已加入題庫共享的縣市**師生免費使用。請勿將平台網址或課程代碼分
+享給未參與共享的縣市人員，以維護參與縣市及共享題庫的立意——這是使用禮儀上
+的請求，並非平台技術或法律上真正擋得住的限制，仍請共同維護。
 
-- Vite 專案骨架
-- Blockly 編輯區
-- JavaScript 程式碼預覽
-- 執行程式按鈕
-- 清除工作區按鈕
-- 載入範例按鈕
-- 基本輸出區
-- 競賽平台標準積木群組
+課程代碼將於**2026年9月開學後**擇日舉辦之線上研習中公布，並說明平台使用方
+式，歡迎參與縣市夥伴自由參加。
 
-## 內建積木群組
+## 授權
 
-目前包含：
-
-- 邏輯
-- 迴圈
-- 數學
-- 文字
-- 清單
-- 變數
-- 函式
-
-## 尚未完成
-
-後續版本將加入：
-
-- SmartRingController WebSerial 連線
-- SmartRing 按鈕讀取積木
-- SmartRing LED 控制積木
-- SmartRing 陣列視覺化積木
-- 搜尋與排序演算法視覺化
+- **平台程式碼**：採用 MIT License，詳見 `LICENSE`。
+- **課程內容**：與程式碼授權分開處理，114學年度縣市競賽題目適用限定對象使
+  用條款，詳見 `NOTICE.md`。
+- 第三方套件（Blockly、Vite 等）授權另見 `THIRD_PARTY_LICENSES.md`。
 
 ## 開發指令
 
@@ -52,3 +36,22 @@ OSEP Blockly Lab 是一個以 Google Blockly 為基礎的教學實驗平台，�
 
 ```bash
 npm install
+```
+
+啟動本機開發伺服器：
+
+```bash
+npm run dev
+```
+
+建置正式版：
+
+```bash
+npm run build
+```
+
+部署到 GitHub Pages：
+
+```bash
+npm run deploy
+```
