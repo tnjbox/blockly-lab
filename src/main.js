@@ -672,13 +672,6 @@ function renderSplitOutputPanes(systemLines, sayLines) {
   `;
 }
 
-function hasGreenFlagBlock() {
-  if (!workspace) return false;
-  return workspace
-    .getTopBlocks(true)
-    .some((block) => block.type === 'event_whenflagclicked');
-}
-
 async function runUserCode() {
   if (!workspace) return;
 
@@ -1897,18 +1890,6 @@ async function requestServerGrading(courseId, taskId, cases) {
 }
 
 async function runProgrammingTestCases() {
-  if (currentTask?.requiresGreenFlag && !hasGreenFlagBlock()) {
-    clearOutput();
-    writeOutput('請先加入「當🚩被點擊」積木，把要評分的程式接在它下面，再進行系統評分。');
-    return {
-      total: 0,
-      passed: 0,
-      score: 0,
-      allPassed: false,
-      cases: [],
-    };
-  }
-
   const testCases = getTaskTestCases(currentTask);
 
   if (testCases.length === 0) {
