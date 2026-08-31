@@ -21407,11 +21407,7 @@ DEF`,expectedOutput:`0`,output:`0`,score:25}],difficulty:`L4`,difficultyLabel:`L
       <p>找不到課程組代碼：${e}</p>
       <p>請先確認課程代碼，或測試以下公開基礎課程：</p>
       ${pb()}
-    `,$.textContent=`找不到課程組代碼：${e}`;return}Cx=t,Tx=Nx(t.mode),VS(t),KS({announce:!0});let n=mb(t);if(!n){wx=null,kx=!1,Vx(),$S(),Bx(),Zb?.classList.remove(`programming-problem`),Qb&&(Qb.textContent=`課程任務摘要`),$.textContent=`課程組 ${t.id} 尚未建立子任務。`;return}eC(n,t)}function nC(){if(!Cx)return;let e=hb(Cx,Gb.value);if(!e){$.textContent=`找不到子任務：${Gb.value}`;return}eC(e,Cx)}function rC(e=``){return String(e).replace(/\r\n/g,`
-`).replace(/\r/g,`
-`).split(`
-`).map(e=>e.trimEnd()).join(`
-`).trimEnd()}function iC(e=[]){let t=[...e];for(;t.length>0&&String(t[t.length-1]).trim()===``;)t.pop();return t}function aC(e=``){let t=String(e??``).replace(/\r\n/g,`
+    `,$.textContent=`找不到課程組代碼：${e}`;return}Cx=t,Tx=Nx(t.mode),VS(t),KS({announce:!0});let n=mb(t);if(!n){wx=null,kx=!1,Vx(),$S(),Bx(),Zb?.classList.remove(`programming-problem`),Qb&&(Qb.textContent=`課程任務摘要`),$.textContent=`課程組 ${t.id} 尚未建立子任務。`;return}eC(n,t)}function nC(){if(!Cx)return;let e=hb(Cx,Gb.value);if(!e){$.textContent=`找不到子任務：${Gb.value}`;return}eC(e,Cx)}function rC(e=``){return String(e??``).trim().split(/\s+/).filter(Boolean).join(` `)}function iC(e=[]){let t=[...e];for(;t.length>0&&String(t[t.length-1]).trim()===``;)t.pop();return t}function aC(e=``){let t=String(e??``).replace(/\r\n/g,`
 `).replace(/\r/g,`
 `).split(`
 `),n=[];for(let e of t){let t=String(e??``),r=t.trim();if(/^(預期答案|參考答案|正確答案|答案|分數)\s*[:：]/.test(r))break;let i=r.match(/^第[一二三四五六七八九十0-9]+個輸入\s*[:：]\s*(.*)$/);if(i){let e=i[1].trim();e&&n.push(e);continue}n.push(t)}return iC(n).join(`
