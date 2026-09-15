@@ -3683,8 +3683,8 @@ C A`,expectedOutput:`2 1`,score:10}]},{id:`114ETaoyuan-4`,title:`4-綠能任務�
 8`,expectedOutput:`1607.68`,score:10}]},{id:`114EYunlin-2`,title:`2-身體質量指數計算與健康判斷`,problemTitle:`2-身體質量指數計算與健康判斷`,courseCode:`114EYunlin`,courseName:`114-雲林縣國小`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,requiresGreenFlag:!0,description:`小康非常注重身體健康，他知道身體質量指數(BMI)是一個常用的健康指標。為了方便計算，他想寫一個程式來快速算出自己的 BMI 值，並能判斷肥胖程度是標準、過輕還是過重。
 BMI 的計算公式為： BMI = 體重(公斤) / [身高(公尺) × 身高(公尺)]
 肥胖狀態判斷標準：
-• BMI &lt; 18.5 → 過輕
-• 18.5 ≤ BMI &lt; 24 → 標準
+• BMI < 18.5 → 過輕
+• 18.5 ≤ BMI < 24 → 標準
 • BMI ≥ 24 → 過重
 【輸入格式】
 程式依序輸入
@@ -3694,8 +3694,8 @@ BMI 的計算公式為： BMI = 體重(公斤) / [身高(公尺) × 身高(公�
 程式會根據公式計算並輸出 BMI 值 (通常建議四捨五入到小數點後兩位)，並判斷並輸出對應的肥胖狀態。(以空白分隔)`,inputDescription:``,outputDescription:``,statement:{description:`小康非常注重身體健康，他知道身體質量指數(BMI)是一個常用的健康指標。為了方便計算，他想寫一個程式來快速算出自己的 BMI 值，並能判斷肥胖程度是標準、過輕還是過重。
 BMI 的計算公式為： BMI = 體重(公斤) / [身高(公尺) × 身高(公尺)]
 肥胖狀態判斷標準：
-• BMI &lt; 18.5 → 過輕
-• 18.5 ≤ BMI &lt; 24 → 標準
+• BMI < 18.5 → 過輕
+• 18.5 ≤ BMI < 24 → 標準
 • BMI ≥ 24 → 過重
 【輸入格式】
 程式依序輸入
@@ -7018,9 +7018,9 @@ A15274 = 11+1+5+2+7+4=30，30÷5=6 餘 0，所以這是一個不正確的會員�
 BMI 的計算方式為：
 BMI = 體重(公斤) ÷ (身高(公尺))²
 健康狀態判定如下：
-• BMI &lt; 18.5 → 輸出「過輕」
-• 18.5 ≤ BMI &lt; 24 → 輸出「正常」
-• 24 ≤ BMI &lt; 27 → 輸出「過重」
+• BMI < 18.5 → 輸出「過輕」
+• 18.5 ≤ BMI < 24 → 輸出「正常」
+• 24 ≤ BMI < 27 → 輸出「過重」
 • BMI ≥ 27 → 輸出「肥胖」
 請讀入兩個數字：
 第一個為體重（公斤），第二個為身高（公尺）。
@@ -7035,9 +7035,9 @@ BMI = 體重(公斤) ÷ (身高(公尺))²
 BMI 的計算方式為：
 BMI = 體重(公斤) ÷ (身高(公尺))²
 健康狀態判定如下：
-• BMI &lt; 18.5 → 輸出「過輕」
-• 18.5 ≤ BMI &lt; 24 → 輸出「正常」
-• 24 ≤ BMI &lt; 27 → 輸出「過重」
+• BMI < 18.5 → 輸出「過輕」
+• 18.5 ≤ BMI < 24 → 輸出「正常」
+• 24 ≤ BMI < 27 → 輸出「過重」
 • BMI ≥ 27 → 輸出「肥胖」
 請讀入兩個數字：
 第一個為體重（公斤），第二個為身高（公尺）。
@@ -7050,7 +7050,7 @@ BMI = 體重(公斤) ÷ (身高(公尺))²
 【輸出格式】
 健康狀態，或 ERROR。`,input:``,output:``},examples:[{input:`58
 1.50`,output:`過重`,explanation:`BMI = 58 / (1.5 * 1.5) = 25.77...
-24 ≤ 25.77... &lt; 27，為「過重」`}],starterXml:`<xml xmlns="https://developers.google.com/blockly/xml"><variables><variable id="t3_w">W</variable><variable id="t3_h">H</variable><variable id="t3_bmi">bmi</variable></variables><block type="event_whenflagclicked" x="40" y="40"><next><block type="interaction_ask_and_wait"><value name="TEXT"><block type="text"><field name="TEXT">請輸入體重(公斤)</field></block></value><next><block type="variables_set"><field name="VAR" id="t3_w">W</field><value name="VALUE"><block type="interaction_answer"></block></value><next><block type="interaction_ask_and_wait"><value name="TEXT"><block type="text"><field name="TEXT">請輸入身高(公尺)</field></block></value><next><block type="variables_set"><field name="VAR" id="t3_h">H</field><value name="VALUE"><block type="interaction_answer"></block></value><next><block type="controls_if"><mutation elseif="0" else="1"></mutation><value name="IF0"><block type="logic_operation"><field name="OP">OR</field><value name="A"><block type="logic_compare"><field name="OP">LTE</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_w">W</field></block></value><value name="B"><block type="math_number"><field name="NUM">0</field></block></value></block></value><value name="B"><block type="logic_compare"><field name="OP">LTE</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_h">H</field></block></value><value name="B"><block type="math_number"><field name="NUM">0</field></block></value></block></value></block></value><statement name="DO0"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">ERROR</field></block></value></block></statement><statement name="ELSE"><block type="variables_set"><field name="VAR" id="t3_bmi">bmi</field><value name="VALUE"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_w">W</field></block></value><value name="B"><block type="math_arithmetic"><field name="OP">MULTIPLY</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_h">H</field></block></value><value name="B"><block type="variables_get"><field name="VAR" id="t3_h">H</field></block></value></block></value></block></value><next><block type="controls_if"><mutation elseif="2" else="1"></mutation><value name="IF0"><block type="logic_compare"><field name="OP">LT</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_bmi">bmi</field></block></value><value name="B"><block type="math_number"><field name="NUM">18.5</field></block></value></block></value><statement name="DO0"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">過輕</field></block></value></block></statement><value name="IF1"><block type="logic_compare"><field name="OP">LT</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_bmi">bmi</field></block></value><value name="B"><block type="math_number"><field name="NUM">24</field></block></value></block></value><statement name="DO1"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">正常</field></block></value></block></statement><value name="IF2"><block type="logic_compare"><field name="OP">LT</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_bmi">bmi</field></block></value><value name="B"><block type="math_number"><field name="NUM">27</field></block></value></block></value><statement name="DO2"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">過重</field></block></value></block></statement><statement name="ELSE"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">肥胖</field></block></value></block></statement></block></next></block></statement></block></next></block></next></block></next></block></next></block></next></block></xml>`,testCases:[{input:`58
+24 ≤ 25.77... < 27，為「過重」`}],starterXml:`<xml xmlns="https://developers.google.com/blockly/xml"><variables><variable id="t3_w">W</variable><variable id="t3_h">H</variable><variable id="t3_bmi">bmi</variable></variables><block type="event_whenflagclicked" x="40" y="40"><next><block type="interaction_ask_and_wait"><value name="TEXT"><block type="text"><field name="TEXT">請輸入體重(公斤)</field></block></value><next><block type="variables_set"><field name="VAR" id="t3_w">W</field><value name="VALUE"><block type="interaction_answer"></block></value><next><block type="interaction_ask_and_wait"><value name="TEXT"><block type="text"><field name="TEXT">請輸入身高(公尺)</field></block></value><next><block type="variables_set"><field name="VAR" id="t3_h">H</field><value name="VALUE"><block type="interaction_answer"></block></value><next><block type="controls_if"><mutation elseif="0" else="1"></mutation><value name="IF0"><block type="logic_operation"><field name="OP">OR</field><value name="A"><block type="logic_compare"><field name="OP">LTE</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_w">W</field></block></value><value name="B"><block type="math_number"><field name="NUM">0</field></block></value></block></value><value name="B"><block type="logic_compare"><field name="OP">LTE</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_h">H</field></block></value><value name="B"><block type="math_number"><field name="NUM">0</field></block></value></block></value></block></value><statement name="DO0"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">ERROR</field></block></value></block></statement><statement name="ELSE"><block type="variables_set"><field name="VAR" id="t3_bmi">bmi</field><value name="VALUE"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_w">W</field></block></value><value name="B"><block type="math_arithmetic"><field name="OP">MULTIPLY</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_h">H</field></block></value><value name="B"><block type="variables_get"><field name="VAR" id="t3_h">H</field></block></value></block></value></block></value><next><block type="controls_if"><mutation elseif="2" else="1"></mutation><value name="IF0"><block type="logic_compare"><field name="OP">LT</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_bmi">bmi</field></block></value><value name="B"><block type="math_number"><field name="NUM">18.5</field></block></value></block></value><statement name="DO0"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">過輕</field></block></value></block></statement><value name="IF1"><block type="logic_compare"><field name="OP">LT</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_bmi">bmi</field></block></value><value name="B"><block type="math_number"><field name="NUM">24</field></block></value></block></value><statement name="DO1"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">正常</field></block></value></block></statement><value name="IF2"><block type="logic_compare"><field name="OP">LT</field><value name="A"><block type="variables_get"><field name="VAR" id="t3_bmi">bmi</field></block></value><value name="B"><block type="math_number"><field name="NUM">27</field></block></value></block></value><statement name="DO2"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">過重</field></block></value></block></statement><statement name="ELSE"><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">肥胖</field></block></value></block></statement></block></next></block></statement></block></next></block></next></block></next></block></next></block></next></block></xml>`,testCases:[{input:`58
 1.50`,expectedOutput:`過重`,score:10},{input:`68
 1.70`,expectedOutput:`正常`,score:10},{input:`-5
 1.5`,expectedOutput:`ERROR`,score:10},{input:`50
@@ -8844,8 +8844,8 @@ C A`,expectedOutput:`2 1`,score:10}]},{id:`114TCPE15-4`,title:`4-綠能任務挑
 8`,expectedOutput:`1607.68`,score:10}]},{id:`114TCPE16-2`,title:`2-身體質量指數計算與健康判斷`,problemTitle:`2-身體質量指數計算與健康判斷`,courseCode:`114TCPE16`,courseName:`114-雲林縣國小（競賽模式）`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,requiresGreenFlag:!0,description:`小康非常注重身體健康，他知道身體質量指數(BMI)是一個常用的健康指標。為了方便計算，他想寫一個程式來快速算出自己的 BMI 值，並能判斷肥胖程度是標準、過輕還是過重。
 BMI 的計算公式為： BMI = 體重(公斤) / [身高(公尺) × 身高(公尺)]
 肥胖狀態判斷標準：
-• BMI &lt; 18.5 → 過輕
-• 18.5 ≤ BMI &lt; 24 → 標準
+• BMI < 18.5 → 過輕
+• 18.5 ≤ BMI < 24 → 標準
 • BMI ≥ 24 → 過重
 【輸入格式】
 程式依序輸入
@@ -8855,8 +8855,8 @@ BMI 的計算公式為： BMI = 體重(公斤) / [身高(公尺) × 身高(公�
 程式會根據公式計算並輸出 BMI 值 (通常建議四捨五入到小數點後兩位)，並判斷並輸出對應的肥胖狀態。(以空白分隔)`,inputDescription:``,outputDescription:``,statement:{description:`小康非常注重身體健康，他知道身體質量指數(BMI)是一個常用的健康指標。為了方便計算，他想寫一個程式來快速算出自己的 BMI 值，並能判斷肥胖程度是標準、過輕還是過重。
 BMI 的計算公式為： BMI = 體重(公斤) / [身高(公尺) × 身高(公尺)]
 肥胖狀態判斷標準：
-• BMI &lt; 18.5 → 過輕
-• 18.5 ≤ BMI &lt; 24 → 標準
+• BMI < 18.5 → 過輕
+• 18.5 ≤ BMI < 24 → 標準
 • BMI ≥ 24 → 過重
 【輸入格式】
 程式依序輸入
@@ -11886,9 +11886,9 @@ A15274 = 11+1+5+2+7+4=30，30÷5=6 餘 0，所以這是一個不正確的會員�
 BMI 的計算方式為：
 BMI = 體重(公斤) ÷ (身高(公尺))²
 健康狀態判定如下：
-• BMI &lt; 18.5 → 輸出「過輕」
-• 18.5 ≤ BMI &lt; 24 → 輸出「正常」
-• 24 ≤ BMI &lt; 27 → 輸出「過重」
+• BMI < 18.5 → 輸出「過輕」
+• 18.5 ≤ BMI < 24 → 輸出「正常」
+• 24 ≤ BMI < 27 → 輸出「過重」
 • BMI ≥ 27 → 輸出「肥胖」
 請讀入兩個數字：
 第一個為體重（公斤），第二個為身高（公尺）。
@@ -11903,9 +11903,9 @@ BMI = 體重(公斤) ÷ (身高(公尺))²
 BMI 的計算方式為：
 BMI = 體重(公斤) ÷ (身高(公尺))²
 健康狀態判定如下：
-• BMI &lt; 18.5 → 輸出「過輕」
-• 18.5 ≤ BMI &lt; 24 → 輸出「正常」
-• 24 ≤ BMI &lt; 27 → 輸出「過重」
+• BMI < 18.5 → 輸出「過輕」
+• 18.5 ≤ BMI < 24 → 輸出「正常」
+• 24 ≤ BMI < 27 → 輸出「過重」
 • BMI ≥ 27 → 輸出「肥胖」
 請讀入兩個數字：
 第一個為體重（公斤），第二個為身高（公尺）。
@@ -11918,7 +11918,7 @@ BMI = 體重(公斤) ÷ (身高(公尺))²
 【輸出格式】
 健康狀態，或 ERROR。`,input:``,output:``},examples:[{input:`58
 1.50`,output:`過重`,explanation:`BMI = 58 / (1.5 * 1.5) = 25.77...
-24 ≤ 25.77... &lt; 27，為「過重」`}],starterXml:``,testCases:[{input:`58
+24 ≤ 25.77... < 27，為「過重」`}],starterXml:``,testCases:[{input:`58
 1.50`,expectedOutput:`過重`,score:10},{input:`68
 1.70`,expectedOutput:`正常`,score:10},{input:`-5
 1.5`,expectedOutput:`ERROR`,score:10},{input:`50
@@ -14176,9 +14176,11 @@ Louise`,expectedOutput:`Justin, Louise, 一起學習吧！`,output:`Justin, Loui
 較大的是數字8，程式輸出8`},{input:`7
 7`,output:`一樣大`,explanation:`第一個輸入7
 第二個輸入7
-二個數一樣大，程式輸出一樣大`}],testCases:[{input:`8
-5`,expectedOutput:`8`,output:`8`,score:50,hidden:!1},{input:`7
-7`,expectedOutput:`一樣大`,output:`一樣大`,score:50,hidden:!1}],starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
+二個數一樣大，程式輸出一樣大`}],testCases:[{input:`3
+7`,expectedOutput:`7`,output:`7`,score:10,hidden:!1},{input:`99
+100`,expectedOutput:`100`,output:`100`,score:10,hidden:!1},{input:`78
+22`,expectedOutput:`78`,output:`78`,score:10,hidden:!1},{input:`21
+21`,expectedOutput:`一樣大`,output:`一樣大`,score:10,hidden:!1}],starterXml:`<xml xmlns="https://developers.google.com/blockly/xml">
   <variables>
     <variable id="var_a">數字一</variable>
     <variable id="var_b">數字二</variable>
