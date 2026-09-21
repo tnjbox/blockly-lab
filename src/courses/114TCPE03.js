@@ -1,3 +1,19 @@
+// 2026-09-21（更正）：mode維持/改回'contest'，不是'learning'——'contest'控制的是「系統
+// 評分結果顯示多少細節」：contest只顯示每筆測資通過/未通過，learning會顯示完整的輸入/
+// 正確答案/學生實際輸出。114TCP系列每題都有對應的學習模式課程（例如114TCPE01對應
+// 114EChaiyi）已經提供範例答案跟完整回饋，114TCP系列維持'contest'、模擬官方競賽平台
+// 「不洩漏答案」的行為是對的，之前一度誤改成'learning'已經改回來。
+//
+// 真正要修的bug是另一件事：mode:'contest'課程原本設計成「評分比對」要打score-grader
+// Worker（本機JS故意不含expectedOutput，防止洩題），但Worker私密的answerKeys.json產生
+// 腳本讀錯資料夾（讀到本來就被清空答案的公開JS，不是YDWS-CodingBank正本），導致「正確
+// 答案」全部變成空字串，系統評分永遠判定失敗，不管學生寫得多正確都一樣。修法是把
+// 「評分比對去哪裡做」跟「結果要顯示多少細節」這兩件事拆開：testCases補回YDWS-CodingBank
+// 正本的真正expectedOutput/output（本機也拿得到答案），main.js的評分邏輯改成不管mode是
+// 什麼、比對一律走本機（不再打Worker），但結果顯示邏輯完全沒動，mode還是看
+// 'contest'/'learning'決定要不要隱藏細節——這樣'contest'課程一樣不洩漏答案，只是評分
+// 比對不再依賴容易忘記重新產生/部署的Worker私密資料。
+
 // blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
 // 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
 // score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
@@ -10,7 +26,7 @@ const course = {
   "code": "114TCPE03",
   "title": "114-彰化縣國小（競賽模式）",
   "type": "programming",
-  "mode": "learning",
+  "mode": "contest",
   "description": "彰化縣114學年度國小組資訊科技競賽練習題，涵蓋公式計算、窮舉法與清單計數統計。",
   "tasks": [
     {
