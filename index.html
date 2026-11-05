@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Younger Dream Workshop</title>
-    <script type="module" crossorigin src="/blockly-lab/assets/index-BTn_nx48.js"></script>
-    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-UpAcHZtw.css">
+    <script type="module" crossorigin src="/blockly-lab/assets/index-CfrCVwpJ.js"></script>
+    <link rel="stylesheet" crossorigin href="/blockly-lab/assets/index-Il5hsO4a.css">
   </head>
   <body>
     <div id="app">
@@ -60,7 +60,10 @@
 
         <div class="field-group mode-display-field" aria-live="polite">
           <span>模式</span>
-          <strong id="courseModeDisplay" class="mode-status-pill learning-mode">尚未載入</strong>
+          <div id="courseModeSwitch" class="mode-switch" role="group" aria-label="切換學習模式或競賽模式">
+            <button type="button" class="mode-switch-button" data-mode="learning" disabled>學習模式</button>
+            <button type="button" class="mode-switch-button" data-mode="contest" disabled>競賽模式</button>
+          </div>
         </div>
 
         <button id="btnLoadCourse" type="button" class="secondary-button">載入課程</button>
