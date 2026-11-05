@@ -19,6 +19,7 @@ import { scaffoldUrlForCourse } from './lib/scaffold-content.js';
 import {
   getPublicCourseGroupListHtml,
   getCourseGroup,
+  normalizeCourseCode,
   getDefaultTask,
   getTaskById,
   getAllCourseGroups,
@@ -177,7 +178,7 @@ const studentClass = document.getElementById('studentClass');
 const studentNumber = document.getElementById('studentNumber');
 const studentName = document.getElementById('studentName');
 const courseCode = document.getElementById('courseCode');
-const courseModeDisplay = document.getElementById('courseModeDisplay');
+const courseModeButtons = Array.from(document.querySelectorAll('#courseModeSwitch [data-mode]'));
 const taskSelector = document.getElementById('taskSelector');
 
 const btnLoadCourse = document.getElementById('btnLoadCourse');
@@ -220,6 +221,8 @@ let workspace = null;
 let currentCourseGroup = null;
 let currentTask = null;
 let currentCourseMode = 'learning';
+// 模式不能切換的原因（空字串＝可以切換）；見 applyCourseModeRule()
+let courseModeLockReason = '';
 let isUserProgramRunning = false;
 let hasProgrammingAssessmentResult = false;
 let lastAssessmentResult = null;
@@ -314,14 +317,53 @@ function getCourseType(courseGroup = currentCourseGroup) {
 
 function updateCourseModeDisplay() {
   const modeText = getModeText();
+  const hasCourse = Boolean(currentCourseGroup);
 
-  modeStatus.textContent = `目前模式：${modeText}`;
+  modeStatus.textContent = hasCourse ? `目前模式：${modeText}` : '目前模式：尚未載入課程';
 
-  if (courseModeDisplay) {
-    courseModeDisplay.textContent = modeText;
-    courseModeDisplay.classList.toggle('contest-mode', isCompetitionMode());
-    courseModeDisplay.classList.toggle('learning-mode', !isCompetitionMode());
+  courseModeButtons.forEach((button) => {
+    const isActive = hasCourse && normalizeCourseMode(button.dataset.mode) === normalizeCourseMode(currentCourseMode);
+    button.classList.toggle('active', isActive);
+    button.disabled = !hasCourse || Boolean(courseModeLockReason);
+    button.textContent = `${isActive && courseModeLockReason ? '🔒 ' : ''}${getModeText(button.dataset.mode)}`;
+    button.title = !hasCourse
+      ? '請先載入課程。'
+      : courseModeLockReason || (button.dataset.mode === 'contest'
+        ? '競賽模式：不能載入範例，評分只顯示每筆測資是否通過。'
+        : '學習模式：可以載入範例，評分會顯示輸入、預期輸出與實際輸出。');
+  });
+}
+
+// 2026-11-05：程式解題課程只要有任何一題附範例，學生可自行切換學習／競賽模式（預設競賽模式）；
+// 沒有範例的課程（如A系列、縣市賽）或教師在後台鎖定測驗的課程固定競賽模式。
+// SmartRing課程不評分、不上傳成績，維持學習模式不顯示切換。
+function applyCourseModeRule(courseGroup) {
+  if (!isProgrammingProblemTask(null, courseGroup)) {
+    currentCourseMode = 'learning';
+    courseModeLockReason = 'SmartRing 課程不區分學習／競賽模式。';
+  } else if (courseGroup.contestLock) {
+    currentCourseMode = 'contest';
+    courseModeLockReason = '老師已將這門課設為測驗，只能使用競賽模式。';
+  } else if (!courseGroup.tasks?.some((task) => task.starterXml)) {
+    currentCourseMode = 'contest';
+    courseModeLockReason = '這是測驗課程（沒有範例解答），只能使用競賽模式。';
+  } else {
+    currentCourseMode = 'contest';
+    courseModeLockReason = '';
   }
+}
+
+function switchCourseMode(mode) {
+  if (!currentCourseGroup || courseModeLockReason) return;
+  const nextMode = normalizeCourseMode(mode);
+  if (nextMode === normalizeCourseMode(currentCourseMode)) return;
+
+  currentCourseMode = nextMode;
+  updateModeStatus();
+  updateTaskActionButtons();
+  outputArea.textContent = nextMode === 'contest'
+    ? '已切換為競賽模式：不能載入範例，系統評分只顯示每筆測資是否通過。'
+    : '已切換為學習模式：可以載入範例（載入過範例的題目不能上傳成績），系統評分會顯示詳細比對結果。';
 }
 
 function isProgrammingProblemTask(task = currentTask, courseGroup = currentCourseGroup) {
@@ -390,11 +432,13 @@ function updateTaskActionButtons() {
   }
 
   if (btnLoadSample) {
-    const canLoadStarter = Boolean(currentTask?.starterXml && !isUserProgramRunning);
+    const canLoadStarter = Boolean(currentTask?.starterXml && !isUserProgramRunning && !isCompetitionMode());
     btnLoadSample.disabled = !canLoadStarter;
-    btnLoadSample.title = currentTask?.starterXml
-      ? '載入目前題目的範例積木，會覆蓋工作區。'
-      : '請先載入有範例積木的課程任務。';
+    btnLoadSample.title = isCompetitionMode()
+      ? '競賽模式不能載入範例，請切換到學習模式。'
+      : currentTask?.starterXml
+        ? '載入目前題目的範例積木，會覆蓋工作區。'
+        : '請先載入有範例積木的課程任務。';
   }
 
   updateSubmitScoreVisibility();
@@ -832,6 +876,11 @@ function loadSample() {
 
   if (!currentTask) {
     outputArea.textContent = '請先載入課程與子任務，再按「載入範例」。';
+    return;
+  }
+
+  if (isCompetitionMode()) {
+    outputArea.textContent = '競賽模式不能載入範例，請先切換到學習模式。';
     return;
   }
 
@@ -1698,10 +1747,27 @@ function loadTask(task, courseGroup, { shouldLoadStarter = false } = {}) {
     return;
   }
 
-  outputArea.textContent = `已載入子任務：${task.id}｜${task.title}。工作區積木未變更，如需範例請按「載入範例」。`;
+  outputArea.textContent = `已載入子任務：${task.id}｜${task.title}。工作區積木未變更${isCompetitionMode() ? '。' : '，如需範例請按「載入範例」。'}`;
 }
 
-function loadCourse() {
+// 教師在BlocklyYdws教師後台把課程鎖成測驗的設定（workers/starter-editor的保留鍵__course）。
+// blockly-lab只讀這一項，不套用逐題的範例覆寫；Worker連不到時當作沒有鎖定，不擋課程載入。
+const STARTER_EDITOR_WORKER_URL = 'https://blocklyydws-starter-editor.tnjboxing.workers.dev';
+
+async function fetchContestLock(code) {
+  try {
+    const resp = await fetch(
+      `${STARTER_EDITOR_WORKER_URL}/overrides?courseCode=${encodeURIComponent(normalizeCourseCode(code))}`
+    );
+    if (!resp.ok) return false;
+    const data = await resp.json();
+    return Boolean(data?.overrides?.__course?.contestLock);
+  } catch {
+    return false;
+  }
+}
+
+async function loadCourse() {
   const profile = getStudentProfile();
   const code = profile.courseCode;
 
@@ -1711,13 +1777,17 @@ function loadCourse() {
     return;
   }
 
-  const courseGroup = getCourseGroup(code);
+  const baseCourseGroup = getCourseGroup(code);
+  const courseGroup = baseCourseGroup
+    ? { ...baseCourseGroup, contestLock: await fetchContestLock(code) }
+    : null;
 
   if (!courseGroup) {
     currentCourseGroup = null;
     currentTask = null;
     hasLoadedStarterForCurrentTask = false;
     currentCourseMode = 'learning';
+    courseModeLockReason = '';
     updateModeStatus();
     resetCompetitionAssessmentResult();
     resetTaskSelector();
@@ -1746,7 +1816,7 @@ function loadCourse() {
   }
 
   currentCourseGroup = courseGroup;
-  currentCourseMode = normalizeCourseMode(courseGroup.mode);
+  applyCourseModeRule(courseGroup);
   applyCourseTypePanelPreference(courseGroup);
   updateModeStatus({ announce: true });
 
@@ -2496,6 +2566,10 @@ function bindSmartRingRuntimeEvents() {
 
 function bindEvents() {
   btnConnectSmartRing.addEventListener('click', toggleSmartRingConnection);
+
+  courseModeButtons.forEach((button) => {
+    button.addEventListener('click', () => switchCourseMode(button.dataset.mode));
+  });
 
   btnToggleSimulator?.addEventListener('click', () => {
     toggleSimulator();
