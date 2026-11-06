@@ -2186,59 +2186,7 @@ B,40`,expectedOutput:`B,F,T,M`,score:10}]},{id:`114EKinmen-4`,title:`4-數位交
 20`,expectedOutput:`10 20 30 40,4`,score:10},{input:`10
 40
 20
-30`,expectedOutput:`10 20 30 40,2`,score:10}]},{id:`114EKinmen-6`,title:`7-智慧掃地機器人`,problemTitle:`7-智慧掃地機器人`,courseCode:`114EKinmen`,courseName:`114-金門縣國小`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,inputDescription:``,outputDescription:``,statement:{description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,input:``,output:``},examples:[{input:`(無輸入)`,output:`依實際迷宮步數而定`,explanation:`本題為 Scratch 迷宮模擬實作題，無一般文字輸入。`}],starterXml:`<xml xmlns="https://developers.google.com/blockly/xml"><variables></variables><block type="event_whenflagclicked" x="40" y="40"><next><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">依實際迷宮步數而定</field></block></value></block></next></block></xml>`,testCases:[{input:`1`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`2`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`3`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`4`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`5`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`6`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`7`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`8`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`9`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`10`,expectedOutput:`依實際迷宮步數而定`,score:10}]}]},Xh=s({default:()=>Zh}),Zh={code:`114EMiaoli`,title:`114-苗栗縣國小`,type:`programming`,mode:`learning`,description:`114-苗栗縣國小114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:29:59.247Z`,sourceTxt:`txtFile/114EMiaoli.txt`,version:`manual-blockly-build-verified`},tasks:[{id:`114EMiaoli-1`,title:`1-苗栗項鍊`,problemTitle:`1-苗栗項鍊`,courseCode:`114EMiaoli`,courseName:`114-苗栗縣國小`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`苗栗縣政府決定發放由英文字母M與L珠子串連的項鍊給市民作紀念。由於每個人需要的尺寸不同，尺寸1的項鍊表示英文字母M與L珠子各一顆，形成字串ML 尺寸2的項鍊表示英文字母M與L珠子各二顆，也就會形成字串MLML。尺寸更大的項鍊，就會形成重複該次數的字串ML。
+30`,expectedOutput:`10 20 30 40,2`,score:10}]}]},Xh=s({default:()=>Zh}),Zh={code:`114EMiaoli`,title:`114-苗栗縣國小`,type:`programming`,mode:`learning`,description:`114-苗栗縣國小114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:29:59.247Z`,sourceTxt:`txtFile/114EMiaoli.txt`,version:`manual-blockly-build-verified`},tasks:[{id:`114EMiaoli-1`,title:`1-苗栗項鍊`,problemTitle:`1-苗栗項鍊`,courseCode:`114EMiaoli`,courseName:`114-苗栗縣國小`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`苗栗縣政府決定發放由英文字母M與L珠子串連的項鍊給市民作紀念。由於每個人需要的尺寸不同，尺寸1的項鍊表示英文字母M與L珠子各一顆，形成字串ML 尺寸2的項鍊表示英文字母M與L珠子各二顆，也就會形成字串MLML。尺寸更大的項鍊，就會形成重複該次數的字串ML。
 請使用 Scratch3撰寫一個程式專案，根據項鍊的尺寸，幫忙印出項鍊的珠子形成的字串。
 【輸入格式】
 「詢問...並等待」一次後，這次「詢問的答案」會得到：項鍊的尺寸。(1~100)
@@ -5376,59 +5324,7 @@ M,30`,expectedOutput:`B,T,M,J,F`,score:10}]},{id:`114JKinmen-4`,title:`4-數位�
 4,3`,expectedOutput:`4,4,3,3`,score:10},{input:`10
 1,1,1,2,2,2,3,3,3,4
 4
-4,3,2,1`,expectedOutput:`4,3,3,3,2,2,2,1,1,1`,score:10}]},{id:`114JKinmen-7`,title:`7-智慧掃地機器人`,problemTitle:`7-智慧掃地機器人`,courseCode:`114JKinmen`,courseName:`114-金門縣國中`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,inputDescription:``,outputDescription:``,statement:{description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,input:``,output:``},examples:[{input:`(無輸入)`,output:`依實際迷宮步數而定`,explanation:`本題為 Scratch 迷宮模擬實作題，無一般文字輸入。`}],starterXml:`<xml xmlns="https://developers.google.com/blockly/xml"><variables></variables><block type="event_whenflagclicked" x="40" y="40"><next><block type="interaction_say"><value name="TEXT"><block type="text"><field name="TEXT">依實際迷宮步數而定</field></block></value></block></next></block></xml>`,testCases:[{input:`1`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`2`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`3`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`4`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`5`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`6`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`7`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`8`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`9`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`10`,expectedOutput:`依實際迷宮步數而定`,score:10}]}]},Pg=s({default:()=>Fg}),Fg={code:`114JMiaoli`,title:`114-苗栗縣國中`,type:`programming`,mode:`learning`,description:`114-苗栗縣國中114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:29:59.258Z`,sourceTxt:`txtFile/114JMiaoli.txt`,version:`manual-blockly-build-verified`},tasks:[{id:`114JMiaoli-1`,title:`1-罰寫位數`,problemTitle:`1-罰寫位數`,courseCode:`114JMiaoli`,courseName:`114-苗栗縣國中`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`有許多人在班上吵鬧，老師非常生氣，於是只好命令全班罰寫：從正整數1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21...... 這樣依序寫下去，直到天荒地老，這樣大家就再也不會吵鬧了。
+4,3,2,1`,expectedOutput:`4,3,3,3,2,2,2,1,1,1`,score:10}]}]},Pg=s({default:()=>Fg}),Fg={code:`114JMiaoli`,title:`114-苗栗縣國中`,type:`programming`,mode:`learning`,description:`114-苗栗縣國中114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:29:59.258Z`,sourceTxt:`txtFile/114JMiaoli.txt`,version:`manual-blockly-build-verified`},tasks:[{id:`114JMiaoli-1`,title:`1-罰寫位數`,problemTitle:`1-罰寫位數`,courseCode:`114JMiaoli`,courseName:`114-苗栗縣國中`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`有許多人在班上吵鬧，老師非常生氣，於是只好命令全班罰寫：從正整數1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21...... 這樣依序寫下去，直到天荒地老，這樣大家就再也不會吵鬧了。
 大家寫著寫著，老師非常好奇，想要知道：假設大家都乖乖罰寫，在已經寫下一些數字後，接下來的三個數字是多少呢？在此只看連續寫下的連續阿拉伯數字部分，忽略數字之間的所有分隔與符號，則寫起來會長得像是123456789101112131415161718192021 ...
 舉例來說，如果大家已經寫下了8個數字，也就是12345678，那麼接下來出現的三個數字就是910。如果大家已經寫下了18個數字，也就是123456789101112131，那麼接下來出現的三個數字就是415。
 請使用 Scratch 撰寫一個程式專案，幫老師計算接下來出現的三個數字。
@@ -9271,59 +9167,7 @@ B,40`,expectedOutput:`B,F,T,M`,score:10}]},{id:`114TCPE17-4`,title:`4-數位交�
 20`,expectedOutput:`10 20 30 40,4`,score:10},{input:`10
 40
 20
-30`,expectedOutput:`10 20 30 40,2`,score:10}]},{id:`114TCPE17-6`,title:`7-智慧掃地機器人`,problemTitle:`7-智慧掃地機器人`,courseCode:`114TCPE17`,courseName:`114-金門縣國小（競賽模式）`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,inputDescription:``,outputDescription:``,statement:{description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,input:``,output:``},examples:[{input:`(無輸入)`,output:`依實際迷宮步數而定`,explanation:`本題為 Scratch 迷宮模擬實作題，無一般文字輸入。`}],starterXml:``,testCases:[{input:`1`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`2`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`3`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`4`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`5`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`6`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`7`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`8`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`9`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`10`,expectedOutput:`依實際迷宮步數而定`,score:10}]}]},I_=s({default:()=>L_}),L_={code:`114TCPE18`,title:`114-苗栗縣國小（競賽模式）`,type:`programming`,mode:`contest`,description:`114-苗栗縣國小114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:31:01.699Z`,sourceCsv:`data/problem_bank_master_complete.csv`,problemSetTitle:`114-苗栗縣國小`,version:`manual-transcription-verified`,convertedFrom:`114EMiaoli`,convertedAt:`2026-08-31T12:31:01.700Z`,note:`競賽模式版本：由對應學習模式課程複製轉換而來（原課程仍以學習模式繼續上架，互不影響）。starterXml已清空，測資正確答案僅保留在這份canonical檔案與各平台Worker的私密answerKeys.json，兩平台公開JS檔案已移除。`},tasks:[{id:`114TCPE18-1`,title:`1-苗栗項鍊`,problemTitle:`1-苗栗項鍊`,courseCode:`114TCPE18`,courseName:`114-苗栗縣國小（競賽模式）`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`苗栗縣政府決定發放由英文字母M與L珠子串連的項鍊給市民作紀念。由於每個人需要的尺寸不同，尺寸1的項鍊表示英文字母M與L珠子各一顆，形成字串ML 尺寸2的項鍊表示英文字母M與L珠子各二顆，也就會形成字串MLML。尺寸更大的項鍊，就會形成重複該次數的字串ML。
+30`,expectedOutput:`10 20 30 40,2`,score:10}]}]},I_=s({default:()=>L_}),L_={code:`114TCPE18`,title:`114-苗栗縣國小（競賽模式）`,type:`programming`,mode:`contest`,description:`114-苗栗縣國小114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:31:01.699Z`,sourceCsv:`data/problem_bank_master_complete.csv`,problemSetTitle:`114-苗栗縣國小`,version:`manual-transcription-verified`,convertedFrom:`114EMiaoli`,convertedAt:`2026-08-31T12:31:01.700Z`,note:`競賽模式版本：由對應學習模式課程複製轉換而來（原課程仍以學習模式繼續上架，互不影響）。starterXml已清空，測資正確答案僅保留在這份canonical檔案與各平台Worker的私密answerKeys.json，兩平台公開JS檔案已移除。`},tasks:[{id:`114TCPE18-1`,title:`1-苗栗項鍊`,problemTitle:`1-苗栗項鍊`,courseCode:`114TCPE18`,courseName:`114-苗栗縣國小（競賽模式）`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`苗栗縣政府決定發放由英文字母M與L珠子串連的項鍊給市民作紀念。由於每個人需要的尺寸不同，尺寸1的項鍊表示英文字母M與L珠子各一顆，形成字串ML 尺寸2的項鍊表示英文字母M與L珠子各二顆，也就會形成字串MLML。尺寸更大的項鍊，就會形成重複該次數的字串ML。
 請使用 Scratch3撰寫一個程式專案，根據項鍊的尺寸，幫忙印出項鍊的珠子形成的字串。
 【輸入格式】
 「詢問...並等待」一次後，這次「詢問的答案」會得到：項鍊的尺寸。(1~100)
@@ -12452,59 +12296,7 @@ M,30`,expectedOutput:`B,T,M,J,F`,score:10}]},{id:`114TCPJ17-4`,title:`4-數位�
 4,3`,expectedOutput:`4,4,3,3`,score:10},{input:`10
 1,1,1,2,2,2,3,3,3,4
 4
-4,3,2,1`,expectedOutput:`4,3,3,3,2,2,2,1,1,1`,score:10}]},{id:`114TCPJ17-7`,title:`7-智慧掃地機器人`,problemTitle:`7-智慧掃地機器人`,courseCode:`114TCPJ17`,courseName:`114-金門縣國中（競賽模式）`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,inputDescription:``,outputDescription:``,statement:{description:`小金家買了一台智慧掃地機器人，這台機器人只能依照固定規則在室內移動，並且會一直沿著牆壁前進，避免撞到家具。現在請你幫忙設計程式，控制掃地機器人依照「靠右走」的規則，從起點出發，走到「電池充電處」。
-【環境說明】
-1. 俯視圖是由許多正方形格子組成，每一格大小相同，都是20單位。
-2. 機器人一次只能移動到「前方相鄰的一格」。
-3. 圖中的牆壁不可穿越。
-4. 只有一個「電池充電處」。
-5. 保證使用正確的「靠右走規則」一定可以走到「電池充電處」。
-【機器人初始狀態】
-• 起始位置：由題目提供的迷宮圖標示
-• 起始方向：面向「90度」
-• 初始步數：0步
-【移動規則(靠右走)】
-機器人每一步必須依照以下順序判斷並執行：
-1. 右邊有路可以走 → 直接前進一格
-2. 右邊沒有路，但下方有路 → 先向右轉，再前進一格
-3. 右邊與前方都沒有路，但左邊有路 → 向左轉，再前進一格
-4. 右、前、左都沒有路 → 向後轉(轉 180度)，再前進一格
-*每一次移動，只能執行其中一個規則。
-【任務說明】
-請設計一個程式，控制掃地機器人：
-• 從起點開始移動
-• 依照「靠右走」規則前進
-• 直到到達「電池充電處」為止
-【輸入說明】
-本題不需要由使用者輸入資料。迷宮圖、起點與電池位置將於測試時提供。
-【輸出說明】
-• 程式結束時，請一併輸出機器人到達「電池充電處」時的總步數`,input:``,output:``},examples:[{input:`(無輸入)`,output:`依實際迷宮步數而定`,explanation:`本題為 Scratch 迷宮模擬實作題，無一般文字輸入。`}],starterXml:``,testCases:[{input:`1`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`2`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`3`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`4`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`5`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`6`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`7`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`8`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`9`,expectedOutput:`依實際迷宮步數而定`,score:10},{input:`10`,expectedOutput:`依實際迷宮步數而定`,score:10}]}]},bv=s({default:()=>xv}),xv={code:`114TCPJ18`,title:`114-苗栗縣國中（競賽模式）`,type:`programming`,mode:`contest`,description:`114-苗栗縣國中114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:31:01.710Z`,sourceCsv:`data/problem_bank_master_complete.csv`,problemSetTitle:`114-苗栗縣國中`,version:`manual-transcription-verified`,convertedFrom:`114JMiaoli`,convertedAt:`2026-08-31T12:31:01.710Z`,note:`競賽模式版本：由對應學習模式課程複製轉換而來（原課程仍以學習模式繼續上架，互不影響）。starterXml已清空，測資正確答案僅保留在這份canonical檔案與各平台Worker的私密answerKeys.json，兩平台公開JS檔案已移除。`},tasks:[{id:`114TCPJ18-1`,title:`1-罰寫位數`,problemTitle:`1-罰寫位數`,courseCode:`114TCPJ18`,courseName:`114-苗栗縣國中（競賽模式）`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`有許多人在班上吵鬧，老師非常生氣，於是只好命令全班罰寫：從正整數1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21...... 這樣依序寫下去，直到天荒地老，這樣大家就再也不會吵鬧了。
+4,3,2,1`,expectedOutput:`4,3,3,3,2,2,2,1,1,1`,score:10}]}]},bv=s({default:()=>xv}),xv={code:`114TCPJ18`,title:`114-苗栗縣國中（競賽模式）`,type:`programming`,mode:`contest`,description:`114-苗栗縣國中114學年度科技教育創意實作競賽題庫`,source:{project:`YDWS-CodingBank`,generatedAt:`2026-08-31T12:31:01.710Z`,sourceCsv:`data/problem_bank_master_complete.csv`,problemSetTitle:`114-苗栗縣國中`,version:`manual-transcription-verified`,convertedFrom:`114JMiaoli`,convertedAt:`2026-08-31T12:31:01.710Z`,note:`競賽模式版本：由對應學習模式課程複製轉換而來（原課程仍以學習模式繼續上架，互不影響）。starterXml已清空，測資正確答案僅保留在這份canonical檔案與各平台Worker的私密answerKeys.json，兩平台公開JS檔案已移除。`},tasks:[{id:`114TCPJ18-1`,title:`1-罰寫位數`,problemTitle:`1-罰寫位數`,courseCode:`114TCPJ18`,courseName:`114-苗栗縣國中（競賽模式）`,role:`contest`,difficulty:`L2`,blocklyFit:`中`,description:`有許多人在班上吵鬧，老師非常生氣，於是只好命令全班罰寫：從正整數1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21...... 這樣依序寫下去，直到天荒地老，這樣大家就再也不會吵鬧了。
 大家寫著寫著，老師非常好奇，想要知道：假設大家都乖乖罰寫，在已經寫下一些數字後，接下來的三個數字是多少呢？在此只看連續寫下的連續阿拉伯數字部分，忽略數字之間的所有分隔與符號，則寫起來會長得像是123456789101112131415161718192021 ...
 舉例來說，如果大家已經寫下了8個數字，也就是12345678，那麼接下來出現的三個數字就是910。如果大家已經寫下了18個數字，也就是123456789101112131，那麼接下來出現的三個數字就是415。
 請使用 Scratch 撰寫一個程式專案，幫老師計算接下來出現的三個數字。
