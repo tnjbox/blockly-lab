@@ -1,26 +1,9 @@
-// 2026-09-21（更正）：mode維持/改回'contest'，不是'learning'——'contest'控制的是「系統
-// 評分結果顯示多少細節」：contest只顯示每筆測資通過/未通過，learning會顯示完整的輸入/
-// 正確答案/學生實際輸出。114TCP系列每題都有對應的學習模式課程（例如114TCPE01對應
-// 114EChaiyi）已經提供範例答案跟完整回饋，114TCP系列維持'contest'、模擬官方競賽平台
-// 「不洩漏答案」的行為是對的，之前一度誤改成'learning'已經改回來。
-//
-// 真正要修的bug是另一件事：mode:'contest'課程原本設計成「評分比對」要打score-grader
-// Worker（本機JS故意不含expectedOutput，防止洩題），但Worker私密的answerKeys.json產生
-// 腳本讀錯資料夾（讀到本來就被清空答案的公開JS，不是YDWS-CodingBank正本），導致「正確
-// 答案」全部變成空字串，系統評分永遠判定失敗，不管學生寫得多正確都一樣。修法是把
-// 「評分比對去哪裡做」跟「結果要顯示多少細節」這兩件事拆開：testCases補回YDWS-CodingBank
-// 正本的真正expectedOutput/output（本機也拿得到答案），main.js的評分邏輯改成不管mode是
-// 什麼、比對一律走本機（不再打Worker），但結果顯示邏輯完全沒動，mode還是看
-// 'contest'/'learning'決定要不要隱藏細節——這樣'contest'課程一樣不洩漏答案，只是評分
-// 比對不再依賴容易忘記重新產生/部署的Worker私密資料。
-
-// blockly-lab限定：2026-08-13改回學習模式（canonical跟BlocklyYdws維持mode:'contest'不動）。
-// 原因：blockly-lab要公開分享給外校老師使用，跟BlocklyYdws共用同一個Cloudflare帳號的
-// score-grader Worker免費額度，外校流量若繼續打Worker評分會侵蝕BlocklyYdws自己的額度。
-// 改學習模式後系統評分改回本機JS直接比對（不再打Worker的/grade），testCases的
-// expectedOutput/output從YDWS-CodingBank canonical正本還原回來（canonical本來就保留
-// 完整答案，沒有被拿掉過）。starterXml仍是空字串——這批課程本來就沒有範例答案可載入，
-// 不受這次改動影響，等於三種模式裡的「模式一」（學習模式＋不可載入範例）。
+// 競賽模式版本，2026-08-13由 114ETaichung.js 複製並轉換而來（來源課程仍以學習模式繼續上架，互不影響）。
+// 轉換規則：mode改為'contest'、每題starterXml清空（競賽模式不提供範例答案可載入）、
+// 課程代碼/題目id/courseCode/courseName改用新代碼、title加註「（競賽模式）」。
+// 正確答案（testCases[].expectedOutput/output）只在canonical（本檔）與YDWS-CodingBank這份留存；
+// BlocklyYdws/blockly-lab兩平台的公開JS檔已移除，改由各自Worker（workers/score-grader/src/
+// answerKeys.json，私密、不進git）比對評分，詳見workers/score-grader/README.md。
 
 const course = {
   "code": "114TCPE10",
@@ -275,11 +258,11 @@ const course = {
       "difficulty": "L3",
       "blocklyFit": "高",
       "requiresGreenFlag": true,
-      "description": "小明承辦了校際足球賽，需要一套自動計分與判定系統。每一場比賽只有兩隊，且只會發生兩種事情：進球 Goal、犯規 Foul。\n規則：\n進 1 球即得 1 分。\n每犯規 3 次，該隊扣 1 分。\n扣分不會讓分數低於 0 分。\n事件代碼：GA＝A隊進球、GB＝B隊進球、FA＝A隊犯規、FB＝B隊犯規。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
+      "description": "小明承辦了校際足球賽，需要一套自動計分與判定系統。每一場比賽只有兩隊，且只會發生兩種事情：進球 Goal、犯規 Foul。\n規則：\n進 1 球即得 1 分。\n每犯規 3 次，該隊扣 1 分。\n比賽結束後才計算得分：得分 = 進球數 − 犯規次數 ÷ 3（無條件捨去）；若結果小於 0，以 0 分計。\n事件代碼：GA＝A隊進球、GB＝B隊進球、FA＝A隊犯規、FB＝B隊犯規。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
       "inputDescription": "第一行輸入一個正整數 N，代表比賽中事件數量。\n接下來輸入 N 行，每一行輸入一個事件代碼（GA、GB、FA、FB）。",
       "outputDescription": "依序輸出三行：A 隊最後得分、B 隊最後得分、比賽結果（A Win、B Win 或 Draw）。",
       "statement": {
-        "description": "小明承辦了校際足球賽，需要一套自動計分與判定系統。每一場比賽只有兩隊，且只會發生兩種事情：進球 Goal、犯規 Foul。\n規則：\n進 1 球即得 1 分。\n每犯規 3 次，該隊扣 1 分。\n扣分不會讓分數低於 0 分。\n事件代碼：GA＝A隊進球、GB＝B隊進球、FA＝A隊犯規、FB＝B隊犯規。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
+        "description": "小明承辦了校際足球賽，需要一套自動計分與判定系統。每一場比賽只有兩隊，且只會發生兩種事情：進球 Goal、犯規 Foul。\n規則：\n進 1 球即得 1 分。\n每犯規 3 次，該隊扣 1 分。\n比賽結束後才計算得分：得分 = 進球數 − 犯規次數 ÷ 3（無條件捨去）；若結果小於 0，以 0 分計。\n事件代碼：GA＝A隊進球、GB＝B隊進球、FA＝A隊犯規、FB＝B隊犯規。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
         "input": "第一行輸入一個正整數 N，代表比賽中事件數量。\n接下來輸入 N 行，每一行輸入一個事件代碼（GA、GB、FA、FB）。",
         "output": "依序輸出三行：A 隊最後得分、B 隊最後得分、比賽結果（A Win、B Win 或 Draw）。"
       },
@@ -378,11 +361,11 @@ const course = {
       "difficulty": "L4",
       "blocklyFit": "高",
       "requiresGreenFlag": true,
-      "description": "延續閃電十一人的基本規則（進球得分、每犯規 3 次扣 1 分、分數不低於 0），新增以下規則：\n每犯規 2 次，該隊得 1 張黃牌。\n同一隊累積 2 張黃牌，自動轉為 1 張紅牌。\n一旦出現紅牌，該隊立刻再扣 1 分（紅牌只會影響一次，不會重複扣分）。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
+      "description": "延續閃電十一人的基本規則（比賽結束後才計算得分：進球數 − 犯規次數 ÷ 3（無條件捨去），小於 0 以 0 分計），新增以下規則：\n每犯規 2 次，該隊得 1 張黃牌。\n同一隊累積 2 張黃牌，自動轉為 1 張紅牌。\n拿到紅牌的隊伍，計算得分時再扣 1 分（紅牌只會影響一次，不會重複扣分；扣完小於 0 仍以 0 分計）。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
       "inputDescription": "第一行輸入一個正整數 N，代表比賽中事件數量。\n接下來輸入 N 行，每一行輸入一個事件代碼（GA、GB、FA、FB）。",
       "outputDescription": "依序輸出三行：A 隊最後得分、B 隊最後得分、比賽結果（A Win、B Win 或 Draw）。",
       "statement": {
-        "description": "延續閃電十一人的基本規則（進球得分、每犯規 3 次扣 1 分、分數不低於 0），新增以下規則：\n每犯規 2 次，該隊得 1 張黃牌。\n同一隊累積 2 張黃牌，自動轉為 1 張紅牌。\n一旦出現紅牌，該隊立刻再扣 1 分（紅牌只會影響一次，不會重複扣分）。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
+        "description": "延續閃電十一人的基本規則（比賽結束後才計算得分：進球數 − 犯規次數 ÷ 3（無條件捨去），小於 0 以 0 分計），新增以下規則：\n每犯規 2 次，該隊得 1 張黃牌。\n同一隊累積 2 張黃牌，自動轉為 1 張紅牌。\n拿到紅牌的隊伍，計算得分時再扣 1 分（紅牌只會影響一次，不會重複扣分；扣完小於 0 仍以 0 分計）。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
         "input": "第一行輸入一個正整數 N，代表比賽中事件數量。\n接下來輸入 N 行，每一行輸入一個事件代碼（GA、GB、FA、FB）。",
         "output": "依序輸出三行：A 隊最後得分、B 隊最後得分、比賽結果（A Win、B Win 或 Draw）。"
       },
@@ -481,11 +464,11 @@ const course = {
       "difficulty": "L4",
       "blocklyFit": "高",
       "requiresGreenFlag": true,
-      "description": "延續紅牌與黃牌的規則，新增以下規則：\n任一隊出現 1 張紅牌，比賽立刻結束，後續事件全部忽略，輸出結果以「結束當下」為準。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
+      "description": "延續紅牌與黃牌的規則，新增以下規則：\n任一隊出現 1 張紅牌，比賽立刻結束，後續事件全部忽略，用結束當下的進球與犯規次數計算得分並輸出結果。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
       "inputDescription": "第一行輸入一個正整數 N，代表比賽中事件數量。\n接下來輸入 N 行，每一行輸入一個事件代碼（GA、GB、FA、FB）。",
       "outputDescription": "依序輸出三行：A 隊最後得分、B 隊最後得分、比賽結果（A Win、B Win 或 Draw）。",
       "statement": {
-        "description": "延續紅牌與黃牌的規則，新增以下規則：\n任一隊出現 1 張紅牌，比賽立刻結束，後續事件全部忽略，輸出結果以「結束當下」為準。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
+        "description": "延續紅牌與黃牌的規則，新增以下規則：\n任一隊出現 1 張紅牌，比賽立刻結束，後續事件全部忽略，用結束當下的進球與犯規次數計算得分並輸出結果。\n請依序輸出 A 隊最後得分、B 隊最後得分、比賽結果（A Win / B Win / Draw）。",
         "input": "第一行輸入一個正整數 N，代表比賽中事件數量。\n接下來輸入 N 行，每一行輸入一個事件代碼（GA、GB、FA、FB）。",
         "output": "依序輸出三行：A 隊最後得分、B 隊最後得分、比賽結果（A Win、B Win 或 Draw）。"
       },
